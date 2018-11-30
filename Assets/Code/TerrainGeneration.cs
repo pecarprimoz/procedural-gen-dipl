@@ -7,8 +7,13 @@ public class TerrainGeneration : MonoBehaviour {
     private int TerrainWidth = 128;
     private int TerrainDepth = 20;
 
+    public float[,] currentTerrain;
+
     [Range(0.1f, 10.0f)]
     public float Frequency = 3.5f;
+
+    [Range(1, 5)]
+    public int NumberOfOctaves = 1;
 
     public Terrain _Terrain;
     void Start() {
@@ -31,17 +36,21 @@ public class TerrainGeneration : MonoBehaviour {
     }
 
     public float[,] GenerateTerrain() {
-        float[,] currentTerrain = new float[TerrainHeight, TerrainWidth];
+        currentTerrain = new float[TerrainWidth, TerrainHeight];
         for (int x = 0; x < TerrainWidth; x++) {
             for (int y = 0; y < TerrainHeight; y++) {
-                currentTerrain[x, y] = GenerateTerrainPerlinNoise((float)x / TerrainWidth, (float)y / TerrainHeight);
+                float nx = (float)x / TerrainWidth;
+                float ny = (float)y / TerrainHeight;
+                // Generate multiple octaves and fiddle with frequencies to get more crumbly terrain
+                currentTerrain[x, y] += 0.15f *Mathf.Clamp(GenerateTerrainPerlinNoise(nx, ny), 0.0f, 1.0f);
             }
         }
         return currentTerrain;
     }
 
     public float GenerateTerrainPerlinNoise(float x, float y) {
-        return Mathf.PerlinNoise(Frequency * x, Frequency * y);
+        return Mathf.PerlinNoise(3* Frequency * x, 3* Frequency * y);
     }
+
 
 }
