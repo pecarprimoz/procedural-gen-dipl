@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class TerrainGenerationDebugger : MonoBehaviour {
     public TerrainGeneration tg;
-    private void Start() {
-    }
+    private static Texture2D texture;
     private void Update() {
-
-        Texture2D texture = new Texture2D(128, 128);
+        // Fun fact, Unity does not GC new Terrains, which results in a memory leak, to prevent this we call destroy and have the texture as static
+        Destroy(texture);
+        // The debug terrain is driven by the TerrainGeneration (the main terrain that we are working on)
+        texture = new Texture2D(tg.TerrainWidth, tg.TerrainHeight);
         GetComponent<Renderer>().material.mainTexture = texture;
-        float[,] terrainMap = tg.currentTerrain;
+        float[,] terrainMap = tg.CurrentTerrain;
         if (terrainMap == null) {
             return;
         }
         for (int y = 0; y < texture.height; y++) {
             for (int x = 0; x < texture.width; x++) {
-                Color c = new Color(1 * terrainMap[x, y], 1 * terrainMap[x, y], 1 * terrainMap[x, y], 1);
+                Color c = Color.Lerp(Color.white, Color.black, terrainMap[x, y]);
                 texture.SetPixel(x, y, c);
             }
         }

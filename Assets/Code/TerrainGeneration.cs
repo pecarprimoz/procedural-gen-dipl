@@ -3,53 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
-    private int TerrainHeight = 128;
-    private int TerrainWidth = 128;
+
+    public readonly int TerrainWidth = 128;
+    public readonly int TerrainHeight = 128;
+
+    [Range(0.0f, 100.0f)]
+    public float NoiseScale = 100.0f;
+    [Range(0.0f, 100.0f)]
+    public float BaseFrequency = 1.0f;
+    [Range(0.0f, 1f)]
+    public float Persistance = 0.5f;
+    [Range(0.0f, 5f)]
+    public float Lacunarity = 2.0f;
+    [Range(1, 10)]
+    public int NumberOfOctaves = 3;
+
+    public string Seed = "";
+    public Vector2 UserOffset = Vector2.zero;
+
+    public float[,] CurrentTerrain;
+    public Terrain _Terrain;
+
+    public NoiseGeneration.CustomFunctionType CustomFunction = NoiseGeneration.CustomFunctionType.kNone;
+
     private int TerrainDepth = 20;
 
-    public float[,] currentTerrain;
-
-    [Range(0.1f, 10.0f)]
-    public float Frequency = 3.5f;
-
-    [Range(1, 5)]
-    public int NumberOfOctaves = 1;
-
-    public Terrain _Terrain;
     void Start() {
-        InitializeTerrain();
+        // InitializeTerrain();
     }
 
     private void Update() {
-        GenerateNewTerrain();
+        InitializeTerrain();
     }
 
     void InitializeTerrain() {
-        _Terrain.terrainData.heightmapResolution = TerrainWidth + 1;
+        _Terrain.terrainData.heightmapResolution = TerrainWidth < TerrainHeight ? TerrainWidth : TerrainHeight;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
-        // GenerateNewTerrain()
-    }
-
-    private void GenerateNewTerrain() {
-        var terrainArray = GenerateTerrain();
-        _Terrain.terrainData.SetHeights(0, 0, terrainArray);
-    }
-
-    public float[,] GenerateTerrain() {
-        currentTerrain = new float[TerrainWidth, TerrainHeight];
-        for (int x = 0; x < TerrainWidth; x++) {
-            for (int y = 0; y < TerrainHeight; y++) {
-                float nx = (float)x / TerrainWidth;
-                float ny = (float)y / TerrainHeight;
-                // Generate multiple octaves and fiddle with frequencies to get more crumbly terrain
-                currentTerrain[x, y] += 0.15f *Mathf.Clamp(GenerateTerrainPerlinNoise(nx, ny), 0.0f, 1.0f);
-            }
-        }
-        return currentTerrain;
-    }
-
-    public float GenerateTerrainPerlinNoise(float x, float y) {
-        return Mathf.PerlinNoise(3* Frequency * x, 3* Frequency * y);
+        CurrentTerrain = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale, BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction);
+        _Terrain.terrainData.SetHeights(0, 0, CurrentTerrain);
     }
 
 
