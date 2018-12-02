@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoiseGeneration : MonoBehaviour {
+public static class NoiseGeneration {
     public enum CustomFunctionType {
         kNone,
         kSin,
