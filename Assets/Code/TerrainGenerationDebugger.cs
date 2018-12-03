@@ -11,16 +11,12 @@ public class TerrainGenerationDebugger : MonoBehaviour {
         // The debug terrain is driven by the TerrainGeneration (the main terrain that we are working on)
         texture = new Texture2D(tg.TerrainWidth, tg.TerrainHeight);
         GetComponent<Renderer>().material.mainTexture = texture;
-        float[,] terrainMap = tg.CurrentTerrain;
-        if (terrainMap == null) {
+        if (tg.TerrainHeightMap == null) {
             return;
         }
-        for (int y = 0; y < texture.height; y++) {
-            for (int x = 0; x < texture.width; x++) {
-                Color c = Color.Lerp(Color.white, Color.black, terrainMap[x, y]);
-                texture.SetPixel(x, y, c);
-            }
-        }
+        texture.filterMode = FilterMode.Point;
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight,tg.TerrainHeightMap,tg.TerrainParameterList, tg.TerrainTextureType));
         texture.Apply();
     }
 }

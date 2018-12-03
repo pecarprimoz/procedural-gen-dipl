@@ -35,6 +35,7 @@ public class ParameterEditorWidget : Editor {
         ReorderableParameterList.onSelectCallback = (ReorderableList list) => {
         };
         ReorderableParameterList.onRemoveCallback = (ReorderableList list) => {
+            TerrainGenerationScript.TerrainParameterList.RemoveAt(list.index);
         };
         return ReorderableParameterList;
     }
@@ -46,7 +47,7 @@ public class ParameterEditorWidget : Editor {
         EditorUtility.SetDirty(TerrainGenerationScript);
     }
     public void DrawTerrainGenerationProperties() {
-        var rect = EditorGUILayout.GetControlRect();
+        TerrainGenerationScript.TerrainTextureType = (TerrainGeneration.TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.TerrainTextureType);
         TerrainGenerationScript.NoiseScale = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Noise Scale", TerrainGenerationScript.NoiseScale);
         TerrainGenerationScript.BaseFrequency = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Base Frequecny", TerrainGenerationScript.BaseFrequency);
         TerrainGenerationScript.Persistance = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Persistance", TerrainGenerationScript.Persistance);
@@ -54,6 +55,7 @@ public class ParameterEditorWidget : Editor {
         TerrainGenerationScript.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainGenerationScript.Seed);
         TerrainGenerationScript.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainGenerationScript.UserOffset);
         TerrainGenerationScript.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.CustomFunction);
+        EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         // @TODO, add a button that saves the current preset of all parameters (serialize or just put as default values in TerrainGeneration)
     }
 }

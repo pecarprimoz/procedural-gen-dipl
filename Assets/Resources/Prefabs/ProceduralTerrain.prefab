@@ -62,16 +62,14 @@ MonoBehaviour:
   UserOffset: {x: 0, y: 0}
   CustomFunction: 0
   _Terrain: {fileID: 218874898587846492}
+  TerrainTextureType: 1
   TerrainParameterList:
-  - Name: 1
-    ParameterBoundry: 0
-    TerrainColor: {r: 0, g: 0, b: 0, a: 0}
-  - Name: 2
-    ParameterBoundry: 0
-    TerrainColor: {r: 0, g: 0, b: 0, a: 0}
-  - Name: 3
-    ParameterBoundry: 0
-    TerrainColor: {r: 0, g: 0, b: 0, a: 0}
+  - Name: Water
+    ParameterBoundry: 0.4
+    TerrainColor: {r: 0.3537736, g: 0.7051743, b: 1, a: 1}
+  - Name: Grass
+    ParameterBoundry: 1
+    TerrainColor: {r: 0.53152895, g: 1, b: 0.0047169924, a: 1}
 --- !u!154 &154853691429667714
 TerrainCollider:
   m_ObjectHideFlags: 1

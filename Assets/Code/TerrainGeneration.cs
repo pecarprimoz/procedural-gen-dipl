@@ -4,7 +4,10 @@ using UnityEditor;
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
-
+    public enum TextureType {
+        kGrayscale,
+        kColored
+    }
     public readonly int TerrainWidth = 128;
     public readonly int TerrainHeight = 128;
     public readonly int TerrainDepth = 20;
@@ -19,8 +22,9 @@ public class TerrainGeneration : MonoBehaviour {
     public Vector2 UserOffset = Vector2.zero;
     public NoiseGeneration.CustomFunctionType CustomFunction = NoiseGeneration.CustomFunctionType.kNone;
 
-    public float[,] CurrentTerrain;
+    public float[,] TerrainHeightMap;
     public Terrain _Terrain;
+    public TextureType TerrainTextureType = TextureType.kGrayscale;
 
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
@@ -36,8 +40,8 @@ public class TerrainGeneration : MonoBehaviour {
     void InitializeTerrain() {
         _Terrain.terrainData.heightmapResolution = TerrainWidth < TerrainHeight ? TerrainWidth : TerrainHeight;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
-        CurrentTerrain = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale, BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction);
-        _Terrain.terrainData.SetHeights(0, 0, CurrentTerrain);
+        TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale, BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction);
+        _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
     private void OnDestroy() {
         // figure out how to save properties from runtime
