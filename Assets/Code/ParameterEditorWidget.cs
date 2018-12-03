@@ -59,6 +59,10 @@ public class ParameterEditorWidget : Editor {
         TerrainGenerationScript.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainGenerationScript.Seed);
         TerrainGenerationScript.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainGenerationScript.UserOffset);
         TerrainGenerationScript.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.CustomFunction);
+        if(TerrainGenerationScript.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) { 
+            var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", TerrainGenerationScript.CustomExponent);
+            TerrainGenerationScript.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
+            }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         // @TODO, add a button that saves the current preset of all parameters (serialize or just put as default values in TerrainGeneration)
     }

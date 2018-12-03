@@ -8,10 +8,11 @@ public static class NoiseGeneration {
         kSin,
         kCos,
         kEps,
-        kPi
+        kPi,
+        kCustom
     }
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType = CustomFunctionType.kNone) {
+        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType = CustomFunctionType.kNone, float customExponent = 2.0f) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
@@ -60,6 +61,9 @@ public static class NoiseGeneration {
                         break;
                     case CustomFunctionType.kEps:
                         currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Epsilon);
+                        break;
+                    case CustomFunctionType.kCustom:
+                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent);
                         break;
                     case CustomFunctionType.kNone:
                         currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]);
