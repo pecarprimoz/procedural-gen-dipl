@@ -53,10 +53,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ff2fa380b1df848908f2c5fff67004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NoiseScale: 75
-  BaseFrequency: 2
-  Persistance: 0.5
-  Lacunarity: 2
+  NoiseScale: 80
+  BaseFrequency: 0.1
+  Persistance: 0.2
+  Lacunarity: 5
   NumberOfOctaves: 3
   Seed: Seedy
   UserOffset: {x: 0, y: 0}
