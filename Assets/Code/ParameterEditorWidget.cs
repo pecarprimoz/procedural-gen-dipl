@@ -7,8 +7,14 @@ using System.Collections.Generic;
 public class ParameterEditorWidget : Editor {
     private ReorderableList ReorderableParameterList;
     private TerrainGeneration TerrainGenerationScript;
+    private string NoisePresetName = string.Empty;
+    public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     private void OnEnable() {
         TerrainGenerationScript = (TerrainGeneration)target;
+    }
+    private void OnSceneGUI() {
+        // TODO, IMPLEMENT A DRAWABLE LIST FOR ALL SERIALIZED PARAMETERS
+        AllParameters = SerializationManager.ReadAllNoiseParameters();
     }
 
     private ReorderableList DisplayParameterList() {
@@ -39,6 +45,7 @@ public class ParameterEditorWidget : Editor {
         };
         return ReorderableParameterList;
     }
+
     public override void OnInspectorGUI() {
         DrawTerrainGenerationProperties();
         serializedObject.Update();
@@ -46,8 +53,19 @@ public class ParameterEditorWidget : Editor {
         serializedObject.ApplyModifiedProperties();
         EditorUtility.SetDirty(TerrainGenerationScript);
     }
+
     public void DrawTerrainGenerationProperties() {
-        TerrainGenerationScript.TerrainTextureType = (TerrainGeneration.TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.TerrainTextureType);
+        EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer (for runtime use):");
+        NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
+        if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
+            NoiseParameters currentNoiseParameters = new NoiseParameters(TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
+                TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.Seed,
+                TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
+            SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
+        }
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
+        TerrainGenerationScript.TerrainTextureType = (NoiseParameters.TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.TerrainTextureType);
         var noiseScale = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Noise Scale", TerrainGenerationScript.NoiseScale);
         TerrainGenerationScript.NoiseScale = noiseScale <= 0 ? 0.0001f : noiseScale;
         var baseFrequency = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Base Frequecny", TerrainGenerationScript.BaseFrequency);
@@ -59,10 +77,10 @@ public class ParameterEditorWidget : Editor {
         TerrainGenerationScript.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainGenerationScript.Seed);
         TerrainGenerationScript.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainGenerationScript.UserOffset);
         TerrainGenerationScript.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.CustomFunction);
-        if(TerrainGenerationScript.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) { 
+        if (TerrainGenerationScript.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) {
             var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", TerrainGenerationScript.CustomExponent);
             TerrainGenerationScript.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
-            }
+        }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         // @TODO, add a button that saves the current preset of all parameters (serialize or just put as default values in TerrainGeneration)
     }

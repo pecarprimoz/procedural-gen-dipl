@@ -4,13 +4,13 @@ using UnityEngine;
 
 public static class TextureGeneration {
     public static Color[] GenerateHeightmapTexture(int terrainWidth, int terrainHeight,
-        float[,] currentTerrain, List<TerrainParameters> terrainParameterList, TerrainGeneration.TextureType textureType) {
+        float[,] currentTerrain, List<TerrainParameters> terrainParameterList, NoiseParameters.TextureType textureType) {
         Color[] terrainTexture = new Color[terrainWidth * terrainHeight];
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
                 float currentHeight = currentTerrain[x, y];
                 switch (textureType) {
-                    case TerrainGeneration.TextureType.kColored:
+                    case NoiseParameters.TextureType.kColored:
                         for (int i = 0; i < terrainParameterList.Count; i++) {
                             var parameter = terrainParameterList[i];
                             if (currentHeight <= parameter.ParameterBoundry) {
@@ -19,7 +19,7 @@ public static class TextureGeneration {
                             }
                         }
                         break;
-                    case TerrainGeneration.TextureType.kGrayscale:
+                    case NoiseParameters.TextureType.kGrayscale:
                         terrainTexture[y * terrainWidth + x] = Color.Lerp(Color.white, Color.black, currentHeight);
                         break;
                     default:

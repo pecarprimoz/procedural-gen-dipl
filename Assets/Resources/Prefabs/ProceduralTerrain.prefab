@@ -67,25 +67,25 @@ MonoBehaviour:
   TerrainParameterList:
   - Name: Water
     ParameterBoundry: 0.2
-    TerrainColor: {r: 0.3537736, g: 0.7051743, b: 1, a: 1}
+    TerrainColorVector: {x: 1, y: 0, z: 0, w: 0}
   - Name: Beach
     ParameterBoundry: 0.3
-    TerrainColor: {r: 0.8207547, g: 0.7384938, b: 0.25938943, a: 1}
+    TerrainColorVector: {x: 0.06132078, y: 0.13505524, z: 1, w: 1}
   - Name: DirtOne
     ParameterBoundry: 0.5
-    TerrainColor: {r: 0.5377358, g: 0.29616535, b: 0.18009079, a: 0}
+    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
   - Name: DirtTwo
     ParameterBoundry: 0.6
-    TerrainColor: {r: 0.3490566, g: 0.16300283, b: 0.16300283, a: 0}
+    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
   - Name: Grass
     ParameterBoundry: 0.85
-    TerrainColor: {r: 0.53152895, g: 1, b: 0.0047169924, a: 1}
+    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
   - Name: Snow
     ParameterBoundry: 0.9
-    TerrainColor: {r: 1, g: 1, b: 1, a: 1}
+    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
   - Name: MntRocks
     ParameterBoundry: 1
-    TerrainColor: {r: 0.21698111, g: 0.21595761, b: 0.21595761, a: 0}
+    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
 --- !u!154 &154853691429667714
 TerrainCollider:
   m_ObjectHideFlags: 1
