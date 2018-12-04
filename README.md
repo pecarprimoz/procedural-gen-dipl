@@ -10,6 +10,9 @@ can also edit these properties when the project is running.
 ##### Optional
 `DebugTerrainCamera` displays the heightmap on the `DebugPlane`, if you want to see the terrain from an 
 orthographic perspective, turn on `CameraTerrain`.
+##### Issues
+Prefabs breaking ? Download the correct Unity version.
+
 ### Examples WIP
 ![Example1](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex1.png)
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex2.png)
