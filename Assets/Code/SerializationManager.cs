@@ -17,12 +17,9 @@ public class SerializationManager {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             MaxDepth = 1
         });
-        if (!File.Exists(path)) {
-            using (StreamWriter file = new StreamWriter(path)) {
-                file.Write(jsonObject);
-            }
-        } else {
-            Debug.LogError(string.Format("Cannot write to file {0}, file with same name already exists", path));
+        // User can overwrite his file
+        using (StreamWriter file = new StreamWriter(path)) {
+            file.Write(jsonObject);
         }
     }
     public static List<NoiseParameters> ReadAllNoiseParameters() {

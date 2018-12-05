@@ -7,14 +7,21 @@ using System.Collections.Generic;
 public class ParameterEditorWidget : Editor {
     private ReorderableList ReorderableParameterList;
     private TerrainGeneration TerrainGenerationScript;
+    private int CurrentSelectedIndex = 0;
     private string NoisePresetName = string.Empty;
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
+    public string[] AllParameterNames;
+
     private void OnEnable() {
         TerrainGenerationScript = (TerrainGeneration)target;
+        // You dont have deserialize every frame, very costly.
+        AllParameters = SerializationManager.ReadAllNoiseParameters();
+        AllParameterNames = new string[AllParameters.Count];
+        for (int i = 0; i < AllParameters.Count; i++) {
+            AllParameterNames[i] = AllParameters[i].NoiseParameterName;
+        }
     }
     private void OnSceneGUI() {
-        // TODO, IMPLEMENT A DRAWABLE LIST FOR ALL SERIALIZED PARAMETERS
-        AllParameters = SerializationManager.ReadAllNoiseParameters();
     }
 
     private ReorderableList DisplayParameterList() {
@@ -55,10 +62,26 @@ public class ParameterEditorWidget : Editor {
     }
 
     public void DrawTerrainGenerationProperties() {
+        if (AllParameterNames.Length > 0) {
+            CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames);
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
+                var loadedNoiseParameterPreset = AllParameters[CurrentSelectedIndex];
+                TerrainGenerationScript.TerrainTextureType = loadedNoiseParameterPreset.TerrainTextureType;
+                TerrainGenerationScript.NoiseScale = loadedNoiseParameterPreset.NoiseScale;
+                TerrainGenerationScript.BaseFrequency = loadedNoiseParameterPreset.BaseFrequency;
+                TerrainGenerationScript.Persistance = loadedNoiseParameterPreset.Persistance;
+                TerrainGenerationScript.Lacunarity = loadedNoiseParameterPreset.Lacunarity;
+                TerrainGenerationScript.Seed = loadedNoiseParameterPreset.Seed;
+                TerrainGenerationScript.UserOffset = loadedNoiseParameterPreset.UserOffset;
+                TerrainGenerationScript.CustomFunction = loadedNoiseParameterPreset.CustomFunction;
+                TerrainGenerationScript.CustomExponent = loadedNoiseParameterPreset.CustomExponent;
+                TerrainGenerationScript.TerrainParameterList = loadedNoiseParameterPreset.TerrainParameterList;
+            }
+        }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer (for runtime use):");
         NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-            NoiseParameters currentNoiseParameters = new NoiseParameters(TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
+            NoiseParameters currentNoiseParameters = new NoiseParameters(NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
                 TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.Seed,
                 TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
             SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);

@@ -7,6 +7,8 @@ public class NoiseParameters {
         kGrayscale,
         kColored
     }
+    public string NoiseParameterName = string.Empty;
+
     // Controls for the perlin generation
     public float NoiseScale;
     public float BaseFrequency;
@@ -22,9 +24,10 @@ public class NoiseParameters {
     public TextureType TerrainTextureType;
     public List<TerrainParameters> TerrainParameterList;
 
-    public NoiseParameters(List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
+    public NoiseParameters(string name, List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
         float persistance, float lacunarity, int numberOfOctaves, string seed, NoiseGeneration.CustomFunctionType customFunction,
         float customExponent, TextureType terrainTextureType) {
+        NoiseParameterName = name;
         NoiseScale = noiseScale;
         BaseFrequency = baseFrequency;
         Persistance = persistance;
