@@ -11,8 +11,13 @@ public static class NoiseGeneration {
         kPi,
         kCustom
     }
+    public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, NoiseParameters param) {
+        return GenerateTerrain(terrainWidth, terrainHeight, param.Seed, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
+            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent);
+    }
+
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType = CustomFunctionType.kNone, float customExponent = 2.0f) {
+        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType , float customExponent) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
