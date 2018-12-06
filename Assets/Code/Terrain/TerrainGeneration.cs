@@ -37,6 +37,7 @@ public class TerrainGeneration : MonoBehaviour {
     }
 
     void InitializeTerrain() {
+        // Currently we do one pass of perlin noise, need to do 3 generations at least for the weather and moisture map
         _Terrain.terrainData.heightmapResolution = TerrainWidth < TerrainHeight ? TerrainWidth : TerrainHeight;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,

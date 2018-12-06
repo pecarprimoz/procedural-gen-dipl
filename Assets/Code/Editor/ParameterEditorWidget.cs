@@ -10,16 +10,11 @@ public class ParameterEditorWidget : Editor {
     private int CurrentSelectedIndex = 0;
     private string NoisePresetName = string.Empty;
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
-    public string[] AllParameterNames;
+    public string[] AllParameterNames = new string[0];
 
     private void OnEnable() {
         TerrainGenerationScript = (TerrainGeneration)target;
-        // You dont have deserialize every frame, very costly.
-        AllParameters = SerializationManager.ReadAllNoiseParameters();
-        AllParameterNames = new string[AllParameters.Count];
-        for (int i = 0; i < AllParameters.Count; i++) {
-            AllParameterNames[i] = AllParameters[i].NoiseParameterName;
-        }
+        TryGeneratingSavedParameterList();
     }
 
     private ReorderableList DisplayParameterList() {
@@ -67,11 +62,7 @@ public class ParameterEditorWidget : Editor {
             if (GUILayout.Button("Delete selected preset", GUILayout.MaxWidth(200))) {
                 SerializationManager.DeleteNoiseParameter(AllParameterNames[CurrentSelectedIndex]);
                 AllParameters.RemoveAt(CurrentSelectedIndex);
-                AllParameters = SerializationManager.ReadAllNoiseParameters();
-                AllParameterNames = new string[AllParameters.Count];
-                for (int i = 0; i < AllParameters.Count; i++) {
-                    AllParameterNames[i] = AllParameters[i].NoiseParameterName;
-                }
+                TryGeneratingSavedParameterList();
             }
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
@@ -95,6 +86,7 @@ public class ParameterEditorWidget : Editor {
                 TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.Seed,
                 TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
             SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
+            TryGeneratingSavedParameterList();
         }
         EditorGUILayout.Space();
         EditorGUILayout.Space();
@@ -116,5 +108,14 @@ public class ParameterEditorWidget : Editor {
         }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         // @TODO, add a button that saves the current preset of all parameters (serialize or just put as default values in TerrainGeneration)
+    }
+
+    private void TryGeneratingSavedParameterList() {
+        // You dont have deserialize every frame, very costly.
+        AllParameters = SerializationManager.ReadAllNoiseParameters();
+        AllParameterNames = new string[AllParameters.Count];
+        for (int i = 0; i < AllParameters.Count; i++) {
+            AllParameterNames[i] = AllParameters[i].NoiseParameterName;
+        }
     }
 }
