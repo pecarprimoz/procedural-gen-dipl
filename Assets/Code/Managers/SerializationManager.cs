@@ -34,5 +34,15 @@ public class SerializationManager {
         }
         return allNoiseParameters;
     }
+    public static void DeleteNoiseParameter(string name) {
+        string path = string.Format("{0}{1}.json", NoiseParameterLocation, name);
+        string pathMeta = string.Format("{0}{1}.json.meta", NoiseParameterLocation, name);
+        if (File.Exists(path)) {
+            File.Delete(path);
+            File.Delete(pathMeta);
+        } else {
+            Debug.LogErrorFormat("{0} does not exist !", path);
+        }
+    }
 
 }

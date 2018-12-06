@@ -21,8 +21,6 @@ public class ParameterEditorWidget : Editor {
             AllParameterNames[i] = AllParameters[i].NoiseParameterName;
         }
     }
-    private void OnSceneGUI() {
-    }
 
     private ReorderableList DisplayParameterList() {
         if (ReorderableParameterList != null) {
@@ -63,7 +61,19 @@ public class ParameterEditorWidget : Editor {
 
     public void DrawTerrainGenerationProperties() {
         if (AllParameterNames.Length > 0) {
-            CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames);
+            GUILayout.Label("Saved parameter presets");
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
+            CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames, GUILayout.Width(250));
+            if (GUILayout.Button("Delete selected preset", GUILayout.MaxWidth(200))) {
+                SerializationManager.DeleteNoiseParameter(AllParameterNames[CurrentSelectedIndex]);
+                AllParameters.RemoveAt(CurrentSelectedIndex);
+                AllParameters = SerializationManager.ReadAllNoiseParameters();
+                AllParameterNames = new string[AllParameters.Count];
+                for (int i = 0; i < AllParameters.Count; i++) {
+                    AllParameterNames[i] = AllParameters[i].NoiseParameterName;
+                }
+            }
+            GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
                 var loadedNoiseParameterPreset = AllParameters[CurrentSelectedIndex];
                 TerrainGenerationScript.TerrainTextureType = loadedNoiseParameterPreset.TerrainTextureType;
