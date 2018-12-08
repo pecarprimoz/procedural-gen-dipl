@@ -33,7 +33,7 @@ public class TerrainGeneration : MonoBehaviour {
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
 
     // Temporary parameters, will be removed in the future
-    private GenerationType _GenerationType = GenerationType.kMultiPerlin;
+    private GenerationType _GenerationType = GenerationType.kDev;
 
     void Start() {
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values

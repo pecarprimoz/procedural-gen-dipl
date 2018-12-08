@@ -9,6 +9,7 @@ public class ParameterEditorWidget : Editor {
     private TerrainGeneration TerrainGenerationScript;
     private int CurrentSelectedIndex = 0;
     private string NoisePresetName = string.Empty;
+    private int DeleteFailsafe = 0;
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     public string[] AllParameterNames = new string[0];
 
@@ -58,11 +59,18 @@ public class ParameterEditorWidget : Editor {
         if (AllParameterNames.Length > 0) {
             GUILayout.Label("Saved parameter presets");
             GUILayout.BeginHorizontal(GUILayout.Width(250));
+            var lastIndex = CurrentSelectedIndex;
             CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames, GUILayout.Width(250));
-            if (GUILayout.Button("Delete selected preset", GUILayout.MaxWidth(200))) {
-                SerializationManager.DeleteNoiseParameter(AllParameterNames[CurrentSelectedIndex]);
-                AllParameters.RemoveAt(CurrentSelectedIndex);
-                TryGeneratingSavedParameterList();
+            DeleteFailsafe = lastIndex != CurrentSelectedIndex ? 0 : DeleteFailsafe;
+            if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
+                if (DeleteFailsafe == 2) {
+                    DeleteFailsafe = 0;
+                    SerializationManager.DeleteNoiseParameter(AllParameterNames[CurrentSelectedIndex]);
+                    AllParameters.RemoveAt(CurrentSelectedIndex);
+                    TryGeneratingSavedParameterList();
+                } else {
+                    DeleteFailsafe++;
+                }
             }
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
