@@ -71,7 +71,7 @@ public static class NoiseGeneration {
                         currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent);
                         break;
                     case CustomFunctionType.kNone:
-                        currentTerrain[x, y] = 0.2f + currentTerrain[x,y];
+                        currentTerrain[x, y] =  Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]);
                         break;
                     default:
                         currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]);

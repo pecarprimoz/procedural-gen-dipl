@@ -33,7 +33,7 @@ public class TerrainGeneration : MonoBehaviour {
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
 
     // Temporary parameters, will be removed in the future
-    private GenerationType _GenerationType = GenerationType.kDev;
+    public GenerationType _GenerationType = GenerationType.kMultiPerlin;
 
     void Start() {
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values
@@ -54,41 +54,49 @@ public class TerrainGeneration : MonoBehaviour {
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
         switch (_GenerationType) {
             case GenerationType.kDev:
-                TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
-                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent);
-                _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+                GenerateTerrainFromPreset();
                 break;
             case GenerationType.kMultiPerlin:
-                // For now working with 3 noiseParameters, base > moisture > weather
-                // This is subject to change, produces interesting results tho, need to play with diff weights and maps
-                List<NoiseParameters> noiseParameterList = SerializationManager.ReadAllNoiseParameters();
-                var baseParam = noiseParameterList[0];
-                var moistureParam = noiseParameterList[1];
-                var weatherParam = noiseParameterList[2];
-                List<float[,]> heightMaps = new List<float[,]>();
-                heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, baseParam));
-                heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, moistureParam));
-                heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, weatherParam));
-                float[,] endMap = new float[TerrainWidth, TerrainHeight];
-                float weight = 0.6f;
-                foreach (var heightMap in heightMaps) {
-                    for (int y = 0; y < TerrainHeight; y++) {
-                        for (int x = 0; x < TerrainWidth; x++) {
-                            heightMap[x, y] *= weight;
-                        }
-                    }
-                    weight -= 0.2f;
-                    for (int y = 0; y < TerrainHeight; y++) {
-                        for (int x = 0; x < TerrainWidth; x++) {
-                            endMap[x, y] += heightMap[x, y];
-                        }
-                    }
-                }
-                _Terrain.terrainData.SetHeights(0, 0, endMap);
+                MultiPerlinTerrainGeneration();
                 break;
             default:
                 Debug.LogError("Unknown generation type");
                 break;
         }
+    }
+
+    private void GenerateTerrainFromPreset() {
+        TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
+                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent);
+        _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+    }
+
+    private void MultiPerlinTerrainGeneration() {
+        // For now working with 3 noiseParameters, base > moisture > weather
+        // This is subject to change, produces interesting results tho, need to play with diff weights and maps
+        List<NoiseParameters> noiseParameterList = SerializationManager.ReadAllNoiseParameters();
+        var baseParam = noiseParameterList[0];
+        var moistureParam = noiseParameterList[1];
+        var weatherParam = noiseParameterList[2];
+        List<float[,]> heightMaps = new List<float[,]>();
+        heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, baseParam));
+        heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, moistureParam));
+        heightMaps.Add(NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, weatherParam));
+        float[,] endMap = new float[TerrainWidth, TerrainHeight];
+        float weight = 0.6f;
+        foreach (var heightMap in heightMaps) {
+            for (int y = 0; y < TerrainHeight; y++) {
+                for (int x = 0; x < TerrainWidth; x++) {
+                    heightMap[x, y] *= weight;
+                }
+            }
+            weight -= 0.2f;
+            for (int y = 0; y < TerrainHeight; y++) {
+                for (int x = 0; x < TerrainWidth; x++) {
+                    endMap[x, y] += heightMap[x, y];
+                }
+            }
+        }
+        _Terrain.terrainData.SetHeights(0, 0, endMap);
     }
 }

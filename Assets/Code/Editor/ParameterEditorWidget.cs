@@ -56,6 +56,8 @@ public class ParameterEditorWidget : Editor {
     }
 
     public void DrawTerrainGenerationProperties() {
+        TerrainGenerationScript._GenerationType = (TerrainGeneration.GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._GenerationType);
+        EditorGUILayout.Space();
         if (AllParameterNames.Length > 0) {
             GUILayout.Label("Saved parameter presets");
             GUILayout.BeginHorizontal(GUILayout.Width(250));
