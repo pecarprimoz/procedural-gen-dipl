@@ -55,9 +55,8 @@ public class ParameterEditorWidget : Editor {
         EditorUtility.SetDirty(TerrainGenerationScript);
     }
 
-    public void DrawTerrainGenerationProperties() {
-        TerrainGenerationScript._GenerationType = (TerrainGeneration.GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._GenerationType);
-        EditorGUILayout.Space();
+    private void DrawLoadSaveGUI() {
+        // Draws the GUI widgets for picking and deleting parameters
         if (AllParameterNames.Length > 0) {
             GUILayout.Label("Saved parameter presets");
             GUILayout.BeginHorizontal(GUILayout.Width(250));
@@ -87,9 +86,11 @@ public class ParameterEditorWidget : Editor {
                 TerrainGenerationScript.CustomFunction = loadedNoiseParameterPreset.CustomFunction;
                 TerrainGenerationScript.CustomExponent = loadedNoiseParameterPreset.CustomExponent;
                 TerrainGenerationScript.TerrainParameterList = loadedNoiseParameterPreset.TerrainParameterList;
+                ReorderableParameterList = null;
             }
         }
-        EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer (for runtime use):");
+        // Draws the GUI widgets for saving presets
+        EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer, saves the current configuration.");
         NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
             NoiseParameters currentNoiseParameters = new NoiseParameters(NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
@@ -100,6 +101,9 @@ public class ParameterEditorWidget : Editor {
         }
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+    }
+
+    public void DrawNoiseParameterGUI() {
         TerrainGenerationScript.TerrainTextureType = (NoiseParameters.TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.TerrainTextureType);
         var noiseScale = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Noise Scale", TerrainGenerationScript.NoiseScale);
         TerrainGenerationScript.NoiseScale = noiseScale <= 0 ? 0.0001f : noiseScale;
@@ -117,7 +121,14 @@ public class ParameterEditorWidget : Editor {
             TerrainGenerationScript.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
         }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
-        // @TODO, add a button that saves the current preset of all parameters (serialize or just put as default values in TerrainGeneration)
+    }
+
+    public void DrawTerrainGenerationProperties() {
+        GUILayout.Label("Pick a generation type");
+        TerrainGenerationScript._GenerationType = (TerrainGeneration.GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._GenerationType);
+        EditorGUILayout.Space();
+        DrawLoadSaveGUI();
+        DrawNoiseParameterGUI();
     }
 
     private void TryGeneratingSavedParameterList() {

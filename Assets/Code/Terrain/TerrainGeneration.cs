@@ -97,6 +97,7 @@ public class TerrainGeneration : MonoBehaviour {
                 }
             }
         }
+        TerrainHeightMap = endMap;
         _Terrain.terrainData.SetHeights(0, 0, endMap);
     }
 }

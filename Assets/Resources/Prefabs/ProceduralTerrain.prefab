@@ -64,28 +64,8 @@ MonoBehaviour:
   CustomExponent: 2
   TerrainTextureType: 0
   _Terrain: {fileID: 218874898587846492}
-  TerrainParameterList:
-  - Name: Water
-    ParameterBoundry: 0.2
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: Beach
-    ParameterBoundry: 0.3
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: DirtOne
-    ParameterBoundry: 0.5
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: DirtTwo
-    ParameterBoundry: 0.6
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: Grass
-    ParameterBoundry: 0.85
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: Snow
-    ParameterBoundry: 0.9
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
-  - Name: MntRocks
-    ParameterBoundry: 1
-    TerrainColorVector: {x: 0, y: 0, z: 0, w: 0}
+  TerrainParameterList: []
+  _GenerationType: 0
 --- !u!154 &154853691429667714
 TerrainCollider:
   m_ObjectHideFlags: 1
