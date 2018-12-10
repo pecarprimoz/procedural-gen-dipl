@@ -16,6 +16,10 @@ public class ParameterEditorWidget : Editor {
     private void OnEnable() {
         TerrainGenerationScript = (TerrainGeneration)target;
         TryGeneratingSavedParameterList();
+        // This is to have the parameter list already loaded
+        if (AllParameters.Count > 0) {
+            TerrainGenerationScript.TerrainParameterList = AllParameters[0].TerrainParameterList;
+        }
     }
 
     private ReorderableList DisplayParameterList() {
@@ -132,7 +136,6 @@ public class ParameterEditorWidget : Editor {
     }
 
     private void TryGeneratingSavedParameterList() {
-        // You dont have deserialize every frame, very costly.
         AllParameters = SerializationManager.ReadAllNoiseParameters();
         AllParameterNames = new string[AllParameters.Count];
         for (int i = 0; i < AllParameters.Count; i++) {
