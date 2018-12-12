@@ -85,6 +85,8 @@ public class ParameterEditorWidget : Editor {
                 TerrainGenerationScript.BaseFrequency = loadedNoiseParameterPreset.BaseFrequency;
                 TerrainGenerationScript.Persistance = loadedNoiseParameterPreset.Persistance;
                 TerrainGenerationScript.Lacunarity = loadedNoiseParameterPreset.Lacunarity;
+                TerrainGenerationScript.NumberOfOctaves = loadedNoiseParameterPreset.NumberOfOctaves;
+                TerrainGenerationScript.GlobalNoiseAddition = loadedNoiseParameterPreset.GlobalNoiseAddition;
                 TerrainGenerationScript.Seed = loadedNoiseParameterPreset.Seed;
                 TerrainGenerationScript.UserOffset = loadedNoiseParameterPreset.UserOffset;
                 TerrainGenerationScript.CustomFunction = loadedNoiseParameterPreset.CustomFunction;
@@ -98,7 +100,7 @@ public class ParameterEditorWidget : Editor {
         NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
             NoiseParameters currentNoiseParameters = new NoiseParameters(NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
-                TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.Seed,
+                TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.GlobalNoiseAddition,TerrainGenerationScript.Seed,
                 TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
             SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
             TryGeneratingSavedParameterList();
@@ -117,8 +119,11 @@ public class ParameterEditorWidget : Editor {
         TerrainGenerationScript.Persistance = persistance <= 0 ? 0.0001f : persistance;
         var lacunarity = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Lacunarity", TerrainGenerationScript.Lacunarity);
         TerrainGenerationScript.Lacunarity = lacunarity <= 0 ? 0.0001f : lacunarity;
+        var octaves = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "Number of octaves", TerrainGenerationScript.NumberOfOctaves);
+        TerrainGenerationScript.NumberOfOctaves = octaves <= 0 ? 1 : octaves;
         TerrainGenerationScript.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainGenerationScript.Seed);
         TerrainGenerationScript.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainGenerationScript.UserOffset);
+        TerrainGenerationScript.GlobalNoiseAddition  = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Global noise add", TerrainGenerationScript.GlobalNoiseAddition);
         TerrainGenerationScript.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.CustomFunction);
         if (TerrainGenerationScript.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) {
             var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", TerrainGenerationScript.CustomExponent);

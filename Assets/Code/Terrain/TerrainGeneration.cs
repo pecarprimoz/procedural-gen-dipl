@@ -18,6 +18,7 @@ public class TerrainGeneration : MonoBehaviour {
     public float Persistance = 0.5f;
     public float Lacunarity = 2.0f;
     public int NumberOfOctaves = 3;
+    public float GlobalNoiseAddition = 0.0f;
 
     public string Seed = "";
     public Vector2 UserOffset = Vector2.zero;
@@ -67,7 +68,7 @@ public class TerrainGeneration : MonoBehaviour {
 
     private void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
-                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent);
+                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition);
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
 

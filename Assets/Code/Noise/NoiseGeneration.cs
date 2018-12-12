@@ -13,11 +13,11 @@ public static class NoiseGeneration {
     }
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, NoiseParameters param) {
         return GenerateTerrain(terrainWidth, terrainHeight, param.Seed, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
-            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent);
+            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition);
     }
 
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType , float customExponent) {
+        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
@@ -68,13 +68,13 @@ public static class NoiseGeneration {
                         currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Epsilon);
                         break;
                     case CustomFunctionType.kCustom:
-                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent);
+                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent) + userAddition;
                         break;
                     case CustomFunctionType.kNone:
-                        currentTerrain[x, y] =  Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]);
+                        currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
                         break;
                     default:
-                        currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]);
+                        currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
                         break;
                 }
             }

@@ -15,6 +15,7 @@ public class NoiseParameters {
     public float Persistance;
     public float Lacunarity;
     public int NumberOfOctaves;
+    public float GlobalNoiseAddition;
 
     public string Seed;
     public Vector2 UserOffset;
@@ -25,7 +26,7 @@ public class NoiseParameters {
     public List<TerrainParameters> TerrainParameterList;
 
     public NoiseParameters(string name, List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
-        float persistance, float lacunarity, int numberOfOctaves, string seed, NoiseGeneration.CustomFunctionType customFunction,
+        float persistance, float lacunarity, int numberOfOctaves, float globalNoiseAddition, string seed, NoiseGeneration.CustomFunctionType customFunction,
         float customExponent, TextureType terrainTextureType) {
         NoiseParameterName = name;
         NoiseScale = noiseScale;
@@ -33,6 +34,7 @@ public class NoiseParameters {
         Persistance = persistance;
         Lacunarity = lacunarity;
         NumberOfOctaves = numberOfOctaves;
+        GlobalNoiseAddition = globalNoiseAddition;
         Seed = seed;
         UserOffset = userOffset;
         CustomFunction = customFunction;
