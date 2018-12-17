@@ -54,16 +54,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NoiseScale: 85
-  BaseFrequency: 1.5
+  BaseFrequency: 2.3
   Persistance: 0.2
-  Lacunarity: 4
-  NumberOfOctaves: 3
-  GlobalNoiseAddition: -0.5
-  Seed: Seedy
+  Lacunarity: 3
+  NumberOfOctaves: 4
+  GlobalNoiseAddition: -0.35
+  Seed: 
   UserOffset: {x: 0, y: 0}
-  CustomFunction: 0
-  CustomExponent: 2
-  TerrainTextureType: 0
+  CustomFunction: 5
+  CustomExponent: 0.1
+  TerrainTextureType: 1
   _Terrain: {fileID: 218874898587846492}
   TerrainParameterList:
   - TerrainTexture: {fileID: 0}

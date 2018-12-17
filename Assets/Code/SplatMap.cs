@@ -3,8 +3,19 @@ using System.Linq;
 using System.Collections.Generic;
 
 public class AssignSplatMap : MonoBehaviour {
-
+    private static bool ValidParameterCheck(List<TerrainParameters> terrainParameterList) {
+        foreach (var parameter in terrainParameterList) {
+            if (parameter.TerrainTexture == null) {
+                return false;
+            }
+        }
+        return true;
+    }
     public static void DoSplat(Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList) {
+        if (!ValidParameterCheck(terrainParameterList)) {
+            Debug.LogError("Invalid textures for splat mapping, make sure you have textures set in the reorderable list!");
+            return;
+        }
         float[,,] splatmapData = new float[128, 128, terrainParameterList.Count];
         SplatPrototype[] splat_lists = new SplatPrototype[terrainParameterList.Count];
         for (int i = 0; i < splat_lists.Length; i++) {
@@ -32,7 +43,7 @@ public class AssignSplatMap : MonoBehaviour {
                 // CHANGE THE RULES BELOW TO SET THE WEIGHTS OF EACH TEXTURE ON WHATEVER RULES YOU WANT
 
                 // Texture[0] has constant influence
-                splatWeights[0] = 0.5f;
+                splatWeights[0] = 1.0f;
 
                 // Texture[1] is stronger at lower altitudes
                 splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
@@ -49,6 +60,7 @@ public class AssignSplatMap : MonoBehaviour {
                 float z = splatWeights.Sum();
 
                 // Loop through each terrain texture
+                //@TODO change this to terrainData.alphamapLayers
                 for (int i = 0; i < 4; i++) {
 
                     // Normalize so that sum of all texture weights = 1
