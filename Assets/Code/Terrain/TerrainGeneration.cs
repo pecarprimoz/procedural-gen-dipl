@@ -46,11 +46,6 @@ public class TerrainGeneration : MonoBehaviour {
     }
 
     void InitializeTerrain() {
-        // Currently we do one pass of perlin noise, need to do 3 generations at least for the weather and moisture map
-        // One possible idea, generate 3 perlin noise maps, with different parameters somewhat resembling terrain/weather/moisture maps
-        // Deserialize them here and pass them trough a limiter (since we want even terrain, we wont have huge peaks, stuff like this
-        // needs to be normalised (take a base height ex. 0.5 then pass the terrain map trough it, then add the weather and moisture maps
-        // with a lower weight (terrain weight 0.7, moisture 0.2, weather 0.1 not sure about this)
         _Terrain.terrainData.heightmapResolution = TerrainWidth < TerrainHeight ? TerrainWidth : TerrainHeight;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
         switch (_GenerationType) {
@@ -70,6 +65,7 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition);
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+        // do this only once, kills performance
     }
 
     private void MultiPerlinTerrainGeneration() {

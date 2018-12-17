@@ -58,13 +58,49 @@ MonoBehaviour:
   Persistance: 0.2
   Lacunarity: 4
   NumberOfOctaves: 3
+  GlobalNoiseAddition: -0.5
   Seed: Seedy
   UserOffset: {x: 0, y: 0}
   CustomFunction: 0
   CustomExponent: 2
   TerrainTextureType: 0
   _Terrain: {fileID: 218874898587846492}
-  TerrainParameterList: []
+  TerrainParameterList:
+  - TerrainTexture: {fileID: 0}
+    Name: Water
+    ParameterBoundry: 0.2
+    TerrainColorVector: {x: 0.2688679, y: 0.7073334, z: 1, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: Beach
+    ParameterBoundry: 0.3
+    TerrainColorVector: {x: 0.9418874, y: 1, z: 0.33490568, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: DirtOne
+    ParameterBoundry: 0.5
+    TerrainColorVector: {x: 0.5660378, y: 0.30158642, z: 0.17354932, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: DirtTwo
+    ParameterBoundry: 0.6
+    TerrainColorVector: {x: 0.2924528, y: 0.15619278, z: 0.0731132, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: Grass
+    ParameterBoundry: 0.85
+    TerrainColorVector: {x: 0.13050124, y: 0.38679248, z: 0.10399608, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: Snow
+    ParameterBoundry: 0.9
+    TerrainColorVector: {x: 1, y: 1, z: 1, w: 1}
+    TexturePath: 
+  - TerrainTexture: {fileID: 0}
+    Name: MntRocks
+    ParameterBoundry: 1
+    TerrainColorVector: {x: 0.23584908, y: 0.2302866, z: 0.2302866, w: 1}
+    TexturePath: 
   _GenerationType: 0
 --- !u!154 &154853691429667714
 TerrainCollider:

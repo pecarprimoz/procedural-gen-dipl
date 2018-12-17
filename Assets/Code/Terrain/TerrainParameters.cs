@@ -12,14 +12,18 @@ public struct TerrainParameters {
         get { return _TerrainColor; }
         set { _TerrainColor = value; TerrainColorVector = value; }
     }
+    [JsonIgnore]
+    public Texture2D TerrainTexture;
 
     public string Name;
     public float ParameterBoundry;
     public Vector4 TerrainColorVector;
-
-    public TerrainParameters(string name, float parameterBoundry, Color c) {
+    public string TexturePath; 
+    public TerrainParameters(string name, float parameterBoundry, Color c, string texturePath) {
         Name = name;
         ParameterBoundry = parameterBoundry;
         _TerrainColor = TerrainColorVector = c;
+        TexturePath = texturePath;
+        TerrainTexture = Resources.Load(texturePath) as Texture2D;
     }
 }

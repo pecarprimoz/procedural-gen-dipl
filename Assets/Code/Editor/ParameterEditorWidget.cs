@@ -27,7 +27,7 @@ public class ParameterEditorWidget : Editor {
             return ReorderableParameterList;
         }
         ReorderableParameterList = new ReorderableList(TerrainGenerationScript.TerrainParameterList, typeof(TerrainParameters), true, true, true, true);
-        ReorderableParameterList.elementHeight = 22.0f * 3;
+        ReorderableParameterList.elementHeight = 22.0f * 5;
         ReorderableParameterList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
             var currentParameter = TerrainGenerationScript.TerrainParameterList[index];
             rect.height = 20.0f;
@@ -38,7 +38,25 @@ public class ParameterEditorWidget : Editor {
             rect.height = 22.0f;
             rect.y += 22.0f;
             currentParameter.TerrainColor = EditorGUI.ColorField(rect, "Color", currentParameter.TerrainColor);
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            EditorGUI.LabelField(rect, currentParameter.TexturePath);
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            // Edge case if textures exist in runtime
+            if (currentParameter.TexturePath == null && currentParameter.TerrainTexture != null) {
+                currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
+            }
+            if (currentParameter.TerrainTexture == null && currentParameter.TexturePath != null) {
+                currentParameter.TerrainTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePath, typeof(Texture2D));
+            }
+            var newTerrainTexture = (Texture2D)EditorGUI.ObjectField(rect, "Texture", currentParameter.TerrainTexture, typeof(Texture2D));
+            if (newTerrainTexture != currentParameter.TerrainTexture) {
+                currentParameter.TerrainTexture = newTerrainTexture;
+                currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
+            }
             TerrainGenerationScript.TerrainParameterList[index] = currentParameter;
+            EditorGUILayout.Separator();
         };
         ReorderableParameterList.drawHeaderCallback = (Rect rect) => {
             EditorGUI.LabelField(rect, string.Format("Parameter list"));
@@ -79,6 +97,7 @@ public class ParameterEditorWidget : Editor {
             }
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
+                TryGeneratingSavedParameterList();
                 var loadedNoiseParameterPreset = AllParameters[CurrentSelectedIndex];
                 TerrainGenerationScript.TerrainTextureType = loadedNoiseParameterPreset.TerrainTextureType;
                 TerrainGenerationScript.NoiseScale = loadedNoiseParameterPreset.NoiseScale;
@@ -100,7 +119,7 @@ public class ParameterEditorWidget : Editor {
         NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
             NoiseParameters currentNoiseParameters = new NoiseParameters(NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
-                TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.GlobalNoiseAddition,TerrainGenerationScript.Seed,
+                TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.GlobalNoiseAddition, TerrainGenerationScript.Seed,
                 TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
             SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
             TryGeneratingSavedParameterList();
@@ -123,11 +142,14 @@ public class ParameterEditorWidget : Editor {
         TerrainGenerationScript.NumberOfOctaves = octaves <= 0 ? 1 : octaves;
         TerrainGenerationScript.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainGenerationScript.Seed);
         TerrainGenerationScript.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainGenerationScript.UserOffset);
-        TerrainGenerationScript.GlobalNoiseAddition  = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Global noise add", TerrainGenerationScript.GlobalNoiseAddition);
+        TerrainGenerationScript.GlobalNoiseAddition = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Global noise add", TerrainGenerationScript.GlobalNoiseAddition);
         TerrainGenerationScript.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript.CustomFunction);
         if (TerrainGenerationScript.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) {
             var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", TerrainGenerationScript.CustomExponent);
             TerrainGenerationScript.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
+        }
+        if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
+            AssignSplatMap.DoSplat(TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList);
         }
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
     }
