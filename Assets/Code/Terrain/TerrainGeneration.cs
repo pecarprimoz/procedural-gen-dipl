@@ -64,8 +64,38 @@ public class TerrainGeneration : MonoBehaviour {
     private void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition);
+        ErodeTerrainMap(ref TerrainHeightMap, TerrainWidth, TerrainHeight, 6);
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
-        // do this only once, kills performance
+    }
+
+    private void ErodeTerrainMap(ref float[,] terrainMap, int width, int height, int iter) {
+        float heightTreshold = 0.9f;
+        float sharePercent = 0.5f;
+        for (int i = 0; i < iter; i++) {
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    // using neummans neighbours
+                    /*
+                     *    h1
+                     * h2 h0 h3
+                     *    h4
+                     * */
+                    float h0 = terrainMap[x, y];
+                    float h1 = terrainMap[x, y - 1];
+                    float h2 = terrainMap[x - 1, y];
+                    float h3 = terrainMap[x + 1, y];
+                    float h4 = terrainMap[x, y + 1];
+                    if (h0 > heightTreshold) {
+                        float amtToShare = h0 * sharePercent;
+                        terrainMap[x, y] = h0 - 4.0f * amtToShare;
+                        terrainMap[x, y - 1] -= h1>heightTreshold ? 0 : amtToShare;
+                        terrainMap[x - 1, y] -= h2>heightTreshold ? 0 : amtToShare;
+                        terrainMap[x + 1, y] -= h3>heightTreshold ? 0 : amtToShare;
+                        terrainMap[x, y + 1] -= h4>heightTreshold ? 0 : amtToShare;
+                    }
+                }
+            }
+        }
     }
 
     private void MultiPerlinTerrainGeneration() {
