@@ -79,26 +79,24 @@ public class TerrainGeneration : MonoBehaviour {
         }
     }
 
-    private void GenerateTerrainFromPreset() { 
+    private void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition);
         switch (_ErosionType) {
             case ErosionType.kThermalErosion:
                 NormalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
-                Debug.Log("Normal erosion done!");
                 break;
             case ErosionType.kHydraulicErosion:
                 ImprovedErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
-                Debug.Log("Improved erosion done!");
                 break;
             case ErosionType.kImprovedErosion:
                 HydraulicErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
-                Debug.Log("Hydraulic done!");
                 break;
         }
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
 
+    //  source http://micsymposium.org/mics_2011_proceedings/mics2011_submission_30.pdf
     private void NormalErosion(ref float[,] terrainMap, int width, int height, int iter) {
         float talus = 4.0f / width;
         int
@@ -113,11 +111,9 @@ public class TerrainGeneration : MonoBehaviour {
                 for (int x = 1; x < width - 1; x++) {
                     current_height = terrainMap[x, y];
                     max_dif = -float.MaxValue;
-
                     for (int i = -1; i < 2; i += 2) {
                         for (int j = -1; j < 2; j += 2) {
                             current_difference = current_height - terrainMap[x + i, y + j];
-
                             if (current_difference > max_dif) {
                                 max_dif = current_difference;
                                 lowest_x = i;
@@ -127,7 +123,6 @@ public class TerrainGeneration : MonoBehaviour {
                     }
                     if (max_dif > talus) {
                         new_height = current_height - max_dif / 2.0f;
-
                         terrainMap[x, y] = new_height;
                         terrainMap[x + lowest_x, y + lowest_y] = new_height;
                     }
@@ -137,9 +132,7 @@ public class TerrainGeneration : MonoBehaviour {
     }
     private void ImprovedErosion(ref float[,] terrainMap, int width, int height, int iter) {
         float talus = 4.0f / width;
-        int
-        lowest_x = -1, lowest_y = -1;
-
+        int lowest_x = -1, lowest_y = -1;
         float current_difference, current_height,
               max_dif,
               new_height;
@@ -149,11 +142,9 @@ public class TerrainGeneration : MonoBehaviour {
                 for (int x = 1; x < width - 1; x++) {
                     current_height = terrainMap[x, y];
                     max_dif = -float.MaxValue;
-
                     for (int i = -1; i < 2; i += 1) {
                         for (int j = -1; j < 2; j += 1) {
                             current_difference = current_height - terrainMap[x + i, y + j];
-
                             if (current_difference > max_dif) {
                                 max_dif = current_difference;
 
@@ -162,7 +153,6 @@ public class TerrainGeneration : MonoBehaviour {
                             }
                         }
                     }
-
                     if (max_dif > 0.0f && max_dif <= talus) {
                         new_height = current_height - max_dif / 2.0f;
                         terrainMap[x, y] = new_height;
@@ -193,35 +183,28 @@ public class TerrainGeneration : MonoBehaviour {
                 for (y = 0; y < width; ++y)
                     water_map[x, y] += rain_amount;
             }
-
             //step 2: erosion
             for (x = 0; x < height; ++x) {
                 for (y = 0; y < width; ++y) {
                     terrainMap[x, y] -= water_map[x, y] * solubility;
                 }
             }
-
             //step 3: movement
             for (x = 1; x < (height - 1); ++x) {
-
                 for (y = 1; y < (width - 1); ++y) {
                     //find the lowest neighbor
                     current_height = terrainMap[x, y] + water_map[x, y];
                     max_dif = -float.MaxValue;
-
                     for (i = -1; i < 2; i += 1) {
                         for (j = -1; j < 2; j += 1) {
                             current_difference = current_height - terrainMap[x + i, y + j] - water_map[x + i, y + i];
-
                             if (current_difference > max_dif) {
                                 max_dif = current_difference;
-
                                 lowest_x = i;
                                 lowest_y = j;
                             }
                         }
                     }
-
                     //now either do nothing, level off, or move all the water
                     if (max_dif > 0.0f) {
                         //move it all...
@@ -237,7 +220,6 @@ public class TerrainGeneration : MonoBehaviour {
                     }
                 }
             }
-
             //step 4: evaporation / deposition
             for (x = 0; x < height; ++x) {
                 for (y = 0; y < width; ++y) {
