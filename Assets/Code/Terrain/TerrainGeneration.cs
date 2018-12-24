@@ -2,10 +2,28 @@
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
+    public class Node {
+        public float value;
+        public int x;
+        public int y;
+        public Node(float value, int x, int y) {
+            this.value = value;
+            this.x = x;
+            this.y = y;
+        }
+    }
     public enum GenerationType {
         kDev,
         kMultiPerlin
     }
+    public enum ErosionType {
+        kThermalErosion,
+        kHydraulicErosion,
+        kImprovedErosion
+    }
+
+    public ErosionType _ErosionType = ErosionType.kThermalErosion;
+    public int NumberOfIterations = 50;
 
     // Terrain parameters, change this if you want a bigger/higher terrain
     public readonly int TerrainWidth = 128;
@@ -61,43 +79,178 @@ public class TerrainGeneration : MonoBehaviour {
         }
     }
 
-    private void GenerateTerrainFromPreset() {
+    private void GenerateTerrainFromPreset() { 
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition);
-        ErodeTerrainMap(ref TerrainHeightMap, TerrainWidth, TerrainHeight, 6);
+        switch (_ErosionType) {
+            case ErosionType.kThermalErosion:
+                NormalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
+                Debug.Log("Normal erosion done!");
+                break;
+            case ErosionType.kHydraulicErosion:
+                ImprovedErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
+                Debug.Log("Improved erosion done!");
+                break;
+            case ErosionType.kImprovedErosion:
+                HydraulicErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, NumberOfIterations);
+                Debug.Log("Hydraulic done!");
+                break;
+        }
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
 
-    private void ErodeTerrainMap(ref float[,] terrainMap, int width, int height, int iter) {
-        float heightTreshold = 0.9f;
-        float sharePercent = 0.5f;
-        for (int i = 0; i < iter; i++) {
+    private void NormalErosion(ref float[,] terrainMap, int width, int height, int iter) {
+        float talus = 4.0f / width;
+        int
+        lowest_x = -1, lowest_y = -1;
+
+        float current_difference, current_height,
+              max_dif,
+              new_height;
+        // iter one for simplicity
+        for (int o = 0; o < iter; o++) {
             for (int y = 1; y < height - 1; y++) {
                 for (int x = 1; x < width - 1; x++) {
-                    // using neummans neighbours
-                    /*
-                     *    h1
-                     * h2 h0 h3
-                     *    h4
-                     * */
-                    float h0 = terrainMap[x, y];
-                    float h1 = terrainMap[x, y - 1];
-                    float h2 = terrainMap[x - 1, y];
-                    float h3 = terrainMap[x + 1, y];
-                    float h4 = terrainMap[x, y + 1];
-                    if (h0 > heightTreshold) {
-                        float amtToShare = h0 * sharePercent;
-                        terrainMap[x, y] = h0 - 4.0f * amtToShare;
-                        terrainMap[x, y - 1] -= h1>heightTreshold ? 0 : amtToShare;
-                        terrainMap[x - 1, y] -= h2>heightTreshold ? 0 : amtToShare;
-                        terrainMap[x + 1, y] -= h3>heightTreshold ? 0 : amtToShare;
-                        terrainMap[x, y + 1] -= h4>heightTreshold ? 0 : amtToShare;
+                    current_height = terrainMap[x, y];
+                    max_dif = -float.MaxValue;
+
+                    for (int i = -1; i < 2; i += 2) {
+                        for (int j = -1; j < 2; j += 2) {
+                            current_difference = current_height - terrainMap[x + i, y + j];
+
+                            if (current_difference > max_dif) {
+                                max_dif = current_difference;
+                                lowest_x = i;
+                                lowest_y = j;
+                            }
+                        }
+                    }
+                    if (max_dif > talus) {
+                        new_height = current_height - max_dif / 2.0f;
+
+                        terrainMap[x, y] = new_height;
+                        terrainMap[x + lowest_x, y + lowest_y] = new_height;
+                    }
+                }
+            }
+        }
+    }
+    private void ImprovedErosion(ref float[,] terrainMap, int width, int height, int iter) {
+        float talus = 4.0f / width;
+        int
+        lowest_x = -1, lowest_y = -1;
+
+        float current_difference, current_height,
+              max_dif,
+              new_height;
+        // iter one for simplicity
+        for (int o = 0; o < iter; o++) {
+            for (int y = 1; y < height - 1; y++) {
+                for (int x = 1; x < width - 1; x++) {
+                    current_height = terrainMap[x, y];
+                    max_dif = -float.MaxValue;
+
+                    for (int i = -1; i < 2; i += 1) {
+                        for (int j = -1; j < 2; j += 1) {
+                            current_difference = current_height - terrainMap[x + i, y + j];
+
+                            if (current_difference > max_dif) {
+                                max_dif = current_difference;
+
+                                lowest_x = i;
+                                lowest_y = j;
+                            }
+                        }
+                    }
+
+                    if (max_dif > 0.0f && max_dif <= talus) {
+                        new_height = current_height - max_dif / 2.0f;
+                        terrainMap[x, y] = new_height;
+                        terrainMap[x + lowest_x, y + lowest_y] = new_height;
                     }
                 }
             }
         }
     }
 
+    private void HydraulicErosion(ref float[,] terrainMap, int width, int height, int iter) {
+        int x, y, i, j, iter_count,
+        lowest_x = -1, lowest_y = -1;
+
+        float[,] water_map = new float[width, height];
+        float rain_amount = 0.01f, //amount of rain dropped per pixel each iteration
+          solubility = 0.01f, //how much sediment a unit of water will erode
+          evaporation = 0.9f, //how much water evaporates from each pixel each iteration
+          capacity = solubility, //how much sediment a unit of water can hold
+          water_lost, current_height, current_difference, max_dif; //temporary variables
+        for (i = 0; i < height; ++i) {
+            for (j = 0; j < width; ++j)
+                water_map[i, j] = 0.0f;
+        }
+        for (iter_count = 0; iter_count < iter; ++iter_count) {
+            //step 1: rain
+            for (x = 0; x < height; ++x) {
+                for (y = 0; y < width; ++y)
+                    water_map[x, y] += rain_amount;
+            }
+
+            //step 2: erosion
+            for (x = 0; x < height; ++x) {
+                for (y = 0; y < width; ++y) {
+                    terrainMap[x, y] -= water_map[x, y] * solubility;
+                }
+            }
+
+            //step 3: movement
+            for (x = 1; x < (height - 1); ++x) {
+
+                for (y = 1; y < (width - 1); ++y) {
+                    //find the lowest neighbor
+                    current_height = terrainMap[x, y] + water_map[x, y];
+                    max_dif = -float.MaxValue;
+
+                    for (i = -1; i < 2; i += 1) {
+                        for (j = -1; j < 2; j += 1) {
+                            current_difference = current_height - terrainMap[x + i, y + j] - water_map[x + i, y + i];
+
+                            if (current_difference > max_dif) {
+                                max_dif = current_difference;
+
+                                lowest_x = i;
+                                lowest_y = j;
+                            }
+                        }
+                    }
+
+                    //now either do nothing, level off, or move all the water
+                    if (max_dif > 0.0f) {
+                        //move it all...
+                        if (water_map[x, y] < max_dif) {
+                            water_map[x + lowest_x, y + lowest_y] += water_map[x, y];
+                            water_map[x, y] = 0.0f;
+                        }
+                        //level off...
+                        else {
+                            water_map[x + lowest_x, y + lowest_y] += max_dif / 2.0f;
+                            water_map[x, y] -= max_dif / 2.0f;
+                        }
+                    }
+                }
+            }
+
+            //step 4: evaporation / deposition
+            for (x = 0; x < height; ++x) {
+                for (y = 0; y < width; ++y) {
+                    water_lost = water_map[x, y] * evaporation;
+                    water_map[x, y] -= water_lost;
+                    terrainMap[x, y] += water_lost * capacity;
+                }
+            }
+        }
+    }
+
+
+    // @TODO, this does not work right, remove or rewrite
     private void MultiPerlinTerrainGeneration() {
         // For now working with 3 noiseParameters, base > moisture > weather
         // This is subject to change, produces interesting results tho, need to play with diff weights and maps

@@ -70,6 +70,7 @@ public class ParameterEditorWidget : Editor {
     }
 
     public override void OnInspectorGUI() {
+        DrawErosionTypeProperties();
         DrawTerrainGenerationProperties();
         serializedObject.Update();
         DisplayParameterList().DoLayoutList();
@@ -111,6 +112,8 @@ public class ParameterEditorWidget : Editor {
                 TerrainGenerationScript.CustomFunction = loadedNoiseParameterPreset.CustomFunction;
                 TerrainGenerationScript.CustomExponent = loadedNoiseParameterPreset.CustomExponent;
                 TerrainGenerationScript.TerrainParameterList = loadedNoiseParameterPreset.TerrainParameterList;
+                TerrainGenerationScript._ErosionType = loadedNoiseParameterPreset.ErosionType;
+                TerrainGenerationScript.NumberOfIterations = loadedNoiseParameterPreset.NumberOfIterations;
                 ReorderableParameterList = null;
             }
         }
@@ -118,7 +121,7 @@ public class ParameterEditorWidget : Editor {
         EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer, saves the current configuration.");
         NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-            NoiseParameters currentNoiseParameters = new NoiseParameters(NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
+            NoiseParameters currentNoiseParameters = new NoiseParameters(TerrainGenerationScript._ErosionType, TerrainGenerationScript.NumberOfIterations, NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
                 TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.GlobalNoiseAddition, TerrainGenerationScript.Seed,
                 TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
             SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
@@ -160,6 +163,14 @@ public class ParameterEditorWidget : Editor {
         EditorGUILayout.Space();
         DrawLoadSaveGUI();
         DrawNoiseParameterGUI();
+    }
+
+    public void DrawErosionTypeProperties() {
+        GUILayout.Label("Pick an erosion type, try different iter numbers !");
+        TerrainGenerationScript._ErosionType = (TerrainGeneration.ErosionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._ErosionType);
+        var iters = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "Number of erosion iterations", TerrainGenerationScript.NumberOfIterations);
+        TerrainGenerationScript.NumberOfIterations = iters <= 0 ? 1 : iters;
+        EditorGUILayout.Space();
     }
 
     private void TryGeneratingSavedParameterList() {
