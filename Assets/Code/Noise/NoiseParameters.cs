@@ -8,8 +8,8 @@ public class NoiseParameters {
     }
     public string NoiseParameterName = string.Empty;
 
-    public TerrainGeneration.ErosionType ErosionType;
-    public int NumberOfIterations;
+    public ErosionGeneration.ErosionType ErosionType;
+    public int ErosionIterations;
     // Controls for the perlin generation
     public float NoiseScale;
     public float BaseFrequency;
@@ -26,11 +26,11 @@ public class NoiseParameters {
     public TextureType TerrainTextureType;
     public List<TerrainParameters> TerrainParameterList;
 
-    public NoiseParameters(TerrainGeneration.ErosionType erosionType, int numberOfIterations, string name, List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
+    public NoiseParameters(ErosionGeneration.ErosionType erosionType, int numberOfIterations, string name, List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
         float persistance, float lacunarity, int numberOfOctaves, float globalNoiseAddition, string seed, NoiseGeneration.CustomFunctionType customFunction,
         float customExponent, TextureType terrainTextureType) {
         ErosionType = erosionType;
-        NumberOfIterations = numberOfIterations;
+        ErosionIterations = numberOfIterations;
         NoiseParameterName = name;
         NoiseScale = noiseScale;
         BaseFrequency = baseFrequency;

@@ -11,7 +11,7 @@ public class AssignSplatMap : MonoBehaviour {
         }
         return true;
     }
-    public static void DoSplat(Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList) {
+    public static void DoSplat(Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList, int terrainWidth, int terrainHeight) {
         if (!ValidParameterCheck(terrainParameterList)) {
             Debug.LogError("Invalid textures for splat mapping, make sure you have textures set in the reorderable list!");
             return;
@@ -23,9 +23,9 @@ public class AssignSplatMap : MonoBehaviour {
             splat_lists[i].texture = terrainParameterList[i].TerrainTexture;
         }
         terrain.terrainData.splatPrototypes = splat_lists;
-
-        for (int y = 0; y < 128; y++) {
-            for (int x = 0; x < 128; x++) {
+        // todo fix splatmapping
+        for (int y = 0; y < terrainHeight; y++) {
+            for (int x = 0; x < terrainWidth; x++) {
                 // Normalise x/y coordinates to range 0-1 
                 float y_01 = (float)y / (float)terrainData.alphamapHeight;
                 float x_01 = (float)x / (float)terrainData.alphamapWidth;
@@ -40,28 +40,30 @@ public class AssignSplatMap : MonoBehaviour {
 
                 // Setup an array to record the mix of texture weights at this point
                 float[] splatWeights = new float[terrainData.alphamapLayers];
-                // CHANGE THE RULES BELOW TO SET THE WEIGHTS OF EACH TEXTURE ON WHATEVER RULES YOU WANT
+                
+                for (int k = 0; k < terrainData.alphamapLayers; k++) {
+                    splatWeights[k] = terrainParameterList[k].ParameterBoundry;
+                }
+                //// Texture[0] has constant influence
+                //splatWeights[0] = 1.0f;
 
-                // Texture[0] has constant influence
-                splatWeights[0] = 1.0f;
+                //// Texture[1] is stronger at lower altitudes
+                //splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
 
-                // Texture[1] is stronger at lower altitudes
-                splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
+                //// Texture[2] stronger on flatter terrain
+                //// Note "steepness" is unbounded, so we "normalise" it by dividing by the extent of heightmap height and scale factor
+                //// Subtract result from 1.0 to give greater weighting to flat surfaces
+                //splatWeights[2] = 1.0f - Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / 5.0f));
 
-                // Texture[2] stronger on flatter terrain
-                // Note "steepness" is unbounded, so we "normalise" it by dividing by the extent of heightmap height and scale factor
-                // Subtract result from 1.0 to give greater weighting to flat surfaces
-                splatWeights[2] = 1.0f - Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / 5.0f));
-
-                // Texture[3] increases with height but only on surfaces facing positive Z axis 
-                splatWeights[3] = height * Mathf.Clamp01(normal.z);
+                //// Texture[3] increases with height but only on surfaces facing positive Z axis 
+                //splatWeights[3] = height * Mathf.Clamp01(normal.z);
 
                 // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
                 float z = splatWeights.Sum();
 
                 // Loop through each terrain texture
                 //@TODO change this to terrainData.alphamapLayers
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < terrainData.alphamapLayers; i++) {
 
                     // Normalize so that sum of all texture weights = 1
                     splatWeights[i] /= z;

@@ -22,6 +22,7 @@ public class SerializationManager {
             file.Write(jsonObject);
         }
     }
+
     public static List<NoiseParameters> ReadAllNoiseParameters() {
         List<NoiseParameters> allNoiseParameters = new List<NoiseParameters>();
         foreach (string file in Directory.GetFiles(NoiseParameterLocation, "*.json")) {
@@ -34,6 +35,7 @@ public class SerializationManager {
         }
         return allNoiseParameters;
     }
+
     public static void DeleteNoiseParameter(string name) {
         string path = string.Format("{0}{1}.json", NoiseParameterLocation, name);
         string pathMeta = string.Format("{0}{1}.json.meta", NoiseParameterLocation, name);

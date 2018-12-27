@@ -9,13 +9,14 @@ public static class NoiseGeneration {
         kPi,
         kCustom
     }
+
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, NoiseParameters param) {
         return GenerateTerrain(terrainWidth, terrainHeight, param.Seed, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
-            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition);
+            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition, param.ErosionType, param.ErosionIterations);
     }
 
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition) {
+        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition, ErosionGeneration.ErosionType erosionType, int erosionIterations) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
@@ -23,7 +24,7 @@ public static class NoiseGeneration {
         float maxNoiseHeight = float.MinValue;
 
         Vector2[] octaveOffsets = GenerateOctaveOffsets(seed, numberOfOctaves, userOffset);
-
+        // generate the terrain using perlin noise
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
                 // the amplitude is used to generate hills of different heights, the higher the amplitude the bigger the hill
@@ -53,6 +54,7 @@ public static class NoiseGeneration {
                 currentTerrain[x, y] = noiseHeight;
             }
         }
+        // apply custom functions to the terrain heights
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
                 switch (functionType) {
@@ -76,6 +78,22 @@ public static class NoiseGeneration {
                         break;
                 }
             }
+        }
+        // erode the terrain
+        switch (erosionType) {
+            case ErosionGeneration.ErosionType.kThermalErosion:
+                ErosionGeneration.ThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kHydraulicErosion:
+                ErosionGeneration.ImprovedThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kImprovedErosion:
+                ErosionGeneration.HydraulicErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kNone:
+                break;
+            default:
+                break;
         }
         return currentTerrain;
     }
