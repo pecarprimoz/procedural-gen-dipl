@@ -22,7 +22,7 @@ public class AssignSplatMap : MonoBehaviour {
             splat_lists[i] = new SplatPrototype();
             splat_lists[i].texture = terrainParameterList[i].TerrainTexture;
         }
-        terrain.terrainData.splatPrototypes = splat_lists;
+        terrainData.splatPrototypes = splat_lists;
         // todo fix splatmapping
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
@@ -40,7 +40,7 @@ public class AssignSplatMap : MonoBehaviour {
 
                 // Setup an array to record the mix of texture weights at this point
                 float[] splatWeights = new float[terrainData.alphamapLayers];
-                
+
                 for (int k = 0; k < terrainData.alphamapLayers; k++) {
                     splatWeights[k] = terrainParameterList[k].ParameterBoundry;
                 }

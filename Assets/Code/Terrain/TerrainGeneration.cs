@@ -59,7 +59,10 @@ public class TerrainGeneration : MonoBehaviour {
     }
 
     void InitializeTerrain() {
-        _Terrain.terrainData.heightmapResolution = TerrainWidth < TerrainHeight ? TerrainWidth : TerrainHeight;
+        _Terrain.terrainData.heightmapResolution = TerrainWidth + 1;
+        _Terrain.terrainData.alphamapResolution = TerrainWidth;
+        _Terrain.terrainData.SetDetailResolution(TerrainWidth, 16);
+        _Terrain.terrainData.baseMapResolution = TerrainWidth * 2;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
         switch (_GenerationType) {
             case GenerationType.kDev:
