@@ -10,9 +10,15 @@ can also edit these properties when the project is running.
 ##### Optional
 `DebugTerrainCamera` displays the heightmap on the `DebugPlane`, if you want to see the terrain from an 
 orthographic perspective, turn on `CameraTerrain`.
-##### Issues
+##### Known issues
 Prefabs breaking ? Download the correct Unity version.
-
+Terraing painting isn't working currenlty, need to figure out splat mapping.
+##### Contact
+If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ### Examples WIP
+##### Thermal erosion at 50 iterations
 ![Example1](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex1.png)
+##### Thermal erosion at 50 iterations, orthographic
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex2.png)
+##### Hydraulic erosion at 200 iterations
+![Example3](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex3.png)

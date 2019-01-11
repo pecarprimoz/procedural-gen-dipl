@@ -42,34 +42,17 @@ public class AssignSplatMap : MonoBehaviour {
                 float[] splatWeights = new float[terrainData.alphamapLayers];
 
                 for (int k = 0; k < terrainData.alphamapLayers; k++) {
-                    splatWeights[k] = terrainParameterList[k].ParameterBoundry;
+                    splatWeights[k] = 1 / terrainData.alphamapLayers;
                 }
-                //// Texture[0] has constant influence
-                //splatWeights[0] = 1.0f;
-
-                //// Texture[1] is stronger at lower altitudes
-                //splatWeights[1] = Mathf.Clamp01((terrainData.heightmapHeight - height));
-
-                //// Texture[2] stronger on flatter terrain
-                //// Note "steepness" is unbounded, so we "normalise" it by dividing by the extent of heightmap height and scale factor
-                //// Subtract result from 1.0 to give greater weighting to flat surfaces
-                //splatWeights[2] = 1.0f - Mathf.Clamp01(steepness * steepness / (terrainData.heightmapHeight / 5.0f));
-
-                //// Texture[3] increases with height but only on surfaces facing positive Z axis 
-                //splatWeights[3] = height * Mathf.Clamp01(normal.z);
-
-                // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
                 float z = splatWeights.Sum();
 
                 // Loop through each terrain texture
                 //@TODO change this to terrainData.alphamapLayers
                 for (int i = 0; i < terrainData.alphamapLayers; i++) {
 
-                    // Normalize so that sum of all texture weights = 1
-                    splatWeights[i] /= z;
 
                     // Assign this point to the splatmap array
-                    splatmapData[x, y, i] = splatWeights[i];
+                    splatmapData[x, y, i] = Random.Range(0, 100.0f);
                 }
             }
         }

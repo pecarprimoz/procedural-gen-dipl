@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4470281, g: 0.4921801, b: 0.54954034, a: 1}
+  m_IndirectSpecularColor: {r: 0.44702864, g: 0.4921813, b: 0.54954106, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -408,6 +408,86 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[0].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 46c9b2c471a59f24cbe88eae93a32f60, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[0].TexturePath
+      value: Assets/Resources/Ground textures pack/Grass & dead leafs 01/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[1].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: cd4f831376722b54bbadd59ef7c6c744, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[1].TexturePath
+      value: Assets/Resources/Ground textures pack/Ground 02/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[2].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: f5d1de47f0f760544a5596ceb8cc895f, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[2].TexturePath
+      value: Assets/Resources/Ground textures pack/Dry ground/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[3].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: eafd0beb9c624d34f812be7d14134c2f, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[3].TexturePath
+      value: Assets/Resources/Ground textures pack/Ground 01/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[4].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: f0a8168310b10da4faedc474bb26c20f, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[4].TexturePath
+      value: Assets/Resources/Ground textures pack/Grass 05/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[5].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: 117cca91456049f4692a3becee93522e, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[5].TexturePath
+      value: Assets/Resources/Ground textures pack/Ground & rocks 03/diffuse.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[6].TerrainTexture
+      value: 
+      objectReference: {fileID: 2800000, guid: c65e186198f501046a0aba89c6335cac, type: 3}
+    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: TerrainParameterList.Array.data[6].TexturePath
+      value: Assets/Resources/Ground textures pack/Lava/emissive.tga
+      objectReference: {fileID: 0}
+    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: m_MaterialType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 2}
+      propertyPath: m_MaterialTemplate
+      value: 
+      objectReference: {fileID: 2100000, guid: fc9ec4dec40592f46ba2e728f45986ad, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 2}
   m_IsPrefabAsset: 0
