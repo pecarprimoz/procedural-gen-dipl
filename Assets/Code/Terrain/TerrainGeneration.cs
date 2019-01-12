@@ -2,19 +2,9 @@
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
-    public class Node {
-        public float value;
-        public int x;
-        public int y;
-        public Node(float value, int x, int y) {
-            this.value = value;
-            this.x = x;
-            this.y = y;
-        }
-    }
     public enum GenerationType {
-        kDev,
-        kMultiPerlin
+        kUpdating,
+        kSingleRun
     }
 
     public ErosionGeneration.ErosionType _ErosionType = ErosionGeneration.ErosionType.kThermalErosion;
@@ -46,16 +36,18 @@ public class TerrainGeneration : MonoBehaviour {
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
 
-    // Temporary parameters, will be removed in the future
-    public GenerationType _GenerationType = GenerationType.kDev;
+    // Used for creating the terrain in runtime, then switch to single run-s to paint the terrain
+    public GenerationType _GenerationType = GenerationType.kSingleRun;
 
     void Start() {
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values
-        // InitializeTerrain();
+        InitializeTerrain();
     }
 
     private void Update() {
-        InitializeTerrain();
+        if (_GenerationType == GenerationType.kUpdating) {
+            InitializeTerrain();
+        }
     }
 
     void InitializeTerrain() {
@@ -64,20 +56,10 @@ public class TerrainGeneration : MonoBehaviour {
         _Terrain.terrainData.SetDetailResolution(TerrainWidth, 16);
         _Terrain.terrainData.baseMapResolution = TerrainWidth * 2;
         _Terrain.terrainData.size = new Vector3(TerrainWidth, TerrainDepth, TerrainHeight);
-        switch (_GenerationType) {
-            case GenerationType.kDev:
-                GenerateTerrainFromPreset();
-                break;
-            case GenerationType.kMultiPerlin:
-                //MultiPerlinTerrainGeneration();
-                break;
-            default:
-                Debug.LogError("Unknown generation type");
-                break;
-        }
+        GenerateTerrainFromPreset();
     }
 
-    private void GenerateTerrainFromPreset() {
+    public void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition, _ErosionType, ErosionIterations);
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
