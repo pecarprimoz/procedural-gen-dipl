@@ -9,6 +9,7 @@ public class TerrainGeneration : MonoBehaviour {
 
     public ErosionGeneration.ErosionType _ErosionType = ErosionGeneration.ErosionType.kThermalErosion;
     public int ErosionIterations = 50;
+    public bool RuntimeErosion = false;
 
     // Terrain parameters, change this if you want a bigger/higher terrain
     public readonly int TerrainWidth = 128;
@@ -61,7 +62,30 @@ public class TerrainGeneration : MonoBehaviour {
 
     public void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, Seed, NoiseScale,
-                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition, _ErosionType, ErosionIterations);
+                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, CustomFunction, CustomExponent, GlobalNoiseAddition, _ErosionType, ErosionIterations, RuntimeErosion);
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+    }
+
+    public void ApplyErosion() {
+        if (_GenerationType == GenerationType.kUpdating) {
+            Debug.LogError("ERROR: You are applying erosion in runtime, that means that the erosion will get overwritten ! Try switching to single mode or toggle runtime erosion.");
+        } else {
+            switch (_ErosionType) {
+                case ErosionGeneration.ErosionType.kThermalErosion:
+                    ErosionGeneration.ThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kHydraulicErosion:
+                    ErosionGeneration.ImprovedThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kImprovedErosion:
+                    ErosionGeneration.HydraulicErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kNone:
+                    break;
+                default:
+                    break;
+            }
+            _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+        }
     }
 }

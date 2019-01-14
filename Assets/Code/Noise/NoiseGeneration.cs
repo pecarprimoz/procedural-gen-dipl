@@ -12,11 +12,11 @@ public static class NoiseGeneration {
 
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, NoiseParameters param) {
         return GenerateTerrain(terrainWidth, terrainHeight, param.Seed, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
-            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition, param.ErosionType, param.ErosionIterations);
+            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition, param.ErosionType, param.ErosionIterations, param.RuntimeErosion);
     }
 
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition, ErosionGeneration.ErosionType erosionType, int erosionIterations) {
+        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition, ErosionGeneration.ErosionType erosionType, int erosionIterations, bool runtimeErosion) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
@@ -79,21 +79,23 @@ public static class NoiseGeneration {
                 }
             }
         }
-        // erode the terrain
-        switch (erosionType) {
-            case ErosionGeneration.ErosionType.kThermalErosion:
-                ErosionGeneration.ThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
-                break;
-            case ErosionGeneration.ErosionType.kHydraulicErosion:
-                ErosionGeneration.ImprovedThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
-                break;
-            case ErosionGeneration.ErosionType.kImprovedErosion:
-                ErosionGeneration.HydraulicErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
-                break;
-            case ErosionGeneration.ErosionType.kNone:
-                break;
-            default:
-                break;
+        // erode the terrain, this is currently in runtime
+        if (runtimeErosion) {
+            switch (erosionType) {
+                case ErosionGeneration.ErosionType.kThermalErosion:
+                    ErosionGeneration.ThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kHydraulicErosion:
+                    ErosionGeneration.ImprovedThermalErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kImprovedErosion:
+                    ErosionGeneration.HydraulicErosion(ref currentTerrain, terrainWidth, terrainHeight, erosionIterations);
+                    break;
+                case ErosionGeneration.ErosionType.kNone:
+                    break;
+                default:
+                    break;
+            }
         }
         return currentTerrain;
     }

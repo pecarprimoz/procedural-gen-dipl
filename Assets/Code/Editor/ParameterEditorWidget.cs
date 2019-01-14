@@ -52,6 +52,12 @@ public class ParameterEditorWidget : Editor {
             TerrainGenerationScript._ErosionType = (ErosionGeneration.ErosionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._ErosionType);
             var iters = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "Number of erosion iterations", TerrainGenerationScript.ErosionIterations);
             TerrainGenerationScript.ErosionIterations = iters <= 0 ? 1 : iters;
+            TerrainGenerationScript.RuntimeErosion = EditorGUI.Toggle(EditorGUILayout.GetControlRect(), "Toggle runtime erosion? (will lag)", TerrainGenerationScript.RuntimeErosion);
+            if (!TerrainGenerationScript.RuntimeErosion) {
+                if (GUILayout.Button("Apply erosion!")) {
+                    TerrainGenerationScript.ApplyErosion();
+                }
+            }
         }
         GUILine();
         EditorGUILayout.Space();
@@ -104,6 +110,7 @@ public class ParameterEditorWidget : Editor {
                     TerrainGenerationScript.TerrainParameterList = loadedNoiseParameterPreset.TerrainParameterList;
                     TerrainGenerationScript._ErosionType = loadedNoiseParameterPreset.ErosionType;
                     TerrainGenerationScript.ErosionIterations = loadedNoiseParameterPreset.ErosionIterations;
+                    TerrainGenerationScript.RuntimeErosion = loadedNoiseParameterPreset.RuntimeErosion;
                     TerrainGenerationScript.GenerateTerrainFromPreset();
                     ReorderableParameterList = null;
                 }
@@ -112,7 +119,7 @@ public class ParameterEditorWidget : Editor {
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer, saves the current configuration.");
             NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-                NoiseParameters currentNoiseParameters = new NoiseParameters(TerrainGenerationScript._ErosionType, TerrainGenerationScript.ErosionIterations, NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
+                NoiseParameters currentNoiseParameters = new NoiseParameters(TerrainGenerationScript._ErosionType, TerrainGenerationScript.RuntimeErosion, TerrainGenerationScript.ErosionIterations, NoisePresetName, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.UserOffset, TerrainGenerationScript.NoiseScale,
                     TerrainGenerationScript.BaseFrequency, TerrainGenerationScript.Persistance, TerrainGenerationScript.Lacunarity, TerrainGenerationScript.NumberOfOctaves, TerrainGenerationScript.GlobalNoiseAddition, TerrainGenerationScript.Seed,
                     TerrainGenerationScript.CustomFunction, TerrainGenerationScript.CustomExponent, TerrainGenerationScript.TerrainTextureType);
                 SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
@@ -159,8 +166,9 @@ public class ParameterEditorWidget : Editor {
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
                     Debug.LogErrorFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), change the generation type then try again!", TerrainGenerationScript._GenerationType.ToString());
+                } else {
+                    AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
                 }
-                AssignSplatMap.DoSplat(TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         }

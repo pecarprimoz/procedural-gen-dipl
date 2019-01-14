@@ -16,9 +16,7 @@ Terraing painting isn't working currenlty, need to figure out splat mapping.
 ##### Contact
 If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ### Examples WIP
-##### Thermal erosion at 50 iterations
+##### Splat-mapping, 150 iterations hydraulic erosion
 ![Example1](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex1.png)
-##### Thermal erosion at 50 iterations, orthographic
+##### Thermal erosion at 500 iterations with grayscale heightmap
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex2.png)
-##### Hydraulic erosion at 200 iterations
-![Example3](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex3.png)
