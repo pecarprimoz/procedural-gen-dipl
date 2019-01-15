@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4470281, g: 0.4921801, b: 0.54954034, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,14 +167,14 @@ Light:
   m_GameObject: {fileID: 679848622}
   m_Enabled: 1
   serializedVersion: 8
-  m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Type: 3
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -188,9 +188,9 @@ Light:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
+  m_AreaSize: {x: 64, y: 64}
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
@@ -202,13 +202,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 679848622}
-  m_LocalRotation: {x: 0.14409713, y: 0, z: 0, w: 0.9895636}
-  m_LocalPosition: {x: 59, y: 63.6, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 64, y: 128, z: 64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 16.57, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &879562164
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,11 +376,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.size
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 4249364747581824, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -412,291 +407,6 @@ Prefab:
     - target: {fileID: 4249364747581824, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: 46c9b2c471a59f24cbe88eae93a32f60, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].TexturePath
-      value: Assets/Resources/Ground textures pack/Grass & dead leafs 01/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: cd4f831376722b54bbadd59ef7c6c744, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].TexturePath
-      value: Assets/Resources/Ground textures pack/Ground 02/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: f5d1de47f0f760544a5596ceb8cc895f, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].TexturePath
-      value: Assets/Resources/Ground textures pack/Dry ground/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[3].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: eafd0beb9c624d34f812be7d14134c2f, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[3].TexturePath
-      value: Assets/Resources/Ground textures pack/Ground 01/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[4].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: f0a8168310b10da4faedc474bb26c20f, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[4].TexturePath
-      value: Assets/Resources/Ground textures pack/Grass 05/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: 117cca91456049f4692a3becee93522e, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].TexturePath
-      value: Assets/Resources/Ground textures pack/Ground & rocks 03/diffuse.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: c65e186198f501046a0aba89c6335cac, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].TexturePath
-      value: Assets/Resources/Ground textures pack/Lava/emissive.tga
-      objectReference: {fileID: 0}
-    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: m_MaterialType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: m_MaterialTemplate
-      value: 
-      objectReference: {fileID: 2100000, guid: fc9ec4dec40592f46ba2e728f45986ad, type: 2}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: _ErosionType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: ErosionIterations
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: NoiseScale
-      value: 165
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: BaseFrequency
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: Lacunarity
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: NumberOfOctaves
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: GlobalNoiseAddition
-      value: -0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: CustomFunction
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainTextureType
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].Name
-      value: Water
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].ParameterBoundry
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].TerrainColorVector.x
-      value: 0.2688679
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].TerrainColorVector.y
-      value: 0.7073334
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[0].TerrainColorVector.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].Name
-      value: Beach
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].TerrainColorVector.x
-      value: 0.9418874
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].TerrainColorVector.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[1].TerrainColorVector.z
-      value: 0.33490568
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].ParameterBoundry
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].TerrainColorVector.x
-      value: 0.5660378
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].TerrainColorVector.y
-      value: 0.30158642
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[2].TerrainColorVector.z
-      value: 0.17354932
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[3].ParameterBoundry
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[4].ParameterBoundry
-      value: 0.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].Name
-      value: Snow
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].ParameterBoundry
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].TerrainColorVector.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].TerrainColorVector.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[5].TerrainColorVector.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].Name
-      value: MntRocks
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].ParameterBoundry
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].TerrainColorVector.x
-      value: 0.23584908
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].TerrainColorVector.y
-      value: 0.2302866
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[6].TerrainColorVector.z
-      value: 0.2302866
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].TerrainTexture
-      value: 
-      objectReference: {fileID: 2800000, guid: b7d9faa91838dbc4794289073b1dabd2, type: 3}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].Name
-      value: Snow
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].ParameterBoundry
-      value: 0.99
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].TerrainColorVector.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].TerrainColorVector.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].TerrainColorVector.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
-      propertyPath: TerrainParameterList.Array.data[7].TexturePath
-      value: Assets/Resources/UpdatedTextures/IceFine001_COL_6K copy.jpg
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 2}
