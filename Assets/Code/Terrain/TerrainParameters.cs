@@ -17,10 +17,14 @@ public struct TerrainParameters {
 
     public string Name;
     public float ParameterBoundry;
+    public float TemperatureParameterBoundry;
+    public float MoistureParameterBoundry;
     public Vector4 TerrainColorVector;
-    public string TexturePath; 
-    public TerrainParameters(string name, float parameterBoundry, Color c, string texturePath) {
+    public string TexturePath;
+    public TerrainParameters(string name, float moistureParameterBoundry, float temperatureParameterBoundry, float parameterBoundry, Color c, string texturePath) {
         Name = name;
+        MoistureParameterBoundry = moistureParameterBoundry;
+        TemperatureParameterBoundry = temperatureParameterBoundry;
         ParameterBoundry = parameterBoundry;
         _TerrainColor = TerrainColorVector = c;
         TexturePath = texturePath;

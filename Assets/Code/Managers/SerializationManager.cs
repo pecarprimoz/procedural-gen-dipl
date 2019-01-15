@@ -29,7 +29,13 @@ public class SerializationManager {
             string jsonContent = File.ReadAllText(file);
             NoiseParameters parameter = JsonConvert.DeserializeObject<NoiseParameters>(jsonContent);
             for (int i = 0; i < parameter.TerrainParameterList.Count; i++) {
-                parameter.TerrainParameterList[i] = new TerrainParameters(parameter.TerrainParameterList[i].Name, parameter.TerrainParameterList[i].ParameterBoundry, parameter.TerrainParameterList[i].TerrainColorVector, parameter.TerrainParameterList[i].TexturePath);
+                parameter.TerrainParameterList[i] = new TerrainParameters(
+                    parameter.TerrainParameterList[i].Name,
+                    parameter.TerrainParameterList[i].MoistureParameterBoundry,
+                    parameter.TerrainParameterList[i].TemperatureParameterBoundry,
+                    parameter.TerrainParameterList[i].ParameterBoundry,
+                    parameter.TerrainParameterList[i].TerrainColorVector,
+                    parameter.TerrainParameterList[i].TexturePath);
             }
             allNoiseParameters.Add(parameter);
         }

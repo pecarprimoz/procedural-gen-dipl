@@ -11,7 +11,7 @@ public class ParameterEditorWidget : Editor {
     private string NoisePresetName = string.Empty;
     private int DeleteFailsafe = 0;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();
-    private List<string> EditorWidgetNames = new List<string> { "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
+    private List<string> EditorWidgetNames = new List<string> { "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     public string[] AllParameterNames = new string[0];
 
@@ -31,6 +31,7 @@ public class ParameterEditorWidget : Editor {
     /// The main InspectorGUI code, every widget drawer gets called here
     /// </summary>
     public override void OnInspectorGUI() {
+        DrawDevelWidget();
         DrawErosionTypeProperties();
         DrawTerrainGenerationProperties();
         serializedObject.Update();
@@ -40,6 +41,18 @@ public class ParameterEditorWidget : Editor {
         }
         serializedObject.ApplyModifiedProperties();
         EditorUtility.SetDirty(TerrainGenerationScript);
+    }
+
+    // Used for devel stuff
+    public void DrawDevelWidget() {
+        EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
+        if (EditorWidgetFoldouts["DevelWidget"]) {
+            if (TerrainGenerationScript._GenerationType == TerrainGeneration.GenerationType.kSingleRun) {
+                if (GUILayout.Button("Gen. H, M, T maps")) {
+                    TerrainGenerationScript.GenerateTerrainOnDemand();
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -182,14 +195,20 @@ public class ParameterEditorWidget : Editor {
             return ReorderableParameterList;
         }
         ReorderableParameterList = new ReorderableList(TerrainGenerationScript.TerrainParameterList, typeof(TerrainParameters), true, true, true, true);
-        ReorderableParameterList.elementHeight = 22.0f * 5;
+        ReorderableParameterList.elementHeight = 22.0f * 7;
         ReorderableParameterList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
             var currentParameter = TerrainGenerationScript.TerrainParameterList[index];
             rect.height = 20.0f;
             currentParameter.Name = EditorGUI.TextField(rect, "Name", currentParameter.Name);
             rect.y += 22.0f;
             rect.height = 20.0f;
-            currentParameter.ParameterBoundry = EditorGUI.FloatField(rect, "Boundry", currentParameter.ParameterBoundry);
+            currentParameter.MoistureParameterBoundry = EditorGUI.FloatField(rect, "Moisture Boundry", currentParameter.MoistureParameterBoundry);
+            rect.y += 22.0f;
+            rect.height = 20.0f;
+            currentParameter.TemperatureParameterBoundry = EditorGUI.FloatField(rect, "Temp Boundry", currentParameter.TemperatureParameterBoundry);
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            currentParameter.ParameterBoundry = EditorGUI.FloatField(rect, "HM Boundry", currentParameter.ParameterBoundry);
             rect.height = 22.0f;
             rect.y += 22.0f;
             currentParameter.TerrainColor = EditorGUI.ColorField(rect, "Color", currentParameter.TerrainColor);

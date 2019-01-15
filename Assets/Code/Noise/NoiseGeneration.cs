@@ -100,6 +100,31 @@ public static class NoiseGeneration {
         return currentTerrain;
     }
 
+    public static float[,] GenerateTemperatureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
+        float[,] temperatureMap = new float[terrainWidth, terrainHeight];
+        // temperature map is basiclly 1 - heightMap[x,y]
+        // means that points that are really hight have a low temperature value (near 0)
+        // hot points have values closer to 1 (deserts, ocean etc)
+        // @TODO, think about implementing smarter temperature generation, equators, south/north poles ...
+        for (int y = 0; y < terrainHeight; y++) {
+            for (int x = 0; x < terrainWidth; x++) {
+                temperatureMap[x, y] = 1 - heightMap[x, y];
+            }
+        }
+        return temperatureMap;
+    }
+
+    public static float[,] GenerateMoistureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
+        // TODO IMPL
+        float[,] moistureMap = new float[terrainWidth, terrainHeight];
+        for (int y = 0; y < terrainHeight; y++) {
+            for (int x = 0; x < terrainWidth; x++) {
+                moistureMap[x, y] = 1;
+            }
+        }
+        return moistureMap;
+    }
+
     public static int GenerateIntSeed(string s) {
         float endSeed = 0;
         char[] charArr = s.ToCharArray();

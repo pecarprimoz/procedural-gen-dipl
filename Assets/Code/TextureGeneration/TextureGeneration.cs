@@ -12,6 +12,7 @@ public static class TextureGeneration {
                     case NoiseParameters.TextureType.kColored:
                         for (int i = 0; i < terrainParameterList.Count; i++) {
                             var parameter = terrainParameterList[i];
+                            // use biome generation to get the color of the biome, TODO implemen for terrain with textures !
                             if (currentHeight <= parameter.ParameterBoundry) {
                                 terrainTexture[y * terrainWidth + x] = parameter.TerrainColor;
                                 break;

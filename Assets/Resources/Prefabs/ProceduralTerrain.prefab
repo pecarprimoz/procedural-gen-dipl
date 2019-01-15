@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _ErosionType: 3
-  ErosionIterations: 150
+  ErosionIterations: 750
   RuntimeErosion: 0
   NoiseScale: 165
   BaseFrequency: 2
@@ -159,7 +159,7 @@ MonoBehaviour:
   GlobalNoiseAddition: -0.2
   Seed: 
   UserOffset: {x: 0, y: 0}
-  CustomFunction: 0
+  CustomFunction: 5
   CustomExponent: 0.1
   TerrainTextureType: 0
   _Terrain: {fileID: 218874898587846492}
@@ -167,41 +167,57 @@ MonoBehaviour:
   - TerrainTexture: {fileID: 2800000, guid: 52129cb3c046c9d479424369d1fd3481, type: 3}
     Name: Beach
     ParameterBoundry: 0.15
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.98733354, y: 1, z: 0.11792451, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/GroundSand003_COL_VAR1_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: 941b23c0cddaff04496b2a111e1f336c, type: 3}
     Name: SandBeach
     ParameterBoundry: 0.3
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.6226415, y: 0.51425266, z: 0.108668566, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/GroundSand003_COL_VAR2_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: a277ec397354f044491a2f8322355ac6, type: 3}
     Name: DirtOne
     ParameterBoundry: 0.45
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.3679245, y: 0.27200088, z: 0.18569775, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/GroundClay004_COL_VAR2_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: e30aaf58155553c4ca35076aff43b0a1, type: 3}
     Name: DirtTwo
     ParameterBoundry: 0.55
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.2924528, y: 0.15619278, z: 0.0731132, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/GroundClay004_COL_VAR1_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: 12ff3c37d59e28240a8f4643c3ead3d3, type: 3}
     Name: Grass
     ParameterBoundry: 0.7
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.13050124, y: 0.38679248, z: 0.10399608, w: 1}
     TexturePath: Assets/Resources/Ground textures pack/Grass & rocks/diffuse.tga
   - TerrainTexture: {fileID: 2800000, guid: fa70279e55ec6234ebf325f15a9945c7, type: 3}
     Name: MntOne
     ParameterBoundry: 0.85
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.4056604, y: 0.4037469, z: 0.4037469, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/RockDark004_COL_VAR2_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: 87c6d8dbfd153074c849b7647510562a, type: 3}
     Name: MntTwo
     ParameterBoundry: 0.95
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 0.14150941, y: 0.13950692, z: 0.13950692, w: 1}
     TexturePath: Assets/Resources/UpdatedTextures/RockDark004_COL_VAR1_6K copy.jpg
   - TerrainTexture: {fileID: 2800000, guid: b7d9faa91838dbc4794289073b1dabd2, type: 3}
     Name: Snow
-    ParameterBoundry: 0.99
+    ParameterBoundry: 1
+    TemperatureParameterBoundry: 0
+    MoistureParameterBoundry: 0
     TerrainColorVector: {x: 1, y: 1, z: 1, w: 0}
     TexturePath: Assets/Resources/UpdatedTextures/IceFine001_COL_6K copy.jpg
   _GenerationType: 0

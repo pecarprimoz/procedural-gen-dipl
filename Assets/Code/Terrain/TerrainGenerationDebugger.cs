@@ -1,8 +1,21 @@
 ﻿using UnityEngine;
 
 public class TerrainGenerationDebugger : MonoBehaviour {
+    public enum DebugPlaneContent {
+        kHeightMap,
+        kMoistureMap,
+        kTemperatureMap
+    }
+
     public TerrainGeneration tg;
+    [SerializeField]
+    public DebugPlaneContent planeContent;
+
     private static Texture2D texture;
+    private void Start() {
+        planeContent = DebugPlaneContent.kHeightMap;
+    }
+
     private void Update() {
         // Fun fact, Unity does not GC new Terrains, which results in a memory leak, to prevent this we call destroy and have the texture as static
         Destroy(texture);
@@ -14,7 +27,17 @@ public class TerrainGenerationDebugger : MonoBehaviour {
         }
         texture.filterMode = FilterMode.Point;
         texture.wrapMode = TextureWrapMode.Clamp;
-        texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight,tg.TerrainHeightMap,tg.TerrainParameterList, tg.TerrainTextureType));
+        switch (planeContent) {
+            case (DebugPlaneContent.kHeightMap):
+                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainHeightMap, tg.TerrainParameterList, tg.TerrainTextureType));
+                break;
+            case (DebugPlaneContent.kMoistureMap):
+                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainMoistureMap, tg.TerrainParameterList, tg.TerrainTextureType));
+                break;
+            case (DebugPlaneContent.kTemperatureMap):
+                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainTemperatureMap, tg.TerrainParameterList, tg.TerrainTextureType));
+                break;
+        }
         texture.Apply();
     }
 }
