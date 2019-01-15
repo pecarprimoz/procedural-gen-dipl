@@ -12,7 +12,6 @@ can also edit these properties when the project is running.
 orthographic perspective, turn on `CameraTerrain`.
 ##### Known issues
 Prefabs breaking ? Download the correct Unity version.
-Terraing painting isn't working currenlty, need to figure out splat mapping.
 ##### Contact
 If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ### Examples WIP
