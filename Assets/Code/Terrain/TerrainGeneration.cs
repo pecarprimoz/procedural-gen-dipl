@@ -85,24 +85,24 @@ public class TerrainGeneration : MonoBehaviour {
 
     public void ApplyErosion() {
         if (_GenerationType == GenerationType.kUpdating) {
-            Debug.LogError("ERROR: You are applying erosion in runtime, that means that the erosion will get overwritten ! Try switching to single mode or toggle runtime erosion.");
-        } else {
-            switch (_ErosionType) {
-                case ErosionGeneration.ErosionType.kThermalErosion:
-                    ErosionGeneration.ThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
-                    break;
-                case ErosionGeneration.ErosionType.kHydraulicErosion:
-                    ErosionGeneration.ImprovedThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
-                    break;
-                case ErosionGeneration.ErosionType.kImprovedErosion:
-                    ErosionGeneration.HydraulicErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
-                    break;
-                case ErosionGeneration.ErosionType.kNone:
-                    break;
-                default:
-                    break;
-            }
-            _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
+            Debug.LogWarning("You are applying erosion in runtime. Switching to single mode");
+            _GenerationType = GenerationType.kSingleRun;
         }
+        switch (_ErosionType) {
+            case ErosionGeneration.ErosionType.kThermalErosion:
+                ErosionGeneration.ThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kHydraulicErosion:
+                ErosionGeneration.ImprovedThermalErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kImprovedErosion:
+                ErosionGeneration.HydraulicErosion(ref TerrainHeightMap, TerrainWidth, TerrainHeight, ErosionIterations);
+                break;
+            case ErosionGeneration.ErosionType.kNone:
+                break;
+            default:
+                break;
+        }
+        _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
 }

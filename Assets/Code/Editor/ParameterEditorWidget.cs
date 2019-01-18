@@ -178,10 +178,10 @@ public class ParameterEditorWidget : Editor {
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
-                    Debug.LogErrorFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), change the generation type then try again!", TerrainGenerationScript._GenerationType.ToString());
-                } else {
-                    AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
+                    Debug.LogErrorFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", TerrainGenerationScript._GenerationType.ToString());
+                    TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
+                AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         }
