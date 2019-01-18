@@ -15,7 +15,7 @@ Prefabs breaking ? Download the correct Unity version.
 ##### Contact
 If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ### Examples WIP
-##### Splat-mapping, 150 iterations hydraulic erosion
+##### Splat-mapping, 750 iterations improved thermal erosion
 ![Example1](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex1.png)
-##### Thermal erosion at 500 iterations with grayscale heightmap
+##### Different terrain parameters and textures, 750 iterations improved thermal erosion
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/ex2.png)
