@@ -11,12 +11,12 @@ public static class NoiseGeneration {
     }
 
     public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, NoiseParameters param) {
-        return GenerateTerrain(terrainWidth, terrainHeight, param.Seed, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
-            param.Lacunarity, param.UserOffset, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition, param.ErosionType, param.ErosionIterations, param.RuntimeErosion);
+        return GenerateTerrain(terrainWidth, terrainHeight, param.NoiseScale, param.BaseFrequency, param.NumberOfOctaves, param.Persistance,
+            param.Lacunarity, param.UserOffset, param.ErosionIterations, param.Seed, param.CustomFunction, param.CustomExponent, param.GlobalNoiseAddition, param.ErosionType, param.RuntimeErosion);
     }
 
-    public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, string seed, float scale, float frequency, int numberOfOctaves,
-        float persistance, float lacunarity, Vector2 userOffset, CustomFunctionType functionType, float customExponent, float userAddition, ErosionGeneration.ErosionType erosionType, int erosionIterations, bool runtimeErosion) {
+    public static float[,] GenerateTerrain(int terrainWidth, int terrainHeight, float scale, float frequency, int numberOfOctaves,
+        float persistance, float lacunarity, Vector2 userOffset, int erosionIterations, string seed = "", CustomFunctionType functionType = CustomFunctionType.kNone, float customExponent = 0.0f, float userAddition = 0.0f, ErosionGeneration.ErosionType erosionType = ErosionGeneration.ErosionType.kImprovedErosion, bool runtimeErosion = false) {
         float[,] currentTerrain = new float[terrainWidth, terrainHeight];
         // localScale is used when calculating how big the hills will be in the same area (highter the localScale, the more even the terrain)
         float localScale = scale <= 0 ? 0.0001f : scale;
@@ -101,25 +101,31 @@ public static class NoiseGeneration {
     }
 
     public static float[,] GenerateTemperatureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
+        // init boundries based on terrainHeight
+        float[,] baseNoiseMap = GenerateTerrain(terrainWidth, terrainHeight, 175, 3, 5, 0.3f, 4.5f, Vector2.zero, 50, userAddition: 0.4f);
+
+        float k = 2.5f / terrainHeight;
+        // then the last 30 % is the equator 
         float[,] temperatureMap = new float[terrainWidth, terrainHeight];
+        for (int y = 0; y < terrainHeight; y++) {
+            for (int x = 0; x < terrainWidth; x++) {
+                temperatureMap[x, y] = y < terrainHeight / 2.0f ? k * (terrainHeight / 2 - y) : k * (y - terrainHeight / 2.0f);
+                temperatureMap[x, y] = baseNoiseMap[x, y] * temperatureMap[x, y];
+            }
+        }
+        return temperatureMap;
+    }
+
+    // SWAPPED MOISTURE AND TEMP MAPS CUZ I HAVE A BETTER IDEA FOR TEMP MAPS !
+    public static float[,] GenerateMoistureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
+        float[,] moistureMap = new float[terrainWidth, terrainHeight];
         // temperature map is basiclly 1 - heightMap[x,y]
         // means that points that are really hight have a low temperature value (near 0)
         // hot points have values closer to 1 (deserts, ocean etc)
         // @TODO, think about implementing smarter temperature generation, equators, south/north poles ...
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
-                temperatureMap[x, y] = 1 - heightMap[x, y];
-            }
-        }
-        return temperatureMap;
-    }
-
-    public static float[,] GenerateMoistureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
-        // TODO IMPL
-        float[,] moistureMap = new float[terrainWidth, terrainHeight];
-        for (int y = 0; y < terrainHeight; y++) {
-            for (int x = 0; x < terrainWidth; x++) {
-                moistureMap[x, y] = 1;
+                moistureMap[x, y] = 1 - heightMap[x, y];
             }
         }
         return moistureMap;

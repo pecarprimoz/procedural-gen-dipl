@@ -47,10 +47,11 @@ public class ParameterEditorWidget : Editor {
     public void DrawDevelWidget() {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
         if (EditorWidgetFoldouts["DevelWidget"]) {
-            if (TerrainGenerationScript._GenerationType == TerrainGeneration.GenerationType.kSingleRun) {
-                if (GUILayout.Button("Gen. H, M, T maps")) {
-                    TerrainGenerationScript.GenerateTerrainOnDemand();
-                }
+            if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
+                TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
+            }
+            if (GUILayout.Button("Gen. H, M, T maps")) {
+                TerrainGenerationScript.GenerateTerrainOnDemand();
             }
         }
     }
@@ -178,7 +179,7 @@ public class ParameterEditorWidget : Editor {
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
-                    Debug.LogErrorFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", TerrainGenerationScript._GenerationType.ToString());
+                    Debug.LogWarningFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", TerrainGenerationScript._GenerationType.ToString());
                     TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
                 AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
