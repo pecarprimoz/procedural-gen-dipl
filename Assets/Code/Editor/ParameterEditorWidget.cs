@@ -47,10 +47,10 @@ public class ParameterEditorWidget : Editor {
     public void DrawDevelWidget() {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
         if (EditorWidgetFoldouts["DevelWidget"]) {
-            if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
-                TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
-            }
             if (GUILayout.Button("Gen. H, M, T maps")) {
+                if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
+                    TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
+                }
                 TerrainGenerationScript.GenerateTerrainOnDemand();
             }
         }
@@ -176,6 +176,9 @@ public class ParameterEditorWidget : Editor {
             GUILayout.BeginHorizontal();
             GUILayout.Label("Pick a generation type");
             TerrainGenerationScript._GenerationType = (TerrainGeneration.GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._GenerationType);
+            if (TerrainGenerationScript._GenerationType == TerrainGeneration.GenerationType.kUpdating) {
+                var a = 1;
+            }
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
