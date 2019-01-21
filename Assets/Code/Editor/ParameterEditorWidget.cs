@@ -51,7 +51,7 @@ public class ParameterEditorWidget : Editor {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
                     TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
-                TerrainGenerationScript.GenerateTerrainOnDemand();
+                TerrainGenerationScript.InitializeTerrain();
             }
         }
     }
@@ -125,8 +125,9 @@ public class ParameterEditorWidget : Editor {
                     TerrainGenerationScript._ErosionType = loadedNoiseParameterPreset.ErosionType;
                     TerrainGenerationScript.ErosionIterations = loadedNoiseParameterPreset.ErosionIterations;
                     TerrainGenerationScript.RuntimeErosion = loadedNoiseParameterPreset.RuntimeErosion;
-                    TerrainGenerationScript.GenerateTerrainFromPreset();
+                    // reoderable parameter list needs to be set to null so the terrain parameters get fixed ! 
                     ReorderableParameterList = null;
+                    TerrainGenerationScript.GenerateTerrainFromPreset();
                 }
             }
             // Draws the GUI widgets for saving presets
@@ -176,9 +177,6 @@ public class ParameterEditorWidget : Editor {
             GUILayout.BeginHorizontal();
             GUILayout.Label("Pick a generation type");
             TerrainGenerationScript._GenerationType = (TerrainGeneration.GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainGenerationScript._GenerationType);
-            if (TerrainGenerationScript._GenerationType == TerrainGeneration.GenerationType.kUpdating) {
-                var a = 1;
-            }
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {

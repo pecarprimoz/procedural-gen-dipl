@@ -32,12 +32,10 @@ public class TerrainGeneration : MonoBehaviour {
 
     // Variables for terrain
     public float[,] TerrainHeightMap;
-    public Terrain _Terrain;
-
-    // DEVEL, TEMP MAP
     public float[,] TerrainTemperatureMap;
-    // DEVEL, MOIST MAP
     public float[,] TerrainMoistureMap;
+    public Terrain _Terrain;
+    
 
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
@@ -56,7 +54,7 @@ public class TerrainGeneration : MonoBehaviour {
         }
     }
 
-    void InitializeTerrain() {
+    public void InitializeTerrain() {
         _Terrain.terrainData.heightmapResolution = TerrainWidth + 1;
         _Terrain.terrainData.alphamapResolution = TerrainWidth;
         _Terrain.terrainData.SetDetailResolution(TerrainWidth, 16);
@@ -65,22 +63,15 @@ public class TerrainGeneration : MonoBehaviour {
         GenerateTerrainFromPreset();
     }
 
-    public void GenerateTerrainOnDemand() {
-        TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, NoiseScale,
-                    BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, ErosionIterations, Seed, CustomFunction, CustomExponent, GlobalNoiseAddition, _ErosionType, RuntimeErosion);
-        _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
-        TerrainTemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
-        TerrainMoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
-        ApplyErosion();
-        AssignSplatMap.DoSplat(TerrainHeightMap, _Terrain, _Terrain.terrainData, TerrainParameterList, TerrainWidth, TerrainHeight);
-    }
-
     public void GenerateTerrainFromPreset() {
         TerrainHeightMap = NoiseGeneration.GenerateTerrain(TerrainWidth, TerrainHeight, NoiseScale,
                     BaseFrequency, NumberOfOctaves, Persistance, Lacunarity, UserOffset, ErosionIterations, Seed, CustomFunction, CustomExponent, GlobalNoiseAddition, _ErosionType, RuntimeErosion);
+        // this can be parallelized 
+        ApplyErosion();
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
         TerrainTemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
         TerrainMoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
+        AssignSplatMap.DoSplat(TerrainHeightMap, _Terrain, _Terrain.terrainData, TerrainParameterList, TerrainWidth, TerrainHeight);
     }
 
     public void ApplyErosion() {
@@ -103,6 +94,5 @@ public class TerrainGeneration : MonoBehaviour {
             default:
                 break;
         }
-        _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
     }
 }
