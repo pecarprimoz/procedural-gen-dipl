@@ -134,7 +134,7 @@ public class ParameterEditorWidget : Editor {
                         TerrainGenerationScript.TerrainParameterList[i] = parameter;
                     }
                     ReorderableParameterList = null;
-                    TerrainGenerationScript.GenerateTerrainFromPreset();
+                    TerrainGenerationScript.GenerateTerrainOnDemand();
                     AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain,
                         TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList,
                         TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
