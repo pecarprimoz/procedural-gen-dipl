@@ -51,10 +51,7 @@ public class ParameterEditorWidget : Editor {
                 if (TerrainGenerationScript._GenerationType != TerrainGeneration.GenerationType.kSingleRun) {
                     TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
-                TerrainGenerationScript.InitializeTerrain();
-                AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain,
-                        TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList,
-                        TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
+                TerrainGenerationScript.GenerateTerrainOnDemand();
             }
         }
     }
