@@ -52,6 +52,9 @@ public class ParameterEditorWidget : Editor {
                     TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
                 TerrainGenerationScript.InitializeTerrain();
+                AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain,
+                        TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList,
+                        TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
             }
         }
     }
@@ -125,9 +128,16 @@ public class ParameterEditorWidget : Editor {
                     TerrainGenerationScript._ErosionType = loadedNoiseParameterPreset.ErosionType;
                     TerrainGenerationScript.ErosionIterations = loadedNoiseParameterPreset.ErosionIterations;
                     TerrainGenerationScript.RuntimeErosion = loadedNoiseParameterPreset.RuntimeErosion;
-                    // reoderable parameter list needs to be set to null so the terrain parameters get fixed ! 
+                    for (int i = 0; i < TerrainGenerationScript.TerrainParameterList.Count; i++) {
+                        var parameter = TerrainGenerationScript.TerrainParameterList[i];
+                        ValidateTexture(ref parameter);
+                        TerrainGenerationScript.TerrainParameterList[i] = parameter;
+                    }
                     ReorderableParameterList = null;
                     TerrainGenerationScript.GenerateTerrainFromPreset();
+                    AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain,
+                        TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList,
+                        TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
                 }
             }
             // Draws the GUI widgets for saving presets
@@ -219,13 +229,7 @@ public class ParameterEditorWidget : Editor {
             EditorGUI.LabelField(rect, currentParameter.TexturePath);
             rect.height = 22.0f;
             rect.y += 22.0f;
-            // Edge case if textures exist in runtime
-            if (currentParameter.TexturePath == null && currentParameter.TerrainTexture != null) {
-                currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
-            }
-            if (currentParameter.TerrainTexture == null && currentParameter.TexturePath != null) {
-                currentParameter.TerrainTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePath, typeof(Texture2D));
-            }
+            ValidateTexture(ref currentParameter);
             var newTerrainTexture = (Texture2D)EditorGUI.ObjectField(rect, "Texture", currentParameter.TerrainTexture, typeof(Texture2D));
             if (newTerrainTexture != currentParameter.TerrainTexture) {
                 currentParameter.TerrainTexture = newTerrainTexture;
@@ -243,6 +247,16 @@ public class ParameterEditorWidget : Editor {
             TerrainGenerationScript.TerrainParameterList.RemoveAt(list.index);
         };
         return ReorderableParameterList;
+    }
+
+    public static void ValidateTexture(ref TerrainParameters currentParameter) {
+        // Edge case if textures exist in runtime
+        if (currentParameter.TexturePath == null && currentParameter.TerrainTexture != null) {
+            currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
+        }
+        if (currentParameter.TerrainTexture == null && currentParameter.TexturePath != null) {
+            currentParameter.TerrainTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePath, typeof(Texture2D));
+        }
     }
 
     private void TryGeneratingSavedParameterList() {

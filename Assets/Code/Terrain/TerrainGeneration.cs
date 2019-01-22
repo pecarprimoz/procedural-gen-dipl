@@ -71,7 +71,6 @@ public class TerrainGeneration : MonoBehaviour {
         _Terrain.terrainData.SetHeights(0, 0, TerrainHeightMap);
         TerrainTemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
         TerrainMoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
-        AssignSplatMap.DoSplat(TerrainHeightMap, _Terrain, _Terrain.terrainData, TerrainParameterList, TerrainWidth, TerrainHeight);
     }
 
     public void ApplyErosion() {
