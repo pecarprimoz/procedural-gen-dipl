@@ -11,7 +11,7 @@ public class AssignSplatMap : MonoBehaviour {
         }
         return true;
     }
-    public static void DoSplat(float[,] terrainHeightMap, Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList, int terrainWidth, int terrainHeight) {
+    public static void DoSplat(float[,] terrainHeightMap, float[,] terrainTemperatureMap, float[,] terrainMoistureMap, Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList, int terrainWidth, int terrainHeight) {
         if (!ValidParameterCheck(terrainParameterList)) {
             Debug.LogError("Invalid textures for splat mapping, make sure you have textures set in the reorderable list!");
             return;
@@ -29,27 +29,23 @@ public class AssignSplatMap : MonoBehaviour {
 
                 // Setup an array to record the mix of texture weights at this point
                 float[] splatWeights = new float[terrainData.alphamapLayers];
-
-                for (int i = 0; i < terrainParameterList.Count; i++) {
-                    if (height <= terrainParameterList[i].ParameterBoundry) {
-                        // if the current parameterBoundry is smaller or equal to the height means we found our boundry
-                        splatWeights[i] = 0.5f;
-                        // blending, if we arnt at ocean/snow level
-                        if (i >= 1 && i < terrainParameterList.Count - 1) {
-                            splatWeights[i + 1] = 0.25f;
-                            splatWeights[i - 1] = 0.25f;
-                        }
-                        // we are at ocean level, blend the sand
-                        else if (i == 0) {
-                            splatWeights[i + 1] = 0.5f;
-                        } 
-                        // we are at snow level, blend the snow
-                        else if (i == terrainParameterList.Count - 1) {
-                            splatWeights[i - 1] = 0.5f;
-                        }
-                        break;
-                    }
+                int idx = TextureGeneration.GetCorrectBiomeIndex(terrainHeightMap, terrainTemperatureMap, terrainMoistureMap, terrainParameterList, x, y);
+                // if the current parameterBoundry is smaller or equal to the height means we found our boundry
+                splatWeights[idx] = 0.5f;
+                // blending, if we arnt at ocean/snow level
+                if (idx >= 1 && idx < terrainParameterList.Count - 1) {
+                    splatWeights[idx + 1] = 0.25f;
+                    splatWeights[idx - 1] = 0.25f;
                 }
+                // we are at ocean level, blend the sand
+                else if (idx == 0) {
+                    splatWeights[idx + 1] = 0.5f;
+                }
+                // we are at snow level, blend the snow
+                else if (idx == terrainParameterList.Count - 1) {
+                    splatWeights[idx - 1] = 0.5f;
+                }
+
 
                 // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
                 // float z = splatWeights.Sum();

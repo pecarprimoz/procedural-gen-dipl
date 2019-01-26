@@ -57,26 +57,33 @@ public static class NoiseGeneration {
         // apply custom functions to the terrain heights
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
+                float final_value = 0.0f;
                 switch (functionType) {
                     case CustomFunctionType.kSin:
-                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Sin(currentTerrain[x, y]));
+                        final_value = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Sin(currentTerrain[x, y]));
                         break;
                     case CustomFunctionType.kCos:
-                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Cos(currentTerrain[x, y]));
+                        final_value = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Cos(currentTerrain[x, y]));
                         break;
                     case CustomFunctionType.kEps:
-                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Epsilon);
+                        final_value = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), Mathf.Epsilon);
                         break;
                     case CustomFunctionType.kCustom:
-                        currentTerrain[x, y] = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent) + userAddition;
+                        final_value = Mathf.Pow(Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]), customExponent) + userAddition;
                         break;
                     case CustomFunctionType.kNone:
-                        currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
+                        final_value = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
                         break;
                     default:
-                        currentTerrain[x, y] = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
+                        final_value = Mathf.InverseLerp(minNoiseHeight, maxNoiseHeight, currentTerrain[x, y]) + userAddition;
                         break;
                 }
+                if (final_value > 1.0f) {
+                    final_value = 1.0f;
+                } else if (final_value < 0.0f) {
+                    final_value = 0.0f;
+                }
+                currentTerrain[x, y] = final_value;
             }
         }
         // erode the terrain, this is currently in runtime
@@ -110,7 +117,8 @@ public static class NoiseGeneration {
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
                 temperatureMap[x, y] = y < terrainHeight / 2.0f ? k * (terrainHeight / 2 - y) : k * (y - terrainHeight / 2.0f);
-                temperatureMap[x, y] = baseNoiseMap[x, y] * temperatureMap[x, y];
+                float endVal = baseNoiseMap[x, y] * temperatureMap[x, y];
+                temperatureMap[x, y] = endVal > 1 ? 1 : endVal;
             }
         }
         return temperatureMap;

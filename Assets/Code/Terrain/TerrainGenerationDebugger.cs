@@ -4,7 +4,8 @@ public class TerrainGenerationDebugger : MonoBehaviour {
     public enum DebugPlaneContent {
         kHeightMap,
         kMoistureMap,
-        kTemperatureMap
+        kTemperatureMap,
+        kAll
     }
 
     public TerrainGeneration tg;
@@ -27,17 +28,7 @@ public class TerrainGenerationDebugger : MonoBehaviour {
         }
         texture.filterMode = FilterMode.Point;
         texture.wrapMode = TextureWrapMode.Clamp;
-        switch (planeContent) {
-            case (DebugPlaneContent.kHeightMap):
-                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainHeightMap, tg.TerrainParameterList, tg.TerrainTextureType));
-                break;
-            case (DebugPlaneContent.kMoistureMap):
-                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainMoistureMap, tg.TerrainParameterList, tg.TerrainTextureType));
-                break;
-            case (DebugPlaneContent.kTemperatureMap):
-                texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg.TerrainWidth, tg.TerrainHeight, tg.TerrainTemperatureMap, tg.TerrainParameterList, tg.TerrainTextureType));
-                break;
-        }
+        texture.SetPixels(TextureGeneration.GenerateHeightmapTexture(tg, planeContent));
         texture.Apply();
     }
 }

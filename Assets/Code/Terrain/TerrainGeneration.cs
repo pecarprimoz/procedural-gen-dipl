@@ -14,7 +14,7 @@ public class TerrainGeneration : MonoBehaviour {
     // Terrain parameters, change this if you want a bigger/higher terrain
     public readonly int TerrainWidth = 128;
     public readonly int TerrainHeight = 128;
-    public readonly int TerrainDepth = 60;
+    public readonly int TerrainDepth = 64;
 
     // Parameters for perlin generations, overwritten with editor parameters (see Editor/ParameterEditorWidget)
     public float NoiseScale = 100.0f;
@@ -35,7 +35,7 @@ public class TerrainGeneration : MonoBehaviour {
     public float[,] TerrainTemperatureMap;
     public float[,] TerrainMoistureMap;
     public Terrain _Terrain;
-    
+
 
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
@@ -79,7 +79,7 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainTemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
         TerrainMoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainWidth, TerrainHeight, TerrainHeightMap);
         ApplyErosion();
-        AssignSplatMap.DoSplat(TerrainHeightMap, _Terrain, _Terrain.terrainData, TerrainParameterList, TerrainWidth, TerrainHeight);
+        AssignSplatMap.DoSplat(TerrainHeightMap, TerrainTemperatureMap, TerrainMoistureMap, _Terrain, _Terrain.terrainData, TerrainParameterList, TerrainWidth, TerrainHeight);
     }
 
     public void ApplyErosion() {

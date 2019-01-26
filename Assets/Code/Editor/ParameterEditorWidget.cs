@@ -132,7 +132,7 @@ public class ParameterEditorWidget : Editor {
                     }
                     ReorderableParameterList = null;
                     TerrainGenerationScript.GenerateTerrainOnDemand();
-                    AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain,
+                    AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript.TerrainTemperatureMap, TerrainGenerationScript.TerrainMoistureMap, TerrainGenerationScript._Terrain,
                         TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList,
                         TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
                 }
@@ -190,7 +190,7 @@ public class ParameterEditorWidget : Editor {
                     Debug.LogWarningFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", TerrainGenerationScript._GenerationType.ToString());
                     TerrainGenerationScript._GenerationType = TerrainGeneration.GenerationType.kSingleRun;
                 }
-                AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
+                AssignSplatMap.DoSplat(TerrainGenerationScript.TerrainHeightMap, TerrainGenerationScript.TerrainTemperatureMap, TerrainGenerationScript.TerrainMoistureMap, TerrainGenerationScript._Terrain, TerrainGenerationScript._Terrain.terrainData, TerrainGenerationScript.TerrainParameterList, TerrainGenerationScript.TerrainWidth, TerrainGenerationScript.TerrainHeight);
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         }
