@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class SerializationManager {
 
-    private static string NoiseParameterLocation = @"Assets\Resources\NoiseParameterPresets\";
+    private static string NoiseParameterLocationWindows = @"Assets\Resources\NoiseParameterPresets\";
+    private static string NoiseParameterLocationOSX = @"Assets/Resources/NoiseParameterPresets";
+    private static string NoiseParameterLocation = "";
+
 
     public static void SaveNoiseParameters(string name, NoiseParameters parameters) {
         if (name.Length == 0) {
@@ -24,6 +27,14 @@ public class SerializationManager {
     }
 
     public static List<NoiseParameters> ReadAllNoiseParameters() {
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            NoiseParameterLocation = NoiseParameterLocationWindows;
+        }
+        else if (Application.platform == RuntimePlatform.OSXEditor)
+        {
+            NoiseParameterLocation = NoiseParameterLocationOSX;
+        }
         List<NoiseParameters> allNoiseParameters = new List<NoiseParameters>();
         foreach (string file in Directory.GetFiles(NoiseParameterLocation, "*.json")) {
             string jsonContent = File.ReadAllText(file);
