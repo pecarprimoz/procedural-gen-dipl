@@ -25,7 +25,7 @@ public class AssignSplatMap : MonoBehaviour {
         terrainData.splatPrototypes = splat_lists;
         for (int y = 0; y < terrainData.alphamapHeight; y++) {
             for (int x = 0; x < terrainData.alphamapWidth; x++) {
-                float height = terrainHeightMap[x, y];
+                // float height = terrainHeightMap[x, y];
 
                 // Setup an array to record the mix of texture weights at this point
                 float[] splatWeights = new float[terrainData.alphamapLayers];

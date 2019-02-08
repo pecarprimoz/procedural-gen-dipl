@@ -12,9 +12,9 @@ public class TerrainGeneration : MonoBehaviour {
     public bool RuntimeErosion = false;
 
     // Terrain parameters, change this if you want a bigger/higher terrain
-    public readonly int TerrainWidth = 128;
-    public readonly int TerrainHeight = 128;
-    public readonly int TerrainDepth = 64;
+    public int TerrainWidth = 128;
+    public int TerrainHeight = 128;
+    public int TerrainDepth = 64;
 
     // Parameters for perlin generations, overwritten with editor parameters (see Editor/ParameterEditorWidget)
     public float NoiseScale = 100.0f;
@@ -44,6 +44,8 @@ public class TerrainGeneration : MonoBehaviour {
     public GenerationType _GenerationType = GenerationType.kSingleRun;
 
     void Start() {
+        // Initialize manager, need to handle path for different platforms (OSX, Windows)
+        SerializationManager.InitializeManager();
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values
         InitializeTerrain();
     }

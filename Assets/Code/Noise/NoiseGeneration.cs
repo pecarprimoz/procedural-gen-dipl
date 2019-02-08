@@ -109,14 +109,11 @@ public static class NoiseGeneration {
 
     public static float[,] GenerateTemperatureMap(int terrainWidth, int terrainHeight, float[,] heightMap) {
         // init boundries based on terrainHeight
-        float[,] baseNoiseMap = GenerateTerrain(terrainWidth, terrainHeight, 175, 3, 5, 0.3f, 4.5f, Vector2.zero, 50, userAddition: 0.4f);
-
-        float k = 2.5f / terrainHeight;
-        // then the last 30 % is the equator 
+        float[,] baseNoiseMap = GenerateTerrain(terrainWidth, terrainHeight, 175, 3, 5, 0.3f, 4.5f, Vector2.zero, 50, userAddition: 0.2f);
         float[,] temperatureMap = new float[terrainWidth, terrainHeight];
         for (int y = 0; y < terrainHeight; y++) {
             for (int x = 0; x < terrainWidth; x++) {
-                temperatureMap[x, y] = y < terrainHeight / 2.0f ? k * (terrainHeight / 2 - y) : k * (y - terrainHeight / 2.0f);
+                temperatureMap[x, y] = (float)(terrainHeight - y) / terrainHeight;
                 float endVal = baseNoiseMap[x, y] * temperatureMap[x, y];
                 temperatureMap[x, y] = endVal > 1 ? 1 : endVal;
             }

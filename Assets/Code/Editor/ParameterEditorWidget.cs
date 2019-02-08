@@ -11,11 +11,12 @@ public class ParameterEditorWidget : Editor {
     private string NoisePresetName = string.Empty;
     private int DeleteFailsafe = 0;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();
-    private List<string> EditorWidgetNames = new List<string> { "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
+    private List<string> EditorWidgetNames = new List<string> { "TerrainSettingsWidget", "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     public string[] AllParameterNames = new string[0];
 
     private void OnEnable() {
+        CurrentSelectedIndex = EditorPrefs.GetInt("ParameterPresetIdx");
         foreach (var widgetName in EditorWidgetNames) {
             EditorWidgetFoldouts.Add(widgetName, true);
         }
@@ -23,7 +24,7 @@ public class ParameterEditorWidget : Editor {
         TryGeneratingSavedParameterList();
         // This is to have the parameter list already loaded
         if (AllParameters.Count > 0) {
-            TerrainGenerationScript.TerrainParameterList = AllParameters[0].TerrainParameterList;
+            TerrainGenerationScript.TerrainParameterList = AllParameters[CurrentSelectedIndex].TerrainParameterList;
         }
     }
 
@@ -31,6 +32,7 @@ public class ParameterEditorWidget : Editor {
     /// The main InspectorGUI code, every widget drawer gets called here
     /// </summary>
     public override void OnInspectorGUI() {
+        DrawTerrainSettingsWidget();
         DrawDevelWidget();
         DrawErosionTypeProperties();
         DrawTerrainGenerationProperties();
@@ -43,6 +45,18 @@ public class ParameterEditorWidget : Editor {
         EditorUtility.SetDirty(TerrainGenerationScript);
     }
 
+    public void DrawTerrainSettingsWidget() {
+        EditorWidgetFoldouts["TerrainSettingsWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["TerrainSettingsWidget"], "TerrainSettingsWidget");
+        if (EditorWidgetFoldouts["TerrainSettingsWidget"]) {
+            GUILayout.Label("ONLY EDIT THESE PARAMETERS WHEN THE GAME IS NOT RUNNING!");
+            var width = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainWidth", TerrainGenerationScript.TerrainWidth);
+            TerrainGenerationScript.TerrainWidth = width <= 0 ? 128 : width;
+            var height = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainHeight", TerrainGenerationScript.TerrainHeight);
+            TerrainGenerationScript.TerrainHeight = height <= 0 ? 128 : height;
+            var depth = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainDepth", TerrainGenerationScript.TerrainDepth);
+            TerrainGenerationScript.TerrainDepth = depth <= 0 ? 128 : depth;
+        }
+    }
     // Used for devel stuff
     public void DrawDevelWidget() {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
@@ -257,11 +271,16 @@ public class ParameterEditorWidget : Editor {
     }
 
     private void TryGeneratingSavedParameterList() {
+        SerializationManager.InitializeManager();
         AllParameters = SerializationManager.ReadAllNoiseParameters();
         AllParameterNames = new string[AllParameters.Count];
         for (int i = 0; i < AllParameters.Count; i++) {
             AllParameterNames[i] = AllParameters[i].NoiseParameterName;
         }
+    }
+
+    private void OnDisable() {
+        EditorPrefs.SetInt("ParameterPresetIdx", CurrentSelectedIndex);
     }
 
     // Helper to draw a line in edtior, cuz Unity...

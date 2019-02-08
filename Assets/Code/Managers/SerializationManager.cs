@@ -3,13 +3,17 @@ using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
 
-public class SerializationManager {
-
+public static class SerializationManager {
     private static string NoiseParameterLocationWindows = @"Assets\Resources\NoiseParameterPresets\";
     private static string NoiseParameterLocationOSX = @"Assets/Resources/NoiseParameterPresets";
     private static string NoiseParameterLocation = "";
-
-
+    public static void InitializeManager() {
+        if (Application.platform == RuntimePlatform.WindowsEditor) {
+            NoiseParameterLocation = NoiseParameterLocationWindows;
+        } else if (Application.platform == RuntimePlatform.OSXEditor) {
+            NoiseParameterLocation = NoiseParameterLocationOSX;
+        }
+    }
     public static void SaveNoiseParameters(string name, NoiseParameters parameters) {
         if (name.Length == 0) {
             Debug.LogError(string.Format("Name cannot be empty."));
@@ -27,14 +31,6 @@ public class SerializationManager {
     }
 
     public static List<NoiseParameters> ReadAllNoiseParameters() {
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            NoiseParameterLocation = NoiseParameterLocationWindows;
-        }
-        else if (Application.platform == RuntimePlatform.OSXEditor)
-        {
-            NoiseParameterLocation = NoiseParameterLocationOSX;
-        }
         List<NoiseParameters> allNoiseParameters = new List<NoiseParameters>();
         foreach (string file in Directory.GetFiles(NoiseParameterLocation, "*.json")) {
             string jsonContent = File.ReadAllText(file);
