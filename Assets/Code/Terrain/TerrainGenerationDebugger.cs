@@ -21,9 +21,9 @@ public class TerrainGenerationDebugger : MonoBehaviour {
         // Fun fact, Unity does not GC new Terrains, which results in a memory leak, to prevent this we call destroy and have the texture as static
         Destroy(texture);
         // The debug terrain is driven by the TerrainGeneration (the main terrain that we are working on)
-        texture = new Texture2D(tg.TerrainWidth, tg.TerrainHeight);
+        texture = new Texture2D(tg.TerrainInfo.TerrainWidth, tg.TerrainInfo.TerrainHeight);
         GetComponent<Renderer>().material.mainTexture = texture;
-        if (tg.TerrainHeightMap == null) {
+        if (tg.TerrainInfo.HeightMap == null) {
             return;
         }
         texture.filterMode = FilterMode.Point;

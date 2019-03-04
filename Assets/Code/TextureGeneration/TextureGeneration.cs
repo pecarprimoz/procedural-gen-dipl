@@ -3,28 +3,28 @@ using System.Linq;
 using UnityEngine;
 
 public static class TextureGeneration {
-    public static Color[] GenerateHeightmapTexture(TerrainGeneration _tg, TerrainGenerationDebugger.DebugPlaneContent planeContent) {
-        Color[] terrainTexture = new Color[_tg.TerrainWidth * _tg.TerrainHeight];
-        for (int y = 0; y < _tg.TerrainHeight; y++) {
-            for (int x = 0; x < _tg.TerrainWidth; x++) {
-                if (_tg.TerrainTextureType == NoiseParameters.TextureType.kColored) {
+    public static Color[] GenerateHeightmapTexture(TerrainGeneration terrainGeneration, TerrainGenerationDebugger.DebugPlaneContent planeContent) {
+        Color[] terrainTexture = new Color[terrainGeneration.TerrainInfo.TerrainWidth * terrainGeneration.TerrainInfo.TerrainHeight];
+        for (int y = 0; y < terrainGeneration.TerrainInfo.TerrainHeight; y++) {
+            for (int x = 0; x < terrainGeneration.TerrainInfo.TerrainWidth; x++) {
+                if (terrainGeneration.TerrainInfo.TerrainTextureType == NoiseParameters.TextureType.kColored) {
                     // do check if textureType is all
-                    terrainTexture[y * _tg.TerrainWidth + x] = _tg.TerrainParameterList[GetCorrectBiomeIndex(_tg, x, y)].TerrainColor;
-                } else if (_tg.TerrainTextureType == NoiseParameters.TextureType.kGrayscale) {
+                    terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = terrainGeneration.TerrainInfo.TerrainParameterList[GetCorrectBiomeIndex(terrainGeneration, x, y)].TerrainColor;
+                } else if (terrainGeneration.TerrainInfo.TerrainTextureType == NoiseParameters.TextureType.kGrayscale) {
                     if (planeContent == TerrainGenerationDebugger.DebugPlaneContent.kHeightMap) {
-                        terrainTexture[y * _tg.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, _tg.TerrainHeightMap[x, y]);
+                        terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, terrainGeneration.TerrainInfo.HeightMap[x, y]);
                     } else if (planeContent == TerrainGenerationDebugger.DebugPlaneContent.kMoistureMap) {
-                        terrainTexture[y * _tg.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, _tg.TerrainMoistureMap[x, y]);
+                        terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, terrainGeneration.TerrainInfo.MoistureMap[x, y]);
                     } else if (planeContent == TerrainGenerationDebugger.DebugPlaneContent.kTemperatureMap) {
-                        terrainTexture[y * _tg.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, _tg.TerrainTemperatureMap[x, y]);
+                        terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, terrainGeneration.TerrainInfo.TemperatureMap[x, y]);
                     }
                 }
             }
         }
         return terrainTexture;
     }
-    public static int GetCorrectBiomeIndex(TerrainGeneration _tg, int x, int y) {
-        return GetCorrectBiomeIndex(_tg.TerrainHeightMap, _tg.TerrainTemperatureMap, _tg.TerrainMoistureMap, _tg.TerrainParameterList, x, y);
+    public static int GetCorrectBiomeIndex(TerrainGeneration terrainGeneration, int x, int y) {
+        return GetCorrectBiomeIndex(terrainGeneration.TerrainInfo.HeightMap, terrainGeneration.TerrainInfo.TemperatureMap, terrainGeneration.TerrainInfo.MoistureMap, terrainGeneration.TerrainInfo.TerrainParameterList, x, y);
     }
 
     public static int GetCorrectBiomeIndex(float[,] heightMap, float[,] tempMap, float[,] moistMap, List<TerrainParameters> terrainParameterList, int x, int y) {

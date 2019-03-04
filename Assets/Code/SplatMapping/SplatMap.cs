@@ -11,6 +11,10 @@ public class AssignSplatMap : MonoBehaviour {
         }
         return true;
     }
+    public static void DoSplat(TerrainInfo info) {
+        DoSplat(info.HeightMap, info.TemperatureMap, info.MoistureMap, info._Terrain, info._Terrain.terrainData, info.TerrainParameterList, info.TerrainWidth, info.TerrainHeight);
+    }
+
     public static void DoSplat(float[,] terrainHeightMap, float[,] terrainTemperatureMap, float[,] terrainMoistureMap, Terrain terrain, TerrainData terrainData, List<TerrainParameters> terrainParameterList, int terrainWidth, int terrainHeight) {
         if (!ValidParameterCheck(terrainParameterList)) {
             Debug.LogError("Invalid textures for splat mapping, make sure you have textures set in the reorderable list!");

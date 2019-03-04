@@ -7,23 +7,26 @@ public class ErosionGeneration {
         kImprovedErosion
     }
 
-    public static void ThermalErosion(ref float[,] terrainMap, int width, int height, int iter) {
-        float talus = 4.0f / width;
+    public static float[,] ThermalErosion(TerrainInfo info) {
+
+        float talus = 4.0f / info.TerrainWidth;
         int lowestX = -1, lowestY = -1;
+
+        float[,] tempMap = info.HeightMap;
 
         float currentDifference, currentHeight,
               maxDifference,
               newHeight;
         // run the erosion iter times to get an eroded terrain
-        for (int o = 0; o < iter; o++) {
-            for (int y = 1; y < height - 1; y++) {
-                for (int x = 1; x < width - 1; x++) {
-                    currentHeight = terrainMap[x, y];
+        for (int o = 0; o < info.ErosionIterations; o++) {
+            for (int y = 1; y < info.TerrainHeight - 1; y++) {
+                for (int x = 1; x < info.TerrainWidth - 1; x++) {
+                    currentHeight = tempMap[x, y];
                     maxDifference = -float.MaxValue;
                     // using von neumann neighbourhood (faster) 
                     for (int i = -1; i < 2; i += 2) {
                         for (int j = -1; j < 2; j += 2) {
-                            currentDifference = currentHeight - terrainMap[x + i, y + j];
+                            currentDifference = currentHeight - tempMap[x + i, y + j];
                             if (currentDifference > maxDifference) {
                                 maxDifference = currentDifference;
                                 lowestX = i;
@@ -34,29 +37,30 @@ public class ErosionGeneration {
                     // redestribute the biggest height to the lowest memeber
                     if (maxDifference > talus) {
                         newHeight = currentHeight - maxDifference / 2.0f;
-                        terrainMap[x, y] = newHeight;
-                        terrainMap[x + lowestX, y + lowestY] = newHeight;
+                        tempMap[x, y] = newHeight;
+                        tempMap[x + lowestX, y + lowestY] = newHeight;
                     }
                 }
             }
         }
+        return tempMap;
     }
-    public static void ImprovedThermalErosion(ref float[,] terrainMap, int width, int height, int iter) {
-        float talus = 4.0f / width;
+    public static float[,] ImprovedThermalErosion(TerrainInfo info) {
+        float talus = 4.0f / info.TerrainWidth;
         int lowestX = -1, lowestY = -1;
-
+        float[,] tmpMap = info.HeightMap;
         float currentDifference, currentHeight,
               maxDifference,
               newHeight;
         // iter one for simplicity
-        for (int o = 0; o < iter; o++) {
-            for (int y = 1; y < height - 1; y++) {
-                for (int x = 1; x < width - 1; x++) {
-                    currentHeight = terrainMap[x, y];
+        for (int o = 0; o < info.ErosionIterations; o++) {
+            for (int y = 1; y < info.TerrainHeight - 1; y++) {
+                for (int x = 1; x < info.TerrainWidth - 1; x++) {
+                    currentHeight = tmpMap[x, y];
                     maxDifference = -float.MaxValue;
                     for (int i = -1; i < 2; i += 1) {
                         for (int j = -1; j < 2; j += 1) {
-                            currentDifference = currentHeight - terrainMap[x + i, y + j];
+                            currentDifference = currentHeight - tmpMap[x + i, y + j];
                             if (currentDifference > maxDifference) {
                                 maxDifference = currentDifference;
                                 lowestX = i;
@@ -67,50 +71,51 @@ public class ErosionGeneration {
                     // we make sure the max difference is bigger than 0
                     if (maxDifference > 0.0f && maxDifference <= talus) {
                         newHeight = currentHeight - maxDifference / 2.0f;
-                        terrainMap[x, y] = newHeight;
-                        terrainMap[x + lowestX, y + lowestY] = newHeight;
+                        tmpMap[x, y] = newHeight;
+                        tmpMap[x + lowestX, y + lowestY] = newHeight;
                     }
                 }
             }
         }
+        return tmpMap;
     }
-    public static void HydraulicErosion(ref float[,] terrainMap, int width, int height, int iter) {
+    public static float[,] HydraulicErosion(TerrainInfo info) {
         int x, y, i, j, iterCount,
         lowestX = -1, lowestY = -1;
-
-        float[,] water_map = new float[width, height];
+        float[,] tmpMap = info.HeightMap;
+        float[,] water_map = new float[info.TerrainWidth, info.TerrainHeight];
         float rainAmmount = 0.01f, //amount of rain dropped per pixel each iteration
           solubility = 0.01f, //how much sediment a unit of water will erode
           evaporation = 0.9f, //how much water evaporates from each pixel each iteration
           capacity = solubility, //how much sediment a unit of water can hold
           waterLost, currentHeight, currentDifference, maxDifference; //temporary variables
         // initialise water map
-        for (i = 0; i < height; ++i) {
-            for (j = 0; j < width; ++j)
+        for (i = 0; i < info.TerrainHeight; ++i) {
+            for (j = 0; j < info.TerrainWidth; ++j)
                 water_map[i, j] = 0.0f;
         }
-        for (iterCount = 0; iterCount < iter; ++iterCount) {
+        for (iterCount = 0; iterCount < info.ErosionIterations; ++iterCount) {
             //step 1: rain
-            for (x = 0; x < height; ++x) {
-                for (y = 0; y < width; ++y)
+            for (x = 0; x < info.TerrainHeight; ++x) {
+                for (y = 0; y < info.TerrainWidth; ++y)
                     water_map[x, y] += rainAmmount;
             }
             //step 2: erosion
-            for (x = 0; x < height; ++x) {
-                for (y = 0; y < width; ++y) {
-                    terrainMap[x, y] -= water_map[x, y] * solubility;
+            for (x = 0; x < info.TerrainHeight; ++x) {
+                for (y = 0; y < info.TerrainWidth; ++y) {
+                    tmpMap[x, y] -= water_map[x, y] * solubility;
                 }
             }
             //step 3: movement
             // again neumann neighbours, smallest member gets height redistributed from largest member
-            for (x = 1; x < (height - 1); ++x) {
-                for (y = 1; y < (width - 1); ++y) {
+            for (x = 1; x < (info.TerrainHeight - 1); ++x) {
+                for (y = 1; y < (info.TerrainWidth - 1); ++y) {
                     //find the lowest neighbor
-                    currentHeight = terrainMap[x, y] + water_map[x, y];
+                    currentHeight = tmpMap[x, y] + water_map[x, y];
                     maxDifference = -float.MaxValue;
                     for (i = -1; i < 2; i += 1) {
                         for (j = -1; j < 2; j += 1) {
-                            currentDifference = currentHeight - terrainMap[x + i, y + j] - water_map[x + i, y + i];
+                            currentDifference = currentHeight - tmpMap[x + i, y + j] - water_map[x + i, y + i];
                             if (currentDifference > maxDifference) {
                                 maxDifference = currentDifference;
                                 lowestX = i;
@@ -134,13 +139,14 @@ public class ErosionGeneration {
                 }
             }
             //step 4: evaporation / deposition
-            for (x = 0; x < height; ++x) {
-                for (y = 0; y < width; ++y) {
+            for (x = 0; x < info.TerrainHeight; ++x) {
+                for (y = 0; y < info.TerrainWidth; ++y) {
                     waterLost = water_map[x, y] * evaporation;
                     water_map[x, y] -= waterLost;
-                    terrainMap[x, y] += waterLost * capacity;
+                    tmpMap[x, y] += waterLost * capacity;
                 }
             }
         }
+        return tmpMap;
     }
 }
