@@ -5,8 +5,9 @@
 (PC)](https://unity3d.com/get-unity/download?thank-you=update&download_nid=59169&os=Win) / [Unity 2018.2.18f 
 (MAC)](https://unity3d.com/get-unity/download?thank-you=update&download_nid=59169&os=Mac)
 3. Open the project in Unity, wait for the project generation.
-4. Set the starting parameters in the prefab `ProceduralTerrain`, trough the script `Terrain Generation`. You 
-can also edit these properties when the project is running.
+4. Run the project, then set the parameters on the `ProceduralTerrain` 
+perfab., trough the script `Terrain Generation' (auto updates when you 
+run the game).
 ##### Optional
 `DebugTerrainCamera` displays the heightmap on the `DebugPlane`, if you want to see the terrain from an 
 orthographic perspective, turn on `CameraTerrain`.
