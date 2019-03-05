@@ -43,6 +43,8 @@ public class TerrainInfo {
     public float[,] MoistureMap;
     public float[,] TemperatureMap;
 
+    public BiomeTypes[,] BiomeMap;
+
     // Used for creating the terrain in runtime, then switch to single run-s to paint the terrain
     public GenerationType GenerationType = GenerationType.kSingleRun;
 

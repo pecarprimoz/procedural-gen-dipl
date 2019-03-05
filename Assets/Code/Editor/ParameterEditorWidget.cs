@@ -162,9 +162,7 @@ public class ParameterEditorWidget : Editor {
                     }
                     ReorderableParameterList = null;
                     Script.GenerateTerrainOnDemand();
-                    AssignSplatMap.DoSplat(TerrainInfo.HeightMap, TerrainInfo.TemperatureMap, TerrainInfo.MoistureMap, TerrainInfo._Terrain,
-                        TerrainInfo._Terrain.terrainData, TerrainInfo.TerrainParameterList,
-                        TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight);
+                    AssignSplatMap.DoSplat(TerrainInfo);
                 }
             }
             // Draws the GUI widgets for saving presets
@@ -220,7 +218,7 @@ public class ParameterEditorWidget : Editor {
                     Debug.LogWarningFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", TerrainInfo.GenerationType.ToString());
                     TerrainInfo.GenerationType = GenerationType.kSingleRun;
                 }
-                AssignSplatMap.DoSplat(TerrainInfo.HeightMap, TerrainInfo.TemperatureMap, TerrainInfo.MoistureMap, TerrainInfo._Terrain, TerrainInfo._Terrain.terrainData, TerrainInfo.TerrainParameterList, TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight);
+                AssignSplatMap.DoSplat(TerrainInfo);
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
         }

@@ -43,6 +43,7 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         ApplyErosion();
         AssignSplatMap.DoSplat(TerrainInfo);
+        TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
     }
 
     public void ApplyErosion() {

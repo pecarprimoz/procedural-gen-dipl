@@ -9,6 +9,7 @@
 run the game, currently developing on `0_WHITTAKER_APPROX`).
 ##### Additional info
 You might want to debug moisture, temperature and height maps. To do that, select `TerrainDebugPlane` and set the `Plane Content` to the preffered map (kAll works with color, displays the biomes!).
+If you want to have a biome map, you need to load one of the `WHITTAKER_APPROX` presets (this is due to older presets having wrong parameter boundaries for biomes).
 ##### Optional
 `DebugTerrainCamera` displays the heightmap on the `DebugPlane`, if you want to see the terrain from an 
 orthographic perspective, turn on `CameraTerrain`.
