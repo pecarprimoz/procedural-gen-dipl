@@ -7,9 +7,14 @@ public static class TextureGeneration {
         Color[] terrainTexture = new Color[terrainGeneration.TerrainInfo.TerrainWidth * terrainGeneration.TerrainInfo.TerrainHeight];
         for (int y = 0; y < terrainGeneration.TerrainInfo.TerrainHeight; y++) {
             for (int x = 0; x < terrainGeneration.TerrainInfo.TerrainWidth; x++) {
-                if (terrainGeneration.TerrainInfo.TerrainTextureType == TextureType.kColored) {
-                    // do check if textureType is all
-                    terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = terrainGeneration.TerrainInfo.TerrainParameterList[GetCorrectBiomeIndex(terrainGeneration, x, y)].TerrainColor;
+                if (planeContent == DebugPlaneType.kAll) {
+                    if (terrainGeneration.TerrainInfo.TerrainTextureType == TextureType.kColored) {
+                        terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = terrainGeneration.TerrainInfo.TerrainParameterList[GetCorrectBiomeIndex(terrainGeneration, x, y)].TerrainColor;
+                    } else {
+                        var valsTogether = terrainGeneration.TerrainInfo.HeightMap[x, y] + terrainGeneration.TerrainInfo.TemperatureMap[x, y] + terrainGeneration.TerrainInfo.MoistureMap[x, y];
+                        valsTogether = valsTogether / 3;
+                        terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, valsTogether);
+                    }
                 } else if (terrainGeneration.TerrainInfo.TerrainTextureType == TextureType.kGrayscale) {
                     if (planeContent == DebugPlaneType.kHeightMap) {
                         terrainTexture[y * terrainGeneration.TerrainInfo.TerrainWidth + x] = Color.Lerp(Color.white, Color.black, terrainGeneration.TerrainInfo.HeightMap[x, y]);
