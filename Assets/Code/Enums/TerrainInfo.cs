@@ -33,9 +33,9 @@ public class TerrainInfo {
 
     public string Seed = "";
     public Vector2 UserOffset = Vector2.zero;
-    public NoiseGeneration.CustomFunctionType CustomFunction = NoiseGeneration.CustomFunctionType.kNone;
+    public CustomFunctionType CustomFunction = CustomFunctionType.kNone;
     public float CustomExponent = 2.0f;
-    public NoiseParameters.TextureType TerrainTextureType = NoiseParameters.TextureType.kGrayscale;
+    public TextureType TerrainTextureType = TextureType.kGrayscale;
 
     public Terrain _Terrain;
 

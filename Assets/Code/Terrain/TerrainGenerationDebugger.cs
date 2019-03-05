@@ -1,20 +1,13 @@
 ﻿using UnityEngine;
 
 public class TerrainGenerationDebugger : MonoBehaviour {
-    public enum DebugPlaneContent {
-        kHeightMap,
-        kMoistureMap,
-        kTemperatureMap,
-        kAll
-    }
-
     public TerrainGeneration tg;
     [SerializeField]
-    public DebugPlaneContent planeContent;
+    public DebugPlaneType planeContent;
 
     private static Texture2D texture;
     private void Start() {
-        planeContent = DebugPlaneContent.kHeightMap;
+        planeContent = DebugPlaneType.kHeightMap;
     }
 
     private void Update() {

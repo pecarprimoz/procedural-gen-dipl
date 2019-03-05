@@ -1,14 +1,6 @@
 ﻿using UnityEngine;
 
 public static class NoiseGeneration {
-    public enum CustomFunctionType {
-        kNone,
-        kSin,
-        kCos,
-        kEps,
-        kPi,
-        kCustom
-    }
 
     public static float[,] GenerateTerrain(TerrainInfo info) {
         float[,] currentTerrain = new float[info.TerrainWidth, info.TerrainHeight];

@@ -17,7 +17,7 @@ public class ParameterEditorWidget : Editor {
     public string[] AllParameterNames = new string[0];
     public TerrainGeneration Script;
 
-    public bool EditorInitialised = false;
+    public bool EditorInitialized = false;
 
     private void OnActivate() {
         Script = (TerrainGeneration)target;
@@ -33,7 +33,7 @@ public class ParameterEditorWidget : Editor {
                 TerrainInfo.TerrainParameterList = AllParameters[CurrentSelectedIndex].TerrainParameterList;
             }
         }
-        EditorInitialised = true;
+        EditorInitialized = true;
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public class ParameterEditorWidget : Editor {
     /// </summary>
     public override void OnInspectorGUI() {
         if (target != null) {
-            if (!EditorInitialised) {
+            if (!EditorInitialized) {
                 OnActivate();
             }
             if (Script.TerrainInfo != null) {
@@ -191,7 +191,7 @@ public class ParameterEditorWidget : Editor {
         if (EditorWidgetFoldouts["TerrainGenerationWidget"]) {
             GUILayout.BeginHorizontal();
             GUILayout.Label("DebugPlane coloring");
-            TerrainInfo.TerrainTextureType = (NoiseParameters.TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainInfo.TerrainTextureType);
+            TerrainInfo.TerrainTextureType = (TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainInfo.TerrainTextureType);
             GUILayout.EndHorizontal();
             var noiseScale = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Noise Scale", TerrainInfo.NoiseScale);
             TerrainInfo.NoiseScale = noiseScale <= 0 ? 0.0001f : noiseScale;
@@ -206,8 +206,8 @@ public class ParameterEditorWidget : Editor {
             TerrainInfo.Seed = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Seed", TerrainInfo.Seed);
             TerrainInfo.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", TerrainInfo.UserOffset);
             TerrainInfo.GlobalNoiseAddition = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Global noise add", TerrainInfo.GlobalNoiseAddition);
-            TerrainInfo.CustomFunction = (NoiseGeneration.CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainInfo.CustomFunction);
-            if (TerrainInfo.CustomFunction == NoiseGeneration.CustomFunctionType.kCustom) {
+            TerrainInfo.CustomFunction = (CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainInfo.CustomFunction);
+            if (TerrainInfo.CustomFunction == CustomFunctionType.kCustom) {
                 var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", TerrainInfo.CustomExponent);
                 TerrainInfo.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
             }
