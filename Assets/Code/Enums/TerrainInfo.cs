@@ -14,6 +14,10 @@ public class TerrainInfo {
         MoistureMap = new float[TerrainWidth, TerrainHeight];
         TemperatureMap = new float[TerrainWidth, TerrainHeight];
     }
+    public ContentManager ContentManager {
+        get; set;
+    }
+
     // Terrain parameters, change this if you want a bigger/higher terrain
     public int TerrainWidth = 128;
     public int TerrainHeight = 128;

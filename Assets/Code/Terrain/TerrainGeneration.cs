@@ -3,10 +3,21 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
 
+    // Manager for content
+    public ContentManager ContentManager;
+
+    // ContentGenerator
+    public ContentGenerator ContentGenerator;
+
+    // Manager for terrain 
     public TerrainInfo TerrainInfo;
 
     void Start() {
+        ContentManager = GetComponent<ContentManager>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
+        // Figure out how to do this better, for now info has "manager" info (so we can use it elsewhere)
+        TerrainInfo.ContentManager = ContentManager;
+        ContentGenerator = GetComponent<ContentGenerator>();
         // Initialize manager, need to handle path for different platforms (OSX, Windows)
         SerializationManager.InitializeManager();
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values
@@ -44,6 +55,7 @@ public class TerrainGeneration : MonoBehaviour {
         ApplyErosion();
         AssignSplatMap.DoSplat(TerrainInfo);
         TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
+        ContentGenerator.GenerateBiomeContent(TerrainInfo);
     }
 
     public void ApplyErosion() {

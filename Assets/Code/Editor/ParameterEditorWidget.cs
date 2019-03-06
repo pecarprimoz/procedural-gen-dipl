@@ -45,7 +45,7 @@ public class ParameterEditorWidget : Editor {
                 OnActivate();
             }
             if (Script.TerrainInfo != null) {
-                DrawTerrainSettingsWidget();
+                //DrawTerrainSettingsWidget();
                 DrawDevelWidget();
                 DrawErosionTypeProperties();
                 DrawTerrainGenerationProperties();
@@ -61,18 +61,18 @@ public class ParameterEditorWidget : Editor {
         EditorGUILayout.LabelField("Run the project to initialise the controls!");
     }
 
-    public void DrawTerrainSettingsWidget() {
-        EditorWidgetFoldouts["TerrainSettingsWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["TerrainSettingsWidget"], "TerrainSettingsWidget");
-        if (EditorWidgetFoldouts["TerrainSettingsWidget"]) {
-            GUILayout.Label("ONLY EDIT THESE PARAMETERS WHEN THE GAME IS NOT RUNNING!");
-            var width = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainWidth", TerrainInfo.TerrainWidth);
-            TerrainInfo.TerrainWidth = width <= 0 ? 128 : width;
-            var height = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainHeight", TerrainInfo.TerrainHeight);
-            TerrainInfo.TerrainHeight = height <= 0 ? 128 : height;
-            var depth = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainDepth", TerrainInfo.TerrainDepth);
-            TerrainInfo.TerrainDepth = depth <= 0 ? 128 : depth;
-        }
-    }
+    //public void DrawTerrainSettingsWidget() {
+    //    EditorWidgetFoldouts["TerrainSettingsWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["TerrainSettingsWidget"], "TerrainSettingsWidget");
+    //    if (EditorWidgetFoldouts["TerrainSettingsWidget"]) {
+    //        GUILayout.Label("ONLY EDIT THESE PARAMETERS WHEN THE GAME IS NOT RUNNING!");
+    //        var width = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainWidth", TerrainInfo.TerrainWidth);
+    //        TerrainInfo.TerrainWidth = width <= 0 ? 128 : width;
+    //        var height = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainHeight", TerrainInfo.TerrainHeight);
+    //        TerrainInfo.TerrainHeight = height <= 0 ? 128 : height;
+    //        var depth = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "TerrainDepth", TerrainInfo.TerrainDepth);
+    //        TerrainInfo.TerrainDepth = depth <= 0 ? 128 : depth;
+    //    }
+    //}
     // Used for devel stuff
     public void DrawDevelWidget() {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
