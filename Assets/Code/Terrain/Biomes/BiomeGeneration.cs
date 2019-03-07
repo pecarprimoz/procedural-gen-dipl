@@ -44,11 +44,14 @@ public class BiomeGeneration {
             return -1;
         }
     }
-    public static BiomeTypes[,] GenerateBiomeMap(TerrainInfo info) {
-        BiomeTypes[,] biomes = new BiomeTypes[info.TerrainWidth, info.TerrainHeight];
+
+    public static BiomeType[,] GenerateBiomeMap(TerrainInfo info, Dictionary<BiomeType, List<TerrainPoint>> biomeDict) {
+        BiomeType[,] biomes = new BiomeType[info.TerrainWidth, info.TerrainHeight];
         for (int y = 0; y < info.TerrainHeight; y++) {
             for (int x = 0; x < info.TerrainWidth; x++) {
-                biomes[x, y] = (BiomeTypes)GetCorrectBiomeIndex(info, x, y);
+                var biome_idx = (BiomeType)GetCorrectBiomeIndex(info, x, y);
+                biomes[x, y] = biome_idx;
+                biomeDict[biome_idx].Add(new TerrainPoint(x, y));
             }
         }
         return biomes;

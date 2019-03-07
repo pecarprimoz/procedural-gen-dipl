@@ -46,7 +46,7 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
-
+    // A lot of stuff can be paralelized, stuff is decoupled for clarity when developing, in the end will be re-facced so shit that can get run paralel will
     public void GenerateTerrainOnDemand() {
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
@@ -54,7 +54,7 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         ApplyErosion();
         AssignSplatMap.DoSplat(TerrainInfo);
-        TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
+        TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo, TerrainInfo.SeperatedBiomes);
         ContentGenerator.GenerateBiomeContent(TerrainInfo);
     }
 

@@ -8,12 +8,12 @@ public class ContentManager : MonoBehaviour {
         var balls = new GameObject("Balls");
         balls.transform.SetParent(ParentObjectForInstantiatedObjects.transform);
         PlaceableDict.Add(PlaceableObjectType.kBall, balls);
-    }
 
-    public enum PlaceableObjectType {
-        kBall = 0
+        var cubes = new GameObject("Cubes");
+        cubes.transform.SetParent(ParentObjectForInstantiatedObjects.transform);
+        PlaceableDict.Add(PlaceableObjectType.kCube, cubes);
     }
-
+    
     public Dictionary<PlaceableObjectType, GameObject> PlaceableDict = new Dictionary<PlaceableObjectType, GameObject>();
 
     // Just keep all the data here
@@ -21,6 +21,9 @@ public class ContentManager : MonoBehaviour {
 
     // DEBUG PREFAB FOR PLACEMENTS
     public GameObject PlaceableObject;
+    // until i have proper models
+    public GameObject PlaceableObjectCube;
+
 
 
 }

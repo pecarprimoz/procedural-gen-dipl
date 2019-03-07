@@ -174,7 +174,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d36273041701d8478998c32d527c179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaceableObject: {fileID: 0}
+  ParentObjectForInstantiatedObjects: {fileID: 0}
+  PlaceableObject: {fileID: 1904199537620494, guid: 938a7fb90dd284e4b9606b86064ebe49,
+    type: 2}
+  PlaceableObjectCube: {fileID: 1777689348333916, guid: 053bd787dbdaeec42962072eeb0c5e20,
+    type: 2}
 --- !u!154 &154853691429667714
 TerrainCollider:
   m_ObjectHideFlags: 1
