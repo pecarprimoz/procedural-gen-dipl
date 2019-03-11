@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,14 +19,21 @@ public class ContentGenerator : MonoBehaviour {
         // Seperate object placement by biomes or different game objects (trees, grass, buildings, road gen, rivers?, other stuff?)
         //PlaceStuff(info);
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item there
-        PlaceContent(info, BiomeType.kTropicalSeasonalForest, 1000, info.ContentManager.PlaceableObject, PlaceableObjectType.kBall);
-        PlaceContent(info, BiomeType.kMountain, 1000, info.ContentManager.PlaceableObjectCube, PlaceableObjectType.kCube);
+        for (int i = 0; i < Enum.GetNames(typeof(BiomeType)).Length; i++) {
+            PlaceContent(info, (BiomeType)i, 100, info.ContentManager.PlaceableObject, PlaceableObjectType.kBall);
+        }
     }
 
     // placement of objects is invalid, since biomePoint.X and biomePoint.Z are ACTUAL INDICES IN THE ARRAY, NOT POINTS, TODO
     private void PlaceContent(TerrainInfo info, BiomeType biomeType, int objCount, GameObject placeableObject, PlaceableObjectType placeableObjectType) {
+        // good for debugging
+        //for (int i = 0; i < info.SeperatedBiomes[biomeType].Count; i++) {
+        //    var biomePoint = info.SeperatedBiomes[biomeType][i];
+        //    int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);
+        //    Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity);
+        //}
         for (int i = 0; i < objCount; i++) {
-            int randomPoint = Random.Range(0, info.SeperatedBiomes[biomeType].Count - 1);
+            int randomPoint = UnityEngine.Random.Range(0, info.SeperatedBiomes[biomeType].Count - 1);
             var biomePoint = info.SeperatedBiomes[biomeType][randomPoint];
             if (!biomePoint.ContainsItem) {
                 int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);

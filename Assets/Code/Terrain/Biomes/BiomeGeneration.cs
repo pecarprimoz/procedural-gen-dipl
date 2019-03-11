@@ -51,7 +51,8 @@ public class BiomeGeneration {
             for (int x = 0; x < info.TerrainWidth; x++) {
                 var biome_idx = (BiomeType)GetCorrectBiomeIndex(info, x, y);
                 biomes[x, y] = biome_idx;
-                biomeDict[biome_idx].Add(new TerrainPoint(x, y));
+                // lol nice 
+                biomeDict[biome_idx].Add(new TerrainPoint(y, x));
             }
         }
         return biomes;
