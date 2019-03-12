@@ -3,27 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ContentManager : MonoBehaviour {
-    // Here we create our skeleton for placing objects for easier usage later on
-    private void Start() {
-        var balls = new GameObject("Balls");
-        balls.transform.SetParent(ParentObjectForInstantiatedObjects.transform);
-        PlaceableDict.Add(PlaceableObjectType.kBall, balls);
-
-        var cubes = new GameObject("Cubes");
-        cubes.transform.SetParent(ParentObjectForInstantiatedObjects.transform);
-        PlaceableDict.Add(PlaceableObjectType.kCube, cubes);
+    public void InitializeBiomePlacementObjects(TerrainInfo info) {
+        BiomeParentGameObjects.Clear();
+        var paramList = info.TerrainParameterList;
+        // here we generate the parent object for every type of biome
+        for (int i = 0; i < paramList.Count; i++) {
+            var obj = new GameObject(string.Format("{0} - {1}", paramList[i].Name, i));
+            obj.transform.SetParent(ParentObjectForInstantiatedObjects.transform);
+            BiomeParentGameObjects.Add(i, obj);
+        }
     }
-    
-    public Dictionary<PlaceableObjectType, GameObject> PlaceableDict = new Dictionary<PlaceableObjectType, GameObject>();
+
+    public Dictionary<int, GameObject> BiomeParentGameObjects = new Dictionary<int, GameObject>();
+    //public Dictionary<string, int> Place
+
+    // public Dictionary<PlaceableObjectType, GameObject> PlaceableDict = new Dictionary<PlaceableObjectType, GameObject>();
 
     // Just keep all the data here
     public GameObject ParentObjectForInstantiatedObjects;
-
-    // DEBUG PREFAB FOR PLACEMENTS
-    public GameObject PlaceableObject;
-    // until i have proper models
-    public GameObject PlaceableObjectCube;
-
-
-
 }

@@ -47,17 +47,9 @@ public class TerrainInfo {
     public float[,] MoistureMap;
     public float[,] TemperatureMap;
 
-    public BiomeType[,] BiomeMap;
+    public int[,] BiomeMap;
     // this could also be initialised when creating the BiomeType enum from editor, not sure if its worth it yet
-    public Dictionary<BiomeType, List<TerrainPoint>> SeperatedBiomes = new Dictionary<BiomeType, List<TerrainPoint>>() {
-        { BiomeType.kMountain, new List<TerrainPoint>() },
-        { BiomeType.kTropicalSeasonalForest, new List<TerrainPoint>() },
-        { BiomeType.kBorealForest, new List<TerrainPoint>() },
-        { BiomeType.kWoodland, new List<TerrainPoint>() },
-        { BiomeType.kShrubland, new List<TerrainPoint>() },
-        { BiomeType.kTemperateSeasonalForest, new List<TerrainPoint>() },
-        { BiomeType.kWater, new List<TerrainPoint>() },
-    };
+    public Dictionary<int, List<TerrainPoint>> SeperatedBiomes = new Dictionary<int, List<TerrainPoint>>();
 
     // Used for creating the terrain in runtime, then switch to single run-s to paint the terrain
     public GenerationType GenerationType = GenerationType.kSingleRun;

@@ -2,13 +2,13 @@
 using UnityEditor;
 using UnityEditorInternal;
 using System.Collections.Generic;
-
+// everything here will get refacced soon, bad start = bad usage
 [InitializeOnLoad]
 [CustomEditor(typeof(TerrainGeneration), true)]
 public class ParameterEditorWidget : Editor {
     private ReorderableList ReorderableParameterList;
     private TerrainInfo TerrainInfo;
-    private int CurrentSelectedIndex = 0;
+    public int CurrentSelectedIndex = 0;
     private string NoisePresetName = string.Empty;
     private int DeleteFailsafe = 0;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();

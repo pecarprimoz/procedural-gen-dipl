@@ -45,14 +45,18 @@ public class BiomeGeneration {
         }
     }
 
-    public static BiomeType[,] GenerateBiomeMap(TerrainInfo info, Dictionary<BiomeType, List<TerrainPoint>> biomeDict) {
-        BiomeType[,] biomes = new BiomeType[info.TerrainWidth, info.TerrainHeight];
+    public static int[,] GenerateBiomeMap(TerrainInfo info) {
+        int[,] biomes = new int[info.TerrainWidth, info.TerrainHeight];
         for (int y = 0; y < info.TerrainHeight; y++) {
             for (int x = 0; x < info.TerrainWidth; x++) {
-                var biome_idx = (BiomeType)GetCorrectBiomeIndex(info, x, y);
+                var biome_idx = GetCorrectBiomeIndex(info, x, y);
                 biomes[x, y] = biome_idx;
-                // lol nice 
-                biomeDict[biome_idx].Add(new TerrainPoint(y, x));
+                // initialise our seperated biomes dict, idx represents the index of the biome param (check the parameter list)
+                if (!info.SeperatedBiomes.ContainsKey(biome_idx)) {
+                    info.SeperatedBiomes.Add(biome_idx, new List<TerrainPoint>());
+                }
+                // add the point of our dict
+                info.SeperatedBiomes[biome_idx].Add(new TerrainPoint(y, x));
             }
         }
         return biomes;

@@ -18,14 +18,16 @@ public class ContentGenerator : MonoBehaviour {
         TerrainLength = (int)info._Terrain.terrainData.size.z;
         // Seperate object placement by biomes or different game objects (trees, grass, buildings, road gen, rivers?, other stuff?)
         //PlaceStuff(info);
-        // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item there
-        for (int i = 0; i < Enum.GetNames(typeof(BiomeType)).Length; i++) {
-            PlaceContent(info, (BiomeType)i, 100, info.ContentManager.PlaceableObject, PlaceableObjectType.kBall);
+        // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
+        var obj = new GameObject();
+        for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
+            PlaceContent(info, i, 100, obj);
         }
+        Destroy(obj);
     }
 
     // placement of objects is invalid, since biomePoint.X and biomePoint.Z are ACTUAL INDICES IN THE ARRAY, NOT POINTS, TODO
-    private void PlaceContent(TerrainInfo info, BiomeType biomeType, int objCount, GameObject placeableObject, PlaceableObjectType placeableObjectType) {
+    private void PlaceContent(TerrainInfo info, int biomeType, int objCount, GameObject placeableObject) {
         // good for debugging
         //for (int i = 0; i < info.SeperatedBiomes[biomeType].Count; i++) {
         //    var biomePoint = info.SeperatedBiomes[biomeType][i];
@@ -37,7 +39,7 @@ public class ContentGenerator : MonoBehaviour {
             var biomePoint = info.SeperatedBiomes[biomeType][randomPoint];
             if (!biomePoint.ContainsItem) {
                 int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);
-                Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity, info.ContentManager.PlaceableDict[placeableObjectType].transform);
+                Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity, info.ContentManager.BiomeParentGameObjects[biomeType].transform);
                 // to avoid placing multiple objects on one point, since we are doing it randomly
                 info.SeperatedBiomes[biomeType][randomPoint].ContainsItem = true;
             }
