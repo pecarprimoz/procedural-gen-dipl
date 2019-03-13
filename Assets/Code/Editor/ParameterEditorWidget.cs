@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class ParameterEditorWidget : Editor {
     [SerializeField]
     private TerrainParameterPresetEditor _ParameterPresetEditor;
-
+    // sync with params in runtime, baisicly replace the terrain info terraiun params with the ones in editor, or with indices
     private TerrainInfo TerrainInfo;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();
     private List<string> EditorWidgetNames = new List<string> { "TerrainSettingsWidget", "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
