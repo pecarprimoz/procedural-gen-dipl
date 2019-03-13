@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct TerrainParameters {
     [JsonIgnore]
-    private Color _TerrainColor;
+    public Color _TerrainColor;
     // Newtonsoft and Unity colors dont mix well
     //serializing color results in a stack overflow due to color.linear having different values every time you go deeper
     [JsonIgnore]

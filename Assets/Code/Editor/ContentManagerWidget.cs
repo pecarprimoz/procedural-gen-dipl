@@ -12,11 +12,8 @@ using System.Collections.Generic;
 [InitializeOnLoad]
 [CustomEditor(typeof(ContentManager), true)]
 public class ContentManagerWidget : Editor {
-
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
 
     }
-
-
 }

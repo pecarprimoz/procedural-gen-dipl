@@ -6,7 +6,9 @@ using System.Collections.Generic;
 [InitializeOnLoad]
 [CustomEditor(typeof(TerrainGeneration), true)]
 public class ParameterEditorWidget : Editor {
+    [SerializeField]
     private TerrainParameterPresetEditor _ParameterPresetEditor;
+
     private TerrainInfo TerrainInfo;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();
     private List<string> EditorWidgetNames = new List<string> { "TerrainSettingsWidget", "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
@@ -16,7 +18,9 @@ public class ParameterEditorWidget : Editor {
     public bool EditorInitialized = false;
 
     private void OnActivate() {
-        _ParameterPresetEditor = new TerrainParameterPresetEditor();
+        if (_ParameterPresetEditor == null) {
+            _ParameterPresetEditor = new TerrainParameterPresetEditor();
+        }
         Script = (TerrainGeneration)target;
         if (Script.TerrainInfo != null) {
             TerrainInfo = Script.TerrainInfo;
@@ -41,14 +45,14 @@ public class ParameterEditorWidget : Editor {
             OnActivate();
         }
         // do this shit in editor
-        serializedObject.Update();
+        //serializedObject.Update();
         //EditorWidgetFoldouts["ParameterListWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ParameterListWidget"], "ParameterListWidget");
         //if (EditorWidgetFoldouts["ParameterListWidget"]) {
         _ParameterPresetEditor.DrawLoadSaveGUI(EditorWidgetFoldouts);
         _ParameterPresetEditor.DisplayParameterList().DoLayoutList();
         //}
-        serializedObject.ApplyModifiedProperties();
-        EditorUtility.SetDirty(target);
+        //serializedObject.ApplyModifiedProperties();
+        //EditorUtility.SetDirty(target);
         // do different shit in runtime
         if (target != null) {
             if (!EditorInitialized) {

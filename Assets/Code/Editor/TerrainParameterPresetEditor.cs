@@ -14,11 +14,11 @@ public class TerrainParameterPresetEditor {
     List<TerrainParameters> SerializedTerrainParameters;
 
     private ReorderableList ReorderableParameterList;
-    public string NoisePresetName = string.Empty;
+    public string TerrainPresetName = string.Empty;
     public string[] AllParameterNames = new string[0];
     public int CurrentSelectedIndex = 0;
     private int DeleteFailsafe = 0;
-    List<NoiseParameters> AllParameters = new List<NoiseParameters>();
+    List<List<TerrainParameters>> AllParameters = new List<List<TerrainParameters>>();
 
 
     // first issue here, noise parameters are coupled with terrain parameters (biomes), need to seperate this THIS COULD BE FINE IN RUNTIME, ALSO IN EDITOR BUT USELESS SINCE WE DO
@@ -37,7 +37,7 @@ public class TerrainParameterPresetEditor {
             if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
                 if (DeleteFailsafe == 2) {
                     DeleteFailsafe = 0;
-                    SerializationManager.DeleteNoiseParameter(AllParameterNames[CurrentSelectedIndex]);
+                    SerializationManager.DeleteTerrainParameter(AllParameterNames[CurrentSelectedIndex]);
                     AllParameters.RemoveAt(CurrentSelectedIndex);
                     TryGeneratingSavedParameterList();
                 } else {
@@ -47,9 +47,9 @@ public class TerrainParameterPresetEditor {
             GUILayout.EndHorizontal();
             if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
                 TryGeneratingSavedParameterList();
-                NoiseParameters loadedNoiseParameterPreset = AllParameters[CurrentSelectedIndex];
                 for (int i = 0; i < SerializedTerrainParameters.Count; i++) {
                     var parameter = SerializedTerrainParameters[i];
+                    parameter.TerrainColor = new Color(parameter.TerrainColorVector.x, parameter.TerrainColorVector.y, parameter.TerrainColorVector.z, 1);
                     EditorUtils.ValidateTexture(ref parameter);
                     SerializedTerrainParameters[i] = parameter;
                 }
@@ -57,15 +57,13 @@ public class TerrainParameterPresetEditor {
                 //    }
                 //}
                 //// Draws the GUI widgets for saving presets, MAKE THIS SHIT ONLY AVALIABLE IN RUN TIME, IF YOU WANNA SAVE UR TERRAIN PRESETS, DO IT SEPERATLY !!! dont do shit for now since i dont plan on saving in editor when testing !!!
-                EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Noise parameter serializer, saves the current configuration.");
-                NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Noise preset name: ", NoisePresetName);
-                if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-                    //    NoiseParameters currentNoiseParameters = new NoiseParameters(info.ErosionType, info.RuntimeErosion, info.ErosionIterations, NoisePresetName, info.TerrainParameterList, info.UserOffset, info.NoiseScale,
-                    //        info.BaseFrequency, info.Persistance, info.Lacunarity, info.NumberOfOctaves, info.GlobalNoiseAddition, info.Seed,
-                    //        info.CustomFunction, info.CustomExponent, info.TerrainTextureType);
-                    //    SerializationManager.SaveNoiseParameters(NoisePresetName, currentNoiseParameters);
-                    //    TryGeneratingSavedParameterList();
-                }
+
+            }
+            EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
+            TerrainPresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", TerrainPresetName);
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
+                SerializationManager.SaveTerrainPreset(TerrainPresetName, SerializedTerrainParameters);
+                TryGeneratingSavedParameterList();
             }
             EditorUtils.GUILine();
             EditorGUILayout.Space();
@@ -125,12 +123,13 @@ public class TerrainParameterPresetEditor {
 
     // we can do this shit in editor !
     public void TryGeneratingSavedParameterList() {
+        List<string> allPresetNames;
         SerializationManager.InitializeManager();
-        AllParameters = SerializationManager.ReadAllNoiseParameters();
+        AllParameters = SerializationManager.ReadAllTerrainParameters(out allPresetNames);
         AllParameterNames = new string[AllParameters.Count];
         for (int i = 0; i < AllParameters.Count; i++) {
-            AllParameterNames[i] = AllParameters[i].NoiseParameterName;
+            AllParameterNames[i] = allPresetNames[i];
         }
-        SerializedTerrainParameters = AllParameters[CurrentSelectedIndex].TerrainParameterList;
+        SerializedTerrainParameters = AllParameters[CurrentSelectedIndex];
     }
 }
