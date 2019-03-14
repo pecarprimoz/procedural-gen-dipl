@@ -8,24 +8,36 @@ using System.Collections.Generic;
 public class ParameterEditorWidget : Editor {
     [SerializeField]
     private TerrainParameterPresetEditor _ParameterPresetEditor;
+    NoiseParameterEditor _NoiseParameterEditor;
     // sync with params in runtime, baisicly replace the terrain info terraiun params with the ones in editor, or with indices
     private TerrainInfo TerrainInfo;
-    private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>();
-    private List<string> EditorWidgetNames = new List<string> { "TerrainSettingsWidget", "DevelWidget", "ErosionWidget", "ParameterPresetWidget", "TerrainGenerationWidget", "ParameterListWidget" };
+    private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>() {
+        { "TerrainSettingsWidget", false },
+        { "DevelWidget", false },
+        { "ErosionWidget", false },
+        { "ParameterPresetWidget", false },
+        { "TerrainGenerationWidget", false },
+        { "ParameterListWidget", false }
+    };
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     public TerrainGeneration Script;
     public bool WasInitialised = false;
     public bool EditorInitialized = false;
 
     private void OnActivate() {
+        // Parameter preset editor works in editor
         if (_ParameterPresetEditor == null) {
             _ParameterPresetEditor = new TerrainParameterPresetEditor();
         }
         Script = (TerrainGeneration)target;
+        // Noise parameter editor works in runtime
         if (Script.TerrainInfo != null) {
-            TerrainInfo = Script.TerrainInfo;
-            foreach (var widgetName in EditorWidgetNames) {
-                EditorWidgetFoldouts.Add(widgetName, true);
+            // We are in runtime, means we can get all the info from runtime
+            if (TerrainInfo == null) {
+                TerrainInfo = Script.TerrainInfo;
+                _NoiseParameterEditor = new NoiseParameterEditor(TerrainInfo);
+                // now just overrwrite this terrain infos parameter property list (biomes) with our serialized editor list
+                TerrainInfo.TerrainParameterList = _ParameterPresetEditor.SerializedTerrainParameters;
             }
             // this function is not the same as the one in TerrainParameterPresetEditor, THIS GUY WILL NEED TO DESERIALIZE TERRAIN INFO (FREQUENCY, OCTAVES, SHIT RELATED TO NOISE PRESETS)
             //TryGeneratingSavedParameterList();
@@ -44,16 +56,6 @@ public class ParameterEditorWidget : Editor {
         if (!WasInitialised) {
             OnActivate();
         }
-        // do this shit in editor
-        //serializedObject.Update();
-        //EditorWidgetFoldouts["ParameterListWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ParameterListWidget"], "ParameterListWidget");
-        //if (EditorWidgetFoldouts["ParameterListWidget"]) {
-        _ParameterPresetEditor.DrawLoadSaveGUI(EditorWidgetFoldouts);
-        _ParameterPresetEditor.DisplayParameterList().DoLayoutList();
-        //}
-        //serializedObject.ApplyModifiedProperties();
-        //EditorUtility.SetDirty(target);
-        // do different shit in runtime
         if (target != null) {
             if (!EditorInitialized) {
                 OnActivate();
@@ -63,8 +65,20 @@ public class ParameterEditorWidget : Editor {
                 DrawDevelWidget();
                 DrawErosionTypeProperties();
                 DrawTerrainGenerationProperties();
+                _NoiseParameterEditor.DrawNoiseParameterGUI(TerrainInfo, EditorWidgetFoldouts);
             }
         }
+        // do this shit in editor
+        //serializedObject.Update();
+        //EditorWidgetFoldouts["ParameterListWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ParameterListWidget"], "ParameterListWidget");
+        //if (EditorWidgetFoldouts["ParameterListWidget"]) {
+        _ParameterPresetEditor.DrawLoadSaveGUI(TerrainInfo, EditorWidgetFoldouts);
+        _ParameterPresetEditor.DisplayParameterList().DoLayoutList();
+        //}
+        //serializedObject.ApplyModifiedProperties();
+        //EditorUtility.SetDirty(target);
+        // do different shit in runtime
+
         EditorGUILayout.LabelField("Run the project to initialise the controls!");
     }
 

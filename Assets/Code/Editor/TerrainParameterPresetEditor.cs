@@ -10,8 +10,7 @@ public class TerrainParameterPresetEditor {
         CurrentSelectedIndex = EditorPrefs.GetInt("ParameterPresetIdx");
         TryGeneratingSavedParameterList();
     }
-    // this fucked should be serializable allready, we'll see :D
-    List<TerrainParameters> SerializedTerrainParameters;
+    public List<TerrainParameters> SerializedTerrainParameters;
 
     private ReorderableList ReorderableParameterList;
     public string TerrainPresetName = string.Empty;
@@ -20,11 +19,10 @@ public class TerrainParameterPresetEditor {
     private int DeleteFailsafe = 0;
     List<List<TerrainParameters>> AllParameters = new List<List<TerrainParameters>>();
 
-
     // first issue here, noise parameters are coupled with terrain parameters (biomes), need to seperate this THIS COULD BE FINE IN RUNTIME, ALSO IN EDITOR BUT USELESS SINCE WE DO
     // NOT WANT TO EXPOSE THESE VALUES TO THE USER WHILE THE GAME IS NOT RUNNING (just causes complications)
     // turn this into trow different draw load save guis, since this one does not need to deserialize terrain info, only terrainpresets (biomes)
-    public void DrawLoadSaveGUI(Dictionary<string, bool> EditorWidgetFoldouts) {
+    public void DrawLoadSaveGUI(TerrainInfo info, Dictionary<string, bool> EditorWidgetFoldouts) {
         // Draws the GUI widgets for picking and deleting parameters
         //EditorWidgetFoldouts["ParameterPresetWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ParameterPresetWidget"], "ParameterPresetWidget");
         //if (EditorWidgetFoldouts["ParameterPresetWidget"]) {
@@ -54,10 +52,6 @@ public class TerrainParameterPresetEditor {
                     SerializedTerrainParameters[i] = parameter;
                 }
                 ReorderableParameterList = null;
-                //    }
-                //}
-                //// Draws the GUI widgets for saving presets, MAKE THIS SHIT ONLY AVALIABLE IN RUN TIME, IF YOU WANNA SAVE UR TERRAIN PRESETS, DO IT SEPERATLY !!! dont do shit for now since i dont plan on saving in editor when testing !!!
-
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
             TerrainPresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", TerrainPresetName);
@@ -70,7 +64,9 @@ public class TerrainParameterPresetEditor {
             EditorGUILayout.Space();
             // lol
             EditorPrefs.SetInt("ParameterPresetIdx", CurrentSelectedIndex);
-
+            if (info != null) {
+                info.TerrainParameterList = SerializedTerrainParameters;
+            }
         }
     }
 

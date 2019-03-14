@@ -22,9 +22,10 @@ public class NoiseParameters {
     public float CustomExponent;
 
     public TextureType TerrainTextureType;
-    public List<TerrainParameters> TerrainParameterList;
+    // OBSOLETE
+    //public List<TerrainParameters> TerrainParameterList;
 
-    public NoiseParameters(ErosionGeneration.ErosionType erosionType, bool runtimeErosion, int numberOfIterations, string name, List<TerrainParameters> terrainParameterList, Vector2 userOffset, float noiseScale, float baseFrequency,
+    public NoiseParameters(ErosionGeneration.ErosionType erosionType, bool runtimeErosion, int numberOfIterations, string name/*, List<TerrainParameters> terrainParameterList*/, Vector2 userOffset, float noiseScale, float baseFrequency,
         float persistance, float lacunarity, int numberOfOctaves, float globalNoiseAddition, string seed, CustomFunctionType customFunction,
         float customExponent, TextureType terrainTextureType) {
         ErosionType = erosionType;
@@ -42,7 +43,7 @@ public class NoiseParameters {
         CustomFunction = customFunction;
         CustomExponent = customExponent;
         TerrainTextureType = terrainTextureType;
-        TerrainParameterList = terrainParameterList;
+        //TerrainParameterList = terrainParameterList;
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class EditorUtils {
@@ -17,5 +18,9 @@ public static class EditorUtils {
         if (currentParameter.TerrainTexture == null && currentParameter.TexturePath != null) {
             currentParameter.TerrainTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePath, typeof(Texture2D));
         }
+    }
+
+    public static void AddTerrainParametersFromEditorToTerrainInfoInRuntime(TerrainInfo info, List<TerrainParameters> terrainParameters) {
+        info.TerrainParameterList = terrainParameters;
     }
 }
