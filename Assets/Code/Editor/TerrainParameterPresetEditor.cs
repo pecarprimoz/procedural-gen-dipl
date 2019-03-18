@@ -75,7 +75,7 @@ public class TerrainParameterPresetEditor {
             return ReorderableParameterList;
         }
         ReorderableParameterList = new ReorderableList(SerializedTerrainParameters, typeof(TerrainParameters), true, true, true, true);
-        ReorderableParameterList.elementHeight = 22.0f * 7;
+        ReorderableParameterList.elementHeight = 22.0f * 18;
         ReorderableParameterList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
             var currentParameter = SerializedTerrainParameters[index];
             rect.height = 20.0f;
@@ -103,6 +103,7 @@ public class TerrainParameterPresetEditor {
                 currentParameter.TerrainTexture = newTerrainTexture;
                 currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
             }
+            ReorderableListDrawPresetObjecList(rect, currentParameter);
             SerializedTerrainParameters[index] = currentParameter;
             EditorGUILayout.Separator();
         };
@@ -111,10 +112,37 @@ public class TerrainParameterPresetEditor {
         };
         ReorderableParameterList.onSelectCallback = (ReorderableList list) => {
         };
+        ReorderableParameterList.onAddCallback = (ReorderableList list) => {
+            ReorderableParameterList.list.Add(new TerrainParameters());
+        };
         ReorderableParameterList.onRemoveCallback = (ReorderableList list) => {
             SerializedTerrainParameters.RemoveAt(list.index);
         };
         return ReorderableParameterList;
+    }
+
+    private void ReorderableListDrawPresetObjecList(Rect rect, TerrainParameters tparam) {
+        rect.height = 22.0f;
+        rect.y += 22.0f;
+        EditorGUI.LabelField(rect, "Terrain game objects");
+        rect.height = 22.0f;
+        rect.y += 22.0f;
+        if (GUI.Button(rect, "+")) {
+            tparam.ObjectListCount++;
+            tparam.TerrainParameterObjectList.Add(null);
+            tparam.ObjectListPath.Add(string.Empty);
+        }
+        rect.height = 22.0f;
+        rect.y += 22.0f;
+        for (int i = 0; i < tparam.ObjectListCount; i++) {
+            var newTerrainObject = (GameObject)EditorGUI.ObjectField(rect, tparam.TerrainParameterObjectList[i], typeof(GameObject), false);
+            if (newTerrainObject != tparam.TerrainParameterObjectList[i]) {
+                tparam.TerrainParameterObjectList[i] = newTerrainObject;
+                tparam.ObjectListPath[i] = AssetDatabase.GetAssetPath(newTerrainObject);
+            }
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+        }
     }
 
     // we can do this shit in editor !

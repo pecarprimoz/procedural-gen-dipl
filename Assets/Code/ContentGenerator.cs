@@ -19,11 +19,9 @@ public class ContentGenerator : MonoBehaviour {
         // Seperate object placement by biomes or different game objects (trees, grass, buildings, road gen, rivers?, other stuff?)
         //PlaceStuff(info);
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
-        var obj = new GameObject();
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
-            PlaceContent(info, i, 100, obj);
+            PlaceContent(info, i, 100, info.TerrainParameterList[i].TerrainParameterObjectList[0]);
         }
-        Destroy(obj);
     }
 
     // placement of objects is invalid, since biomePoint.X and biomePoint.Z are ACTUAL INDICES IN THE ARRAY, NOT POINTS, TODO

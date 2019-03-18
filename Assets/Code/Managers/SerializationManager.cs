@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 
 public static class SerializationManager {
@@ -73,6 +74,12 @@ public static class SerializationManager {
             for (int i = 0; i < parameters.Count; i++) {
                 var cp = parameters[i];
                 cp.TerrainColor = new Color(cp.TerrainColorVector.x, cp.TerrainColorVector.y, cp.TerrainColorVector.z, 1);
+                cp.TerrainParameterObjectList = new List<GameObject>();
+                if (cp.ObjectListCount > 0) {
+                    for (int j = 0; j < cp.ObjectListCount; j++) {
+                        cp.TerrainParameterObjectList.Add((GameObject)AssetDatabase.LoadAssetAtPath(cp.ObjectListPath[j], typeof(GameObject)));
+                    }
+                }
                 parameters[i] = cp;
             }
             allTerrainParameters.Add(parameters);
