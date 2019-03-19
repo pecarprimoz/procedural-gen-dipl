@@ -1,1 +1,0 @@
-{"NoiseParameterName":"01_WHITTAKER_APPROX","ErosionType":3,"ErosionIterations":750,"RuntimeErosion":false,"NoiseScale":245.0,"BaseFrequency":1.8,"Persistance":0.25,"Lacunarity":3.3,"NumberOfOctaves":5,"GlobalNoiseAddition":0.0,"Seed":"","UserOffset":{"x":0.0,"y":0.0,"magnitude":0.0,"sqrMagnitude":0.0},"CustomFunction":0,"CustomExponent":0.1,"TerrainTextureType":1}

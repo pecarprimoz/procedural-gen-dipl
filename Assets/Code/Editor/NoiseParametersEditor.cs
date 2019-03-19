@@ -53,35 +53,33 @@ public class NoiseParameterEditor {
                 }
                 AssignSplatMap.DoSplat(info);
             }
-            EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "PARAMETER BOUNDRIES NEED TO BE IN ASCENDING ORDER!");
-        }
-        GUILayout.Label("Saved noise presets");
-        GUILayout.BeginHorizontal(GUILayout.Width(250));
-        var lastIndex = CurrentSelectedIndexNoise;
-        CurrentSelectedIndexNoise = EditorGUILayout.Popup(CurrentSelectedIndexNoise, AllNoiseParameterNames, GUILayout.Width(250));
-        DeleteFailsafe = lastIndex != CurrentSelectedIndexNoise ? 0 : DeleteFailsafe;
-        if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
-            if (DeleteFailsafe == 2) {
-                DeleteFailsafe = 0;
-                SerializationManager.DeleteNoiseParameter(AllNoiseParameterNames[CurrentSelectedIndexNoise]);
-                SerializedNoiseParameters.RemoveAt(CurrentSelectedIndexNoise);
+            GUILayout.Label("Saved noise presets");
+            GUILayout.BeginHorizontal(GUILayout.Width(250));
+            var lastIndex = CurrentSelectedIndexNoise;
+            CurrentSelectedIndexNoise = EditorGUILayout.Popup(CurrentSelectedIndexNoise, AllNoiseParameterNames, GUILayout.Width(250));
+            DeleteFailsafe = lastIndex != CurrentSelectedIndexNoise ? 0 : DeleteFailsafe;
+            if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
+                if (DeleteFailsafe == 2) {
+                    DeleteFailsafe = 0;
+                    SerializationManager.DeleteNoiseParameter(AllNoiseParameterNames[CurrentSelectedIndexNoise]);
+                    SerializedNoiseParameters.RemoveAt(CurrentSelectedIndexNoise);
+                    TryGeneratingSavedNoiseParameters(info, false);
+                } else {
+                    DeleteFailsafe++;
+                }
+            }
+            GUILayout.EndHorizontal();
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
+                TryGeneratingSavedNoiseParameters(info, true);
+            }
+            EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
+            NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", NoisePresetName);
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
+                SerializedNoiseParameter.NoiseParameterName = NoisePresetName;
+                SerializationManager.SaveNoiseParameters(NoisePresetName, SerializedNoiseParameter);
                 TryGeneratingSavedNoiseParameters(info, false);
-            } else {
-                DeleteFailsafe++;
             }
         }
-        GUILayout.EndHorizontal();
-        if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
-            TryGeneratingSavedNoiseParameters(info, true);
-        }
-        EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
-        NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", NoisePresetName);
-        if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-            SerializedNoiseParameter.NoiseParameterName = NoisePresetName;
-            SerializationManager.SaveNoiseParameters(NoisePresetName, SerializedNoiseParameter);
-            TryGeneratingSavedNoiseParameters(info, false);
-        }
-        EditorUtils.GUILine();
         EditorGUILayout.Space();
         EditorGUILayout.Space();
         SetCorrectNoiseParams(SerializedNoiseParameter, ref info);

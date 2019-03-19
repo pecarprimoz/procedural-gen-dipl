@@ -99,8 +99,8 @@ public static class SerializationManager {
     }
 
     public static void DeleteTerrainParameter(string name) {
-        string path = string.Format("{0}{1}.json", TerrainParameterLocation, name);
-        string pathMeta = string.Format("{0}{1}.json.meta", TerrainParameterLocation, name);
+        string path = string.Format("{0}{1}", TerrainParameterLocation, name);
+        string pathMeta = string.Format("{0}{1}.meta", TerrainParameterLocation, name);
         if (File.Exists(path)) {
             File.Delete(path);
             File.Delete(pathMeta);

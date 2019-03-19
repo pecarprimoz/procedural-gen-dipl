@@ -12,6 +12,7 @@ public class TerrainParameterPresetEditor {
     }
     public List<TerrainParameters> SerializedTerrainParameters;
 
+    public bool FoldoutParameterPresets = false;
     private ReorderableList ReorderableParameterList;
     public string TerrainPresetName = string.Empty;
     public string[] AllParameterNames = new string[0];
@@ -19,53 +20,47 @@ public class TerrainParameterPresetEditor {
     private int DeleteFailsafe = 0;
     List<List<TerrainParameters>> AllParameters = new List<List<TerrainParameters>>();
 
-    // first issue here, noise parameters are coupled with terrain parameters (biomes), need to seperate this THIS COULD BE FINE IN RUNTIME, ALSO IN EDITOR BUT USELESS SINCE WE DO
-    // NOT WANT TO EXPOSE THESE VALUES TO THE USER WHILE THE GAME IS NOT RUNNING (just causes complications)
-    // turn this into trow different draw load save guis, since this one does not need to deserialize terrain info, only terrainpresets (biomes)
     public void DrawLoadSaveGUI(TerrainInfo info, Dictionary<string, bool> EditorWidgetFoldouts) {
         // Draws the GUI widgets for picking and deleting parameters
-        //EditorWidgetFoldouts["ParameterPresetWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ParameterPresetWidget"], "ParameterPresetWidget");
-        //if (EditorWidgetFoldouts["ParameterPresetWidget"]) {
-        if (AllParameterNames.Length > 0) {
-            GUILayout.Label("Saved parameter presets");
-            GUILayout.BeginHorizontal(GUILayout.Width(250));
-            var lastIndex = CurrentSelectedIndex;
-            CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames, GUILayout.Width(250));
-            DeleteFailsafe = lastIndex != CurrentSelectedIndex ? 0 : DeleteFailsafe;
-            if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
-                if (DeleteFailsafe == 2) {
-                    DeleteFailsafe = 0;
-                    SerializationManager.DeleteTerrainParameter(AllParameterNames[CurrentSelectedIndex]);
-                    AllParameters.RemoveAt(CurrentSelectedIndex);
+        FoldoutParameterPresets = EditorGUILayout.Foldout(FoldoutParameterPresets, "Parameter Presets");
+        if (FoldoutParameterPresets) {
+            if (AllParameterNames.Length > 0) {
+                GUILayout.Label("Saved parameter presets");
+                GUILayout.BeginHorizontal(GUILayout.Width(250));
+                var lastIndex = CurrentSelectedIndex;
+                CurrentSelectedIndex = EditorGUILayout.Popup(CurrentSelectedIndex, AllParameterNames, GUILayout.Width(250));
+                DeleteFailsafe = lastIndex != CurrentSelectedIndex ? 0 : DeleteFailsafe;
+                if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
+                    if (DeleteFailsafe == 2) {
+                        DeleteFailsafe = 0;
+                        SerializationManager.DeleteTerrainParameter(AllParameterNames[CurrentSelectedIndex]);
+                        AllParameters.RemoveAt(CurrentSelectedIndex);
+                        TryGeneratingSavedParameterList();
+                    } else {
+                        DeleteFailsafe++;
+                    }
+                }
+                GUILayout.EndHorizontal();
+                if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
                     TryGeneratingSavedParameterList();
-                } else {
-                    DeleteFailsafe++;
+                    for (int i = 0; i < SerializedTerrainParameters.Count; i++) {
+                        var parameter = SerializedTerrainParameters[i];
+                        parameter.TerrainColor = new Color(parameter.TerrainColorVector.x, parameter.TerrainColorVector.y, parameter.TerrainColorVector.z, 1);
+                        EditorUtils.ValidateTexture(ref parameter);
+                        SerializedTerrainParameters[i] = parameter;
+                    }
+                    ReorderableParameterList = null;
                 }
-            }
-            GUILayout.EndHorizontal();
-            if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
-                TryGeneratingSavedParameterList();
-                for (int i = 0; i < SerializedTerrainParameters.Count; i++) {
-                    var parameter = SerializedTerrainParameters[i];
-                    parameter.TerrainColor = new Color(parameter.TerrainColorVector.x, parameter.TerrainColorVector.y, parameter.TerrainColorVector.z, 1);
-                    EditorUtils.ValidateTexture(ref parameter);
-                    SerializedTerrainParameters[i] = parameter;
+                EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
+                TerrainPresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", TerrainPresetName);
+                if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
+                    SerializationManager.SaveTerrainPreset(TerrainPresetName, SerializedTerrainParameters);
+                    TryGeneratingSavedParameterList();
                 }
-                ReorderableParameterList = null;
-            }
-            EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
-            TerrainPresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", TerrainPresetName);
-            if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
-                SerializationManager.SaveTerrainPreset(TerrainPresetName, SerializedTerrainParameters);
-                TryGeneratingSavedParameterList();
-            }
-            EditorUtils.GUILine();
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
-            // lol
-            EditorPrefs.SetInt("ParameterPresetIdx", CurrentSelectedIndex);
-            if (info != null) {
-                info.TerrainParameterList = SerializedTerrainParameters;
+                EditorPrefs.SetInt("ParameterPresetIdx", CurrentSelectedIndex);
+                if (info != null) {
+                    info.TerrainParameterList = SerializedTerrainParameters;
+                }
             }
         }
     }
@@ -127,11 +122,23 @@ public class TerrainParameterPresetEditor {
         EditorGUI.LabelField(rect, "Terrain game objects");
         rect.height = 22.0f;
         rect.y += 22.0f;
+        var tmpWidth = rect.width;
+        rect.width = tmpWidth / 2;
         if (GUI.Button(rect, "+")) {
             tparam.ObjectListCount++;
             tparam.TerrainParameterObjectList.Add(null);
             tparam.ObjectListPath.Add(string.Empty);
         }
+        rect.x += rect.width;
+        if (GUI.Button(rect, "-")) {
+            if (tparam.ObjectListCount - 1 >= 0) {
+                tparam.ObjectListCount--;
+                tparam.TerrainParameterObjectList.RemoveAt(tparam.ObjectListCount);
+                tparam.ObjectListPath.RemoveAt(tparam.ObjectListCount);
+            }
+        }
+        rect.x -= rect.width;
+        rect.width = tmpWidth;
         rect.height = 22.0f;
         rect.y += 22.0f;
         for (int i = 0; i < tparam.ObjectListCount; i++) {

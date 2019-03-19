@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ContentManager : MonoBehaviour {
     public void InitializeBiomePlacementObjects(TerrainInfo info) {
+        // need to make a choice here, keep object when user generates and dont clear, or clear always ?
         BiomeParentGameObjects.Clear();
         var paramList = info.TerrainParameterList;
         // here we generate the parent object for every type of biome
@@ -15,10 +16,6 @@ public class ContentManager : MonoBehaviour {
     }
 
     public Dictionary<int, GameObject> BiomeParentGameObjects = new Dictionary<int, GameObject>();
-    //public Dictionary<string, int> Place
-
-    // public Dictionary<PlaceableObjectType, GameObject> PlaceableDict = new Dictionary<PlaceableObjectType, GameObject>();
-
     // Just keep all the data here
     public GameObject ParentObjectForInstantiatedObjects;
 }

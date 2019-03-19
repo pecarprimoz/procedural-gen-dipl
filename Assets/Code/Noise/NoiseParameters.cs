@@ -22,8 +22,6 @@ public class NoiseParameters {
     public float CustomExponent;
 
     public TextureType TerrainTextureType;
-    // OBSOLETE
-    //public List<TerrainParameters> TerrainParameterList;
 
     public NoiseParameters(ErosionGeneration.ErosionType erosionType, bool runtimeErosion, int numberOfIterations, string name/*, List<TerrainParameters> terrainParameterList*/, Vector2 userOffset, float noiseScale, float baseFrequency,
         float persistance, float lacunarity, int numberOfOctaves, float globalNoiseAddition, string seed, CustomFunctionType customFunction,
