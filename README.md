@@ -22,5 +22,5 @@ If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ![Example1](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/wip1.png)
 ##### Height, moisture and temperature maps used for terrain and biome generation
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/height_moist_temp.png)
-##### 1024*1024*64 terrain map, 250 erosion iterations, runtime texturing and object placement, less than 2 min
+##### 1024x1024x64 terrain map, 250 erosion iterations, runtime texturing and object placement, less than 2 min
 ![Example3](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/wip3.png)
