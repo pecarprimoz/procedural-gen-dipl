@@ -379,12 +379,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114604088226089348, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
         type: 2}
-      propertyPath: PlaceableObject
-      value: 
-      objectReference: {fileID: 1904199537620494, guid: 938a7fb90dd284e4b9606b86064ebe49,
-        type: 2}
-    - target: {fileID: 114604088226089348, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
-        type: 2}
       propertyPath: ParentObjectForInstantiatedObjects
       value: 
       objectReference: {fileID: 1270213913}

@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour {
 
+    // Terrain parameters, change this if you want a bigger/higher terrain
+    public int TerrainWidth = 128;
+    public int TerrainHeight = 128;
+    public int TerrainDepth = 64;
+    public bool UseCustomTerrainSizeDefinitions = false;
+
     // Manager for content
     public ContentManager ContentManager;
 
@@ -15,6 +21,11 @@ public class TerrainGeneration : MonoBehaviour {
     void Start() {
         ContentManager = GetComponent<ContentManager>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
+        if (UseCustomTerrainSizeDefinitions) {
+            TerrainInfo.TerrainWidth = TerrainWidth;
+            TerrainInfo.TerrainHeight = TerrainHeight;
+            TerrainInfo.TerrainDepth = TerrainDepth;
+        }
         // Figure out how to do this better, for now info has "manager" info (so we can use it elsewhere)
         TerrainInfo.ContentManager = ContentManager;
         ContentGenerator = GetComponent<ContentGenerator>();

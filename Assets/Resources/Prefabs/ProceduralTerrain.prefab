@@ -161,6 +161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ff2fa380b1df848908f2c5fff67004, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TerrainWidth: 128
+  TerrainHeight: 128
+  TerrainDepth: 64
+  UseCustomTerrainSizeDefinitions: 1
   ContentManager: {fileID: 0}
   ContentGenerator: {fileID: 0}
 --- !u!114 &114604088226089348
@@ -175,10 +179,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParentObjectForInstantiatedObjects: {fileID: 0}
-  PlaceableObject: {fileID: 1904199537620494, guid: 938a7fb90dd284e4b9606b86064ebe49,
-    type: 2}
-  PlaceableObjectCube: {fileID: 1777689348333916, guid: 053bd787dbdaeec42962072eeb0c5e20,
-    type: 2}
 --- !u!154 &154853691429667714
 TerrainCollider:
   m_ObjectHideFlags: 1

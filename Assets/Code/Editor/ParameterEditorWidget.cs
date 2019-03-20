@@ -10,12 +10,9 @@ public class ParameterEditorWidget : Editor {
     NoiseParameterEditor _NoiseParameterEditor;
     private TerrainInfo TerrainInfo;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>() {
-        { "TerrainSettingsWidget", false },
         { "DevelWidget", false },
         { "ErosionWidget", false },
-        { "ParameterPresetWidget", false },
         { "TerrainGenerationWidget", false },
-        { "ParameterListWidget", false }
     };
     public List<NoiseParameters> AllParameters = new List<NoiseParameters>();
     public TerrainGeneration Script;
@@ -58,11 +55,21 @@ public class ParameterEditorWidget : Editor {
                 _NoiseParameterEditor.DrawNoiseParameterGUI(TerrainInfo, EditorWidgetFoldouts);
             }
         }
+        DrawTerrainSizeWidget();
         _ParameterPresetEditor.DrawLoadSaveGUI(TerrainInfo, EditorWidgetFoldouts);
         _ParameterPresetEditor.DisplayParameterList().DoLayoutList();
 
         EditorGUILayout.LabelField("Run the project to initialise the controls!");
     }
+    public void DrawTerrainSizeWidget() {
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("TerrainWidth"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("TerrainHeight"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("TerrainDepth"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("UseCustomTerrainSizeDefinitions"));
+        serializedObject.ApplyModifiedProperties();
+    }
+    //
     // Used for devel stuff
     public void DrawDevelWidget() {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
