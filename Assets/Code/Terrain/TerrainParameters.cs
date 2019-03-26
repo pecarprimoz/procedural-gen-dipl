@@ -17,6 +17,7 @@ public class TerrainParameters {
     public Texture2D TerrainTexture;
     [JsonIgnore]
     public List<GameObject> TerrainParameterObjectList;
+    public List<int> TerrainParameterObjectCount;
 
     public List<string> ObjectListPath;
 
@@ -37,6 +38,7 @@ public class TerrainParameters {
         TexturePath = texturePath;
         TerrainTexture = Resources.Load(texturePath) as Texture2D;
         TerrainParameterObjectList = new List<GameObject>();
+        TerrainParameterObjectCount = new List<int>();
         ObjectListPath = new List<string>();
         ObjectListCount = 0;
     }
@@ -49,6 +51,8 @@ public class TerrainParameters {
         TexturePath = string.Empty;
         TerrainTexture = null;
         TerrainParameterObjectList = new List<GameObject>();
+        TerrainParameterObjectCount = new List<int>();
+
         ObjectListPath = new List<string>();
         ObjectListCount = 0;
     }

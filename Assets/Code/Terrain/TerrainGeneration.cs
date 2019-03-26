@@ -70,6 +70,10 @@ public class TerrainGeneration : MonoBehaviour {
         ContentGenerator.GenerateBiomeContent(TerrainInfo);
     }
 
+    public void AddObjectsToTerrain() {
+
+    }
+
     public void ApplyErosion() {
         if (TerrainInfo.GenerationType == GenerationType.kUpdating) {
             Debug.LogWarning("You are applying erosion in runtime. Switching to single mode");

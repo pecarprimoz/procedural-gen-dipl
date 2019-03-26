@@ -128,6 +128,7 @@ public class TerrainParameterPresetEditor {
             tparam.ObjectListCount++;
             tparam.TerrainParameterObjectList.Add(null);
             tparam.ObjectListPath.Add(string.Empty);
+            tparam.TerrainParameterObjectCount.Add(0);
         }
         rect.x += rect.width;
         if (GUI.Button(rect, "-")) {
@@ -135,18 +136,22 @@ public class TerrainParameterPresetEditor {
                 tparam.ObjectListCount--;
                 tparam.TerrainParameterObjectList.RemoveAt(tparam.ObjectListCount);
                 tparam.ObjectListPath.RemoveAt(tparam.ObjectListCount);
+                tparam.TerrainParameterObjectCount.RemoveAt(tparam.ObjectListCount);
             }
         }
         rect.x -= rect.width;
-        rect.width = tmpWidth;
+        rect.width = tmpWidth / 2;
         rect.height = 22.0f;
         rect.y += 22.0f;
         for (int i = 0; i < tparam.ObjectListCount; i++) {
             var newTerrainObject = (GameObject)EditorGUI.ObjectField(rect, tparam.TerrainParameterObjectList[i], typeof(GameObject), false);
+            rect.x += rect.width;
+            tparam.TerrainParameterObjectCount[i] = EditorGUI.IntField(rect, tparam.TerrainParameterObjectCount[i]);
             if (newTerrainObject != tparam.TerrainParameterObjectList[i]) {
                 tparam.TerrainParameterObjectList[i] = newTerrainObject;
                 tparam.ObjectListPath[i] = AssetDatabase.GetAssetPath(newTerrainObject);
             }
+            rect.x -= rect.width;
             rect.height = 22.0f;
             rect.y += 22.0f;
         }
