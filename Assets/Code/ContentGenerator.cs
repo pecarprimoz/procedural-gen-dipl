@@ -19,7 +19,7 @@ public class ContentGenerator : MonoBehaviour {
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
             // instead of taking the first item, take random ?
-            PlaceContent(info, i, 100, info.TerrainParameterList[i].TerrainParameterObjectList[0]);
+            PlaceContent(info, i, info.TerrainParameterList[i].ObjectListCount, info.TerrainParameterList[i].TerrainParameterObjectList[0]);
         }
     }
 
