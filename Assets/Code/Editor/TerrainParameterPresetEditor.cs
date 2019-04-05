@@ -48,6 +48,7 @@ public class TerrainParameterPresetEditor {
                         parameter.TerrainColor = new Color(parameter.TerrainColorVector.x, parameter.TerrainColorVector.y, parameter.TerrainColorVector.z, 1);
                         EditorUtils.ValidateTexture(ref parameter);
                         SerializedTerrainParameters[i] = parameter;
+                        info.TerrainParameterList = SerializedTerrainParameters;
                     }
                     ReorderableParameterList = null;
                 }
