@@ -1,15 +1,13 @@
 # Procedural terrain generation
 ### Usage
 1. Donwload the repository or clone using `git clone https://github.com/pecarprimoz/procedural-gen-dipl.git` 
-2. Download [Unity 2018.2.18f 
-(PC)](https://unity3d.com/get-unity/download?thank-you=update&download_nid=59169&os=Win) / [Unity 2018.2.18f 
-(MAC)](https://unity3d.com/get-unity/download?thank-you=update&download_nid=59169&os=Mac)
+2. Download the latest (stable) release of Unity.
 3. Open the project in Unity, wait for the project generation.
 4. Run the project, select the `ProceduralTerrain` prefab, then set the parameters trough the script `Terrain Generation` (the script auto updates when you 
-run the game, currently developing on `0_WHITTAKER_APPROX`).
+run the game).
 ##### Additional info
 You might want to debug moisture, temperature and height maps. To do that, select `TerrainDebugPlane` and set the `Plane Content` to the preffered map (kAll works with color, displays the biomes!).
-If you want to have a biome map, you need to load one of the `WHITTAKER_APPROX` presets (this is due to older presets having wrong parameter boundaries for biomes).
+If you want to have a biome map, you need to load one of the presets (this is due to older presets having wrong parameter boundaries for biomes).
 ##### Optional
 `DebugTerrainCamera` displays the heightmap on the `DebugPlane`, if you want to see the terrain from an 
 orthographic perspective, turn on `CameraTerrain`.
