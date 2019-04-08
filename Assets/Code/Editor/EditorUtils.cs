@@ -12,11 +12,30 @@ public static class EditorUtils {
 
     public static void ValidateTexture(ref TerrainParameters currentParameter) {
         // Edge case if textures exist in runtime
-        if (currentParameter.TexturePath == null && currentParameter.TerrainTexture != null) {
-            currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
+        if (currentParameter.TexturePathSpring == null && currentParameter.TerrainTextureSpring != null) {
+            currentParameter.TexturePathSpring = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSpring);
         }
-        if (currentParameter.TerrainTexture == null && currentParameter.TexturePath != null) {
-            currentParameter.TerrainTexture = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePath, typeof(Texture2D));
+        if (currentParameter.TexturePathSummer == null && currentParameter.TerrainTextureSummer != null) {
+            currentParameter.TexturePathSummer = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSummer);
+        }
+        if (currentParameter.TexturePathAutumn == null && currentParameter.TerrainTextureAutumn != null) {
+            currentParameter.TexturePathAutumn = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureAutumn);
+        }
+        if (currentParameter.TexturePathWinter == null && currentParameter.TerrainTextureWinter != null) {
+            currentParameter.TexturePathWinter = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureWinter);
+        }
+        // if we dont have the texture loaded but we have the path
+        if (currentParameter.TerrainTextureSpring == null && currentParameter.TexturePathSpring != null) {
+            currentParameter.TerrainTextureSpring = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePathSpring, typeof(Texture2D));
+        }
+        if (currentParameter.TerrainTextureSummer == null && currentParameter.TexturePathSummer != null) {
+            currentParameter.TerrainTextureSummer = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePathSummer, typeof(Texture2D));
+        }
+        if (currentParameter.TerrainTextureAutumn == null && currentParameter.TexturePathAutumn != null) {
+            currentParameter.TerrainTextureAutumn = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePathAutumn, typeof(Texture2D));
+        }
+        if (currentParameter.TerrainTextureWinter == null && currentParameter.TexturePathWinter != null) {
+            currentParameter.TerrainTextureWinter = (Texture2D)AssetDatabase.LoadAssetAtPath(currentParameter.TexturePathWinter, typeof(Texture2D));
         }
     }
 

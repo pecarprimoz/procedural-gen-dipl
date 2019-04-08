@@ -4,7 +4,7 @@ public class TerrainGenerationDebugger : MonoBehaviour {
     public TerrainGeneration tg;
     [SerializeField]
     public DebugPlaneType planeContent;
-    private bool WasTextureCreated = false;
+    public bool AlwaysUpdate = false;
 
     private static Texture2D texture;
     private void Start() {
@@ -28,6 +28,8 @@ public class TerrainGenerationDebugger : MonoBehaviour {
     }
 
     private void Update() {
-        //GenerateTexture();
+        if (AlwaysUpdate) {
+            GenerateTexture();
+        }
     }
 }

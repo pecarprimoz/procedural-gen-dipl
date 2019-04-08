@@ -13,8 +13,16 @@ public class TerrainParameters {
         get { return _TerrainColor; }
         set { _TerrainColor = value; TerrainColorVector = value; }
     }
+
     [JsonIgnore]
-    public Texture2D TerrainTexture;
+    public Texture2D TerrainTextureSpring;
+    [JsonIgnore]
+    public Texture2D TerrainTextureSummer;
+    [JsonIgnore]
+    public Texture2D TerrainTextureAutumn;
+    [JsonIgnore]
+    public Texture2D TerrainTextureWinter;
+
     [JsonIgnore]
     public List<GameObject> TerrainParameterObjectList;
     public List<int> TerrainParameterObjectCount;
@@ -28,28 +36,44 @@ public class TerrainParameters {
     public float TemperatureParameterBoundry;
     public float MoistureParameterBoundry;
     public Vector4 TerrainColorVector;
-    public string TexturePath;
-    public TerrainParameters(string name, float moistureParameterBoundry, float temperatureParameterBoundry, float parameterBoundry, Color c, string texturePath) {
+
+    public string TexturePathSpring;
+    public string TexturePathSummer;
+    public string TexturePathAutumn;
+    public string TexturePathWinter;
+
+
+
+    public TerrainParameters(string name, float moistureParameterBoundry, float temperatureParameterBoundry, float parameterBoundry, Color c, string texturePathSpring,
+        string texturePathSummer, string texturePathAutumn, string texturePathWinter) {
         Name = name;
         MoistureParameterBoundry = moistureParameterBoundry;
         TemperatureParameterBoundry = temperatureParameterBoundry;
         ParameterBoundry = parameterBoundry;
         _TerrainColor = TerrainColorVector = c;
-        TexturePath = texturePath;
-        TerrainTexture = Resources.Load(texturePath) as Texture2D;
+        TexturePathSpring = texturePathSpring;
+        TexturePathSummer = texturePathSummer;
+        TexturePathAutumn = texturePathAutumn;
+        TexturePathWinter = texturePathWinter;
+        TerrainTextureSpring = Resources.Load(texturePathSpring) as Texture2D;
+        TerrainTextureSummer = Resources.Load(texturePathSummer) as Texture2D;
+        TerrainTextureAutumn = Resources.Load(texturePathAutumn) as Texture2D;
+        TerrainTextureWinter = Resources.Load(texturePathWinter) as Texture2D;
+
         TerrainParameterObjectList = new List<GameObject>();
         TerrainParameterObjectCount = new List<int>();
         ObjectListPath = new List<string>();
         ObjectListCount = 0;
     }
+
     public TerrainParameters() {
         Name = string.Empty;
         ParameterBoundry = 0.0f;
         TemperatureParameterBoundry = 0.0f;
         MoistureParameterBoundry = 0.0f;
         _TerrainColor = TerrainColorVector = Color.white;
-        TexturePath = string.Empty;
-        TerrainTexture = null;
+        TexturePathSpring = TexturePathSummer = TexturePathAutumn = TexturePathWinter = string.Empty;
+        TerrainTextureSpring = TerrainTextureSummer = TerrainTextureAutumn = TerrainTextureWinter = null;
         TerrainParameterObjectList = new List<GameObject>();
         TerrainParameterObjectCount = new List<int>();
 

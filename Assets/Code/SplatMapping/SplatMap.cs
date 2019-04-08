@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class AssignSplatMap : MonoBehaviour {
     private static bool ValidParameterCheck(List<TerrainParameters> terrainParameterList) {
         foreach (var parameter in terrainParameterList) {
-            if (parameter.TerrainTexture == null) {
+            if (parameter.TerrainTextureSpring == null ||
+                parameter.TerrainTextureSummer == null ||
+                parameter.TerrainTextureAutumn == null ||
+                parameter.TerrainTextureWinter == null) {
                 return false;
             }
         }
@@ -20,7 +23,8 @@ public class AssignSplatMap : MonoBehaviour {
         SplatPrototype[] splat_lists = new SplatPrototype[info.TerrainParameterList.Count];
         for (int i = 0; i < splat_lists.Length; i++) {
             splat_lists[i] = new SplatPrototype();
-            splat_lists[i].texture = info.TerrainParameterList[i].TerrainTexture;
+            // @ TODO, SEASONAL CHANGES WILL HAPPEN HERE, ONLY WORKING WITH SPRING FOR TESTING, IMPL !!!
+            splat_lists[i].texture = info.TerrainParameterList[i].TerrainTextureSpring;
         }
         info._Terrain.terrainData.splatPrototypes = splat_lists;
         for (int y = 0; y < info._Terrain.terrainData.alphamapHeight; y++) {
@@ -39,7 +43,7 @@ public class AssignSplatMap : MonoBehaviour {
                 }
                 // we are at ocean level, blend the sand
                 else if (idx == 0) {
-                    splatWeights[idx + 1] = 0.5f; 
+                    splatWeights[idx + 1] = 0.5f;
                 }
                 // we are at snow level, blend the snow
                 else if (idx == info.TerrainParameterList.Count - 1) {

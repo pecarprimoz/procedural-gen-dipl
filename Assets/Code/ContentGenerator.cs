@@ -7,15 +7,15 @@ using UnityEngine;
 
 // 1. Pass terrain info to this guy, need to calc stuff for placement
 public class ContentGenerator : MonoBehaviour {
-    int TerrainPositionX;
-    int TerrainPositionZ;
-    int TerrainWidth;
-    int TerrainLength;
+    //int TerrainPositionX;
+    //int TerrainPositionZ;
+    //int TerrainWidth;
+    //int TerrainLength;
     public void GenerateBiomeContent(TerrainInfo info) {
-        TerrainPositionX = (int)info._Terrain.transform.position.x;
-        TerrainPositionZ = (int)info._Terrain.transform.position.z;
-        TerrainWidth = (int)info._Terrain.terrainData.size.x;
-        TerrainLength = (int)info._Terrain.terrainData.size.z;
+        //TerrainPositionX = (int)info._Terrain.transform.position.x;
+        //TerrainPositionZ = (int)info._Terrain.transform.position.z;
+        //TerrainWidth = (int)info._Terrain.terrainData.size.x;
+        //TerrainLength = (int)info._Terrain.terrainData.size.z;
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
             // instead of taking the first item, take random ?

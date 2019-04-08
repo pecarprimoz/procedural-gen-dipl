@@ -48,7 +48,10 @@ public class TerrainParameterPresetEditor {
                         parameter.TerrainColor = new Color(parameter.TerrainColorVector.x, parameter.TerrainColorVector.y, parameter.TerrainColorVector.z, 1);
                         EditorUtils.ValidateTexture(ref parameter);
                         SerializedTerrainParameters[i] = parameter;
-                        info.TerrainParameterList = SerializedTerrainParameters;
+                        // if info not null, means we in runtime, so we need to update the info with new loaded params
+                        if (info != null) {
+                            info.TerrainParameterList = SerializedTerrainParameters;
+                        }
                     }
                     ReorderableParameterList = null;
                 }
@@ -90,14 +93,35 @@ public class TerrainParameterPresetEditor {
             currentParameter.TerrainColor = EditorGUI.ColorField(rect, "Color", currentParameter.TerrainColor);
             rect.height = 22.0f;
             rect.y += 22.0f;
-            EditorGUI.LabelField(rect, currentParameter.TexturePath);
+            // this can be done better, testing impl
             rect.height = 22.0f;
             rect.y += 22.0f;
             EditorUtils.ValidateTexture(ref currentParameter);
-            var newTerrainTexture = (Texture2D)EditorGUI.ObjectField(rect, "Texture", currentParameter.TerrainTexture, typeof(Texture2D));
-            if (newTerrainTexture != currentParameter.TerrainTexture) {
-                currentParameter.TerrainTexture = newTerrainTexture;
-                currentParameter.TexturePath = AssetDatabase.GetAssetPath(currentParameter.TerrainTexture);
+            var newTerrainTextureSpring = (Texture2D)EditorGUI.ObjectField(rect, "Texture Spring", currentParameter.TerrainTextureSpring, typeof(Texture2D));
+            if (newTerrainTextureSpring != currentParameter.TerrainTextureSpring) {
+                currentParameter.TerrainTextureSpring = newTerrainTextureSpring;
+                currentParameter.TexturePathSpring = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSpring);
+            }
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            var newTerrainTextureSummer = (Texture2D)EditorGUI.ObjectField(rect, "Texture Summer", currentParameter.TerrainTextureSummer, typeof(Texture2D));
+            if (newTerrainTextureSummer != currentParameter.TerrainTextureSummer) {
+                currentParameter.TerrainTextureSummer = newTerrainTextureSummer;
+                currentParameter.TexturePathSummer = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSummer);
+            }
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            var newTerrainTextureAutumn = (Texture2D)EditorGUI.ObjectField(rect, "Texture Autumn", currentParameter.TerrainTextureAutumn, typeof(Texture2D));
+            if (newTerrainTextureAutumn != currentParameter.TerrainTextureAutumn) {
+                currentParameter.TerrainTextureAutumn = newTerrainTextureAutumn;
+                currentParameter.TexturePathAutumn = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureAutumn);
+            }
+            rect.height = 22.0f;
+            rect.y += 22.0f;
+            var newTerrainTextureWinter = (Texture2D)EditorGUI.ObjectField(rect, "Texture Winter", currentParameter.TerrainTextureWinter, typeof(Texture2D));
+            if (newTerrainTextureWinter != currentParameter.TerrainTextureWinter) {
+                currentParameter.TerrainTextureWinter = newTerrainTextureWinter;
+                currentParameter.TexturePathWinter = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureWinter);
             }
             ReorderableListDrawPresetObjecList(rect, currentParameter);
             SerializedTerrainParameters[index] = currentParameter;

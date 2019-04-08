@@ -6,8 +6,10 @@ public class TerrainGenerationDebuggerWidget : Editor {
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
         TerrainGenerationDebugger tgb = (TerrainGenerationDebugger)target;
-        if (GUILayout.Button("Generate texture")) {
-            tgb.GenerateTexture();
+        if (!tgb.AlwaysUpdate) {
+            if (GUILayout.Button("Generate texture")) {
+                tgb.GenerateTexture();
+            }
         }
     }
 }
