@@ -36,28 +36,26 @@ public class AssignSplatMap : MonoBehaviour {
                 float[] splatWeights = new float[info._Terrain.terrainData.alphamapLayers];
                 int idx = BiomeGeneration.GetCorrectBiomeIndex(info, x, y);
                 splatWeights[idx] = 1.0f;
-                //// if the current parameterBoundry is smaller or equal to the height means we found our boundry
-                //splatWeights[idx] = 0.5f;
-                //// blending, if we arnt at ocean/snow level
-                //if (idx >= 1 && idx < info.TerrainParameterList.Count - 1) {
-                //    splatWeights[idx + 1] = 0.25f;
-                //    splatWeights[idx - 1] = 0.25f;
-                //}
-                //// we are at ocean level, blend the sand
-                //else if (idx == 0) {
-                //    splatWeights[idx + 1] = 0.5f;
-                //}
-                //// we are at snow level, blend the snow
-                //else if (idx == info.TerrainParameterList.Count - 1) {
-                //    splatWeights[idx - 1] = 0.5f;
-                //}
-                //// Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
-                //// float z = splatWeights.Sum();
+                // blending, if we arnt at ocean/snow level
+                if (idx >= 1 && idx < info.TerrainParameterList.Count - 1) {
+                    splatWeights[idx + 1] = 0.5f;
+                    splatWeights[idx - 1] = 0.5f;
+                }
+                // we are at ocean level, blend the sand
+                else if (idx == 0) {
+                    splatWeights[idx + 1] = 0.5f;
+                }
+                // we are at snow level, blend the snow
+                else if (idx == info.TerrainParameterList.Count - 1) {
+                    splatWeights[idx - 1] = 0.5f;
+                }
+                // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
+                float z = splatWeights.Sum();
 
                 // Loop through each terrain texture
                 for (int i = 0; i < info._Terrain.terrainData.alphamapLayers; i++) {
                     // Normalize so that sum of all texture weights = 1
-                    // splatWeights[i] /= z;
+                    splatWeights[i] /= z;
                     // Assign this point to the splatmap array
                     splatmapData[x, y, i] = splatWeights[i];
                 }
