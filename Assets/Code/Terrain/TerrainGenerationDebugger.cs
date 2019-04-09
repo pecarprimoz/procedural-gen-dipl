@@ -12,7 +12,6 @@ public class TerrainGenerationDebugger : MonoBehaviour {
     }
 
     public void GenerateTexture() {
-        // TODO, CHECK THE WIDTH/HEIGHT AND UPDATE TYPE, THIS RAPES 1km * 1km TERRAINS ! FIX BY MAKING IT CALLABLE TROUGH EDITOR
         // Fun fact, Unity does not GC new Terrains, which results in a memory leak, to prevent this we call destroy and have the texture as static
         Destroy(texture);
         // The debug terrain is driven by the TerrainGeneration (the main terrain that we are working on)
