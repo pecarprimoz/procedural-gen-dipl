@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311926, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -51,7 +51,7 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 10
@@ -363,12 +363,12 @@ PrefabInstance:
     - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
         type: 3}
       propertyPath: TerrainWidth
-      value: 256
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 114553417975686340, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
         type: 3}
       propertyPath: TerrainHeight
-      value: 256
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 4249364747581824, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -407,6 +407,21 @@ PrefabInstance:
       propertyPath: ParentObjectForInstantiatedObjects
       value: 
       objectReference: {fileID: 1270213913}
+    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 3}
+      propertyPath: m_SplatMapDistance
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 218874898587846492, guid: d2cae24de98ddee4e8a2397c3af1bfe2,
+        type: 3}
+      propertyPath: m_TreeCrossFadeLength
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2cae24de98ddee4e8a2397c3af1bfe2, type: 3}
 --- !u!1001 &1860139740

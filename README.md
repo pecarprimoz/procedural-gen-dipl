@@ -22,3 +22,5 @@ If you have any questions, feel free to email me at `pecar.primoz96@gmail.com`
 ![Example2](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/height_moist_temp.png)
 ##### 1024x1024x64 terrain map, 250 erosion iterations, runtime texturing and object placement, less than 2 min
 ![Example3](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/wip3.png)
+##### 512x512x64 terrain map, 250 erosion iterations, ~5k placed objects, grass patches on 4 biomes, rock patches on 1 biome, 50k detail draw distance, ~10s total generation time
+![Example4](https://raw.githubusercontent.com/pecarprimoz/procedural-gen-dipl/master/Screens/wip4.png)

@@ -6,9 +6,8 @@ using UnityEngine;
 
 public class ContentGenerator : MonoBehaviour {
     public void GenerateBiomeContent(TerrainInfo info) {
-        for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
-            PlaceGrass(info);
-        }
+        // testing for some biomes to get grass 
+        PlaceSomeShit(info);
 
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++) {
@@ -38,25 +37,21 @@ public class ContentGenerator : MonoBehaviour {
             }
         }
     }
-    // wip
-    private void PlaceGrass(TerrainInfo info) {
-        int detailWidth = info._Terrain.terrainData.detailWidth;
-        int detailHeight = info._Terrain.terrainData.detailHeight;
 
-        int[,] details0 = new int[detailWidth, detailHeight];
-        int[,] details1 = new int[detailWidth, detailHeight];
-
-        int x, y;
-
-        for (x = 0; x < detailWidth; x++) // divided by 4 just to show a test patch
-        {
-            for (y = 0; y < detailHeight; y++) // test patch
-            {
-                details0[y, x] = 0;
+    private void PlaceSomeShit(TerrainInfo info) {
+        var t = info._Terrain;
+        var map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, 9);
+        for (int i = 1; i < 4; i++) {
+            foreach (var point in info.SeperatedBiomes[i]) {
+                map[point.Z, point.X] = 1;
             }
         }
+        t.terrainData.SetDetailLayer(0, 0, 0, map);
+        map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, 1);
 
-        info._Terrain.terrainData.SetDetailLayer(0, 0, 0, details0);
-        //info._Terrain.terrainData.SetDetailLayer(0, 0, 1, details1);
+        foreach (var point in info.SeperatedBiomes[0]) {
+            map[point.Z, point.X] = 1;
+        }
+        t.terrainData.SetDetailLayer(0, 0, 1, map);
     }
 }
