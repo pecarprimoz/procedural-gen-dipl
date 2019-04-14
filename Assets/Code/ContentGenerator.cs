@@ -39,19 +39,35 @@ public class ContentGenerator : MonoBehaviour {
     }
 
     private void PlaceSomeShit(TerrainInfo info) {
+        // 0 - 5 indices are for grass atm, 3-5 are flowers (less dense patches)
         var t = info._Terrain;
-        var map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, 9);
-        for (int i = 1; i < 4; i++) {
-            foreach (var point in info.SeperatedBiomes[i]) {
-                map[point.Z, point.X] = 1;
+        // go trough the biomes that need grass
+        for (int j = 0; j < 3; j++) {
+            var map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, j);
+            for (int i = 1; i < 5; i++) {
+                // go trough the biome points
+                foreach (var point in info.SeperatedBiomes[i]) {
+                    // go trough the detail layers
+                    // https://answers.unity.com/questions/182147/terraindatagetdetaillayer.html
+                    int density = UnityEngine.Random.Range(13, 16);
+                    map[point.Z, point.X] = density;
+                }
             }
         }
-        t.terrainData.SetDetailLayer(0, 0, 0, map);
-        map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, 1);
 
-        foreach (var point in info.SeperatedBiomes[0]) {
-            map[point.Z, point.X] = 1;
+        // add the flowers
+        for (int j = 3; j < 6; j++) {
+            var map = t.terrainData.GetDetailLayer(0, 0, t.terrainData.detailWidth, t.terrainData.detailHeight, j);
+            for (int i = 1; i < 5; i++) {
+                // go trough the biome points
+                foreach (var point in info.SeperatedBiomes[i]) {
+                    // go trough the detail layers
+                    int density = UnityEngine.Random.Range(1, 5);
+                    map[point.Z, point.X] = density;
+                }
+            }
+            t.terrainData.SetDetailLayer(0, 0, j, map);
         }
-        t.terrainData.SetDetailLayer(0, 0, 1, map);
+
     }
 }

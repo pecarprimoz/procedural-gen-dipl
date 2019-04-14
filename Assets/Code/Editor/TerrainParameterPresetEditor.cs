@@ -97,28 +97,28 @@ public class TerrainParameterPresetEditor {
             rect.height = 22.0f;
             rect.y += 22.0f;
             EditorUtils.ValidateTexture(ref currentParameter);
-            var newTerrainTextureSpring = (Texture2D)EditorGUI.ObjectField(rect, "Texture Spring", currentParameter.TerrainTextureSpring, typeof(Texture2D));
+            var newTerrainTextureSpring = (Texture2D)EditorGUI.ObjectField(rect, "Texture Spring", currentParameter.TerrainTextureSpring, typeof(Texture2D), true);
             if (newTerrainTextureSpring != currentParameter.TerrainTextureSpring) {
                 currentParameter.TerrainTextureSpring = newTerrainTextureSpring;
                 currentParameter.TexturePathSpring = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSpring);
             }
             rect.height = 22.0f;
             rect.y += 22.0f;
-            var newTerrainTextureSummer = (Texture2D)EditorGUI.ObjectField(rect, "Texture Summer", currentParameter.TerrainTextureSummer, typeof(Texture2D));
+            var newTerrainTextureSummer = (Texture2D)EditorGUI.ObjectField(rect, "Texture Summer", currentParameter.TerrainTextureSummer, typeof(Texture2D), true);
             if (newTerrainTextureSummer != currentParameter.TerrainTextureSummer) {
                 currentParameter.TerrainTextureSummer = newTerrainTextureSummer;
                 currentParameter.TexturePathSummer = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureSummer);
             }
             rect.height = 22.0f;
             rect.y += 22.0f;
-            var newTerrainTextureAutumn = (Texture2D)EditorGUI.ObjectField(rect, "Texture Autumn", currentParameter.TerrainTextureAutumn, typeof(Texture2D));
+            var newTerrainTextureAutumn = (Texture2D)EditorGUI.ObjectField(rect, "Texture Autumn", currentParameter.TerrainTextureAutumn, typeof(Texture2D), true);
             if (newTerrainTextureAutumn != currentParameter.TerrainTextureAutumn) {
                 currentParameter.TerrainTextureAutumn = newTerrainTextureAutumn;
                 currentParameter.TexturePathAutumn = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureAutumn);
             }
             rect.height = 22.0f;
             rect.y += 22.0f;
-            var newTerrainTextureWinter = (Texture2D)EditorGUI.ObjectField(rect, "Texture Winter", currentParameter.TerrainTextureWinter, typeof(Texture2D));
+            var newTerrainTextureWinter = (Texture2D)EditorGUI.ObjectField(rect, "Texture Winter", currentParameter.TerrainTextureWinter, typeof(Texture2D), true);
             if (newTerrainTextureWinter != currentParameter.TerrainTextureWinter) {
                 currentParameter.TerrainTextureWinter = newTerrainTextureWinter;
                 currentParameter.TexturePathWinter = AssetDatabase.GetAssetPath(currentParameter.TerrainTextureWinter);
