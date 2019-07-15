@@ -37,7 +37,8 @@ public class ContentGenerator : MonoBehaviour {
             }
         }
     }
-
+    // note to self
+    // if you want to add additional vegetation & floura, has to be done by unity's Terrain Details, 4 tab on the Terrain component
     private void PlaceSomeShit(TerrainInfo info) {
         // 0 - 5 indices are for grass atm, 3-5 are flowers (less dense patches)
         var t = info._Terrain;

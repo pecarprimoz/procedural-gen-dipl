@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainGeneration : MonoBehaviour {
+public class TerrainGeneration : MonoBehaviour
+{
 
     // Terrain parameters, change this if you want a bigger/higher terrain
     public int TerrainWidth = 128;
     public int TerrainHeight = 128;
     public int TerrainDepth = 64;
     public bool UseCustomTerrainSizeDefinitions = false;
+
+    // Seasonal change component
+    public SeasonalChange SeasonalChange;
 
     // Manager for content
     public ContentManager ContentManager;
@@ -18,10 +22,13 @@ public class TerrainGeneration : MonoBehaviour {
     // Manager for terrain 
     public TerrainInfo TerrainInfo;
 
-    void Start() {
+    void Start()
+    {
         ContentManager = GetComponent<ContentManager>();
+        SeasonalChange = GetComponent<SeasonalChange>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
-        if (UseCustomTerrainSizeDefinitions) {
+        if (UseCustomTerrainSizeDefinitions)
+        {
             TerrainInfo.TerrainWidth = TerrainWidth;
             TerrainInfo.TerrainHeight = TerrainHeight;
             TerrainInfo.TerrainDepth = TerrainDepth;
@@ -35,13 +42,20 @@ public class TerrainGeneration : MonoBehaviour {
         InitializeTerrain();
     }
 
-    private void Update() {
-        if (TerrainInfo.GenerationType == GenerationType.kUpdating) {
+    private void Update()
+    {
+        if (TerrainInfo.GenerationType == GenerationType.kUpdating)
+        {
             InitializeTerrain();
+        }
+        if (TerrainInfo.AreSeasonsChanging)
+        {
+            SeasonalChange.SeasonalChangeUpdate(TerrainInfo);
         }
     }
 
-    public void InitializeTerrain() {
+    public void InitializeTerrain()
+    {
         // this kills the performance, is rly pretty tho :D
         TerrainInfo._Terrain.detailObjectDistance = 50000;
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
@@ -52,7 +66,8 @@ public class TerrainGeneration : MonoBehaviour {
         GenerateTerrainFromPreset();
     }
 
-    public void GenerateTerrainFromPreset() {
+    public void GenerateTerrainFromPreset()
+    {
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         // this can be parallelized 
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
@@ -60,7 +75,8 @@ public class TerrainGeneration : MonoBehaviour {
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
     // A lot of stuff can be paralelized, stuff is decoupled for clarity when developing, in the end will be re-facced so shit that can get run paralel will
-    public void GenerateTerrainOnDemand() {
+    public void GenerateTerrainOnDemand()
+    {
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
         TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
@@ -72,16 +88,20 @@ public class TerrainGeneration : MonoBehaviour {
         ContentGenerator.GenerateBiomeContent(TerrainInfo);
     }
 
-    public void AddObjectsToTerrain() {
+    public void AddObjectsToTerrain()
+    {
 
     }
 
-    public void ApplyErosion() {
-        if (TerrainInfo.GenerationType == GenerationType.kUpdating) {
+    public void ApplyErosion()
+    {
+        if (TerrainInfo.GenerationType == GenerationType.kUpdating)
+        {
             Debug.LogWarning("You are applying erosion in runtime. Switching to single mode");
             TerrainInfo.GenerationType = GenerationType.kSingleRun;
         }
-        switch (TerrainInfo.ErosionType) {
+        switch (TerrainInfo.ErosionType)
+        {
             case ErosionGeneration.ErosionType.kThermalErosion:
                 TerrainInfo.HeightMap = ErosionGeneration.ThermalErosion(TerrainInfo);
                 break;

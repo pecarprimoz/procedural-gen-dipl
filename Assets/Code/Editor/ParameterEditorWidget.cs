@@ -4,10 +4,12 @@ using UnityEditorInternal;
 using System.Collections.Generic;
 [InitializeOnLoad]
 [CustomEditor(typeof(TerrainGeneration), true)]
-public class ParameterEditorWidget : Editor {
+public class ParameterEditorWidget : Editor
+{
     [SerializeField]
     private TerrainParameterPresetEditor _ParameterPresetEditor;
-    NoiseParameterEditor _NoiseParameterEditor;
+    private NoiseParameterEditor _NoiseParameterEditor;
+    private EditorSeasonalChange _EditorSeasonalChange;
     private TerrainInfo TerrainInfo;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>() {
         { "DevelWidget", false },
@@ -19,18 +21,23 @@ public class ParameterEditorWidget : Editor {
     public bool WasInitialised = false;
     public bool EditorInitialized = false;
 
-    private void OnActivate() {
+    private void OnActivate()
+    {
         // Parameter preset editor works in editor
-        if (_ParameterPresetEditor == null) {
+        if (_ParameterPresetEditor == null)
+        {
             _ParameterPresetEditor = new TerrainParameterPresetEditor();
         }
         Script = (TerrainGeneration)target;
         // Noise parameter editor works in runtime
-        if (Script.TerrainInfo != null) {
+        if (Script.TerrainInfo != null)
+        {
             // We are in runtime, means we can get all the info from runtime
-            if (TerrainInfo == null) {
+            if (TerrainInfo == null)
+            {
                 TerrainInfo = Script.TerrainInfo;
                 _NoiseParameterEditor = new NoiseParameterEditor(TerrainInfo);
+                _EditorSeasonalChange = new EditorSeasonalChange();
                 // now just overrwrite this terrain infos parameter property list (biomes) with our serialized editor list
                 TerrainInfo.TerrainParameterList = _ParameterPresetEditor.SerializedTerrainParameters;
             }
@@ -41,18 +48,26 @@ public class ParameterEditorWidget : Editor {
     /// <summary>
     /// The main InspectorGUI code, every widget drawer gets called here
     /// </summary>
-    public override void OnInspectorGUI() {
-        if (!WasInitialised) {
+    public override void OnInspectorGUI()
+    {
+        if (!WasInitialised)
+        {
             OnActivate();
         }
-        if (target != null) {
-            if (!EditorInitialized) {
+        if (target != null)
+        {
+            if (!EditorInitialized)
+            {
                 OnActivate();
             }
-            if (Script.TerrainInfo != null) {
+            if (Script.TerrainInfo != null)
+            {
                 DrawDevelWidget();
                 DrawErosionTypeProperties();
                 _NoiseParameterEditor.DrawNoiseParameterGUI(TerrainInfo, EditorWidgetFoldouts);
+                _EditorSeasonalChange.DrawSeasonalChangeGUI(TerrainInfo);
+                // should always be running after terrainInfo is avaliable, cant be run in editor
+                //_EditorSeasonalChange.SeasonalChangeUpdate(TerrainInfo);
             }
         }
         DrawTerrainSizeWidget();
@@ -61,7 +76,9 @@ public class ParameterEditorWidget : Editor {
 
         EditorGUILayout.LabelField("Run the project to initialise the controls!");
     }
-    public void DrawTerrainSizeWidget() {
+
+    public void DrawTerrainSizeWidget()
+    {
         serializedObject.Update();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("TerrainWidth"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("TerrainHeight"));
@@ -71,11 +88,15 @@ public class ParameterEditorWidget : Editor {
     }
     //
     // Used for devel stuff
-    public void DrawDevelWidget() {
+    public void DrawDevelWidget()
+    {
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
-        if (EditorWidgetFoldouts["DevelWidget"]) {
-            if (GUILayout.Button("Gen. H, M, T maps")) {
-                if (TerrainInfo.GenerationType != GenerationType.kSingleRun) {
+        if (EditorWidgetFoldouts["DevelWidget"])
+        {
+            if (GUILayout.Button("Gen. H, M, T maps"))
+            {
+                if (TerrainInfo.GenerationType != GenerationType.kSingleRun)
+                {
                     TerrainInfo.GenerationType = GenerationType.kSingleRun;
                 }
                 Script.GenerateTerrainOnDemand();
@@ -88,16 +109,20 @@ public class ParameterEditorWidget : Editor {
     /// <summary>
     /// Draws the ErosionTypeWidget
     /// </summary>
-    public void DrawErosionTypeProperties() {
+    public void DrawErosionTypeProperties()
+    {
         EditorWidgetFoldouts["ErosionWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["ErosionWidget"], "ErosionWidget");
-        if (EditorWidgetFoldouts["ErosionWidget"]) {
+        if (EditorWidgetFoldouts["ErosionWidget"])
+        {
             GUILayout.Label("Pick an erosion type, try different iter numbers !");
             TerrainInfo.ErosionType = (ErosionGeneration.ErosionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), TerrainInfo.ErosionType);
             var iters = EditorGUI.IntField(EditorGUILayout.GetControlRect(), "Number of erosion iterations", TerrainInfo.ErosionIterations);
             TerrainInfo.ErosionIterations = iters <= 0 ? 1 : iters;
             TerrainInfo.RuntimeErosion = EditorGUI.Toggle(EditorGUILayout.GetControlRect(), "Toggle runtime erosion? (will lag)", TerrainInfo.RuntimeErosion);
-            if (!TerrainInfo.RuntimeErosion) {
-                if (GUILayout.Button("Apply erosion!")) {
+            if (!TerrainInfo.RuntimeErosion)
+            {
+                if (GUILayout.Button("Apply erosion!"))
+                {
                     Script.ApplyErosion();
                 }
             }
