@@ -57,4 +57,7 @@ public class TerrainInfo {
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
 
+    // Seasonal changes boolean
+    public bool AreSeasonsChanging = false;
+
 }
