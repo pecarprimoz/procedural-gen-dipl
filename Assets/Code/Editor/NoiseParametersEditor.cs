@@ -2,7 +2,8 @@
 using UnityEditor;
 using UnityEngine;
 // this class should be okay, nothing needs to be set in editor mode, all runtime variables
-public class NoiseParameterEditor {
+public class NoiseParameterEditor
+{
     public int CurrentSelectedIndexNoise = 0;
     int DeleteFailsafe = 0;
     public string NoisePresetName = string.Empty;
@@ -10,15 +11,18 @@ public class NoiseParameterEditor {
     public string[] AllNoiseParameterNames = new string[0];
     public NoiseParameters SerializedNoiseParameter;
 
-    public NoiseParameterEditor(TerrainInfo info) {
+    public NoiseParameterEditor(TerrainInfo info)
+    {
         SerializedNoiseParameters = new List<NoiseParameters>();
         CurrentSelectedIndexNoise = EditorPrefs.GetInt("ParameterPresetNoiseIdx");
         TryGeneratingSavedNoiseParameters(info, true);
     }
 
-    public void DrawNoiseParameterGUI(TerrainInfo info, Dictionary<string, bool> EditorWidgetFoldouts) {
+    public void DrawNoiseParameterGUI(TerrainGeneration script, TerrainInfo info, Dictionary<string, bool> EditorWidgetFoldouts)
+    {
         EditorWidgetFoldouts["TerrainGenerationWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["TerrainGenerationWidget"], "TerrainGenerationWidget");
-        if (EditorWidgetFoldouts["TerrainGenerationWidget"]) {
+        if (EditorWidgetFoldouts["TerrainGenerationWidget"])
+        {
             GUILayout.BeginHorizontal();
             GUILayout.Label("DebugPlane coloring");
             SerializedNoiseParameter.TerrainTextureType = (TextureType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), SerializedNoiseParameter.TerrainTextureType);
@@ -37,7 +41,8 @@ public class NoiseParameterEditor {
             SerializedNoiseParameter.UserOffset = EditorGUI.Vector2Field(EditorGUILayout.GetControlRect(), "User Offset", SerializedNoiseParameter.UserOffset);
             SerializedNoiseParameter.GlobalNoiseAddition = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Global noise add", SerializedNoiseParameter.GlobalNoiseAddition);
             SerializedNoiseParameter.CustomFunction = (CustomFunctionType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), SerializedNoiseParameter.CustomFunction);
-            if (SerializedNoiseParameter.CustomFunction == CustomFunctionType.kCustom) {
+            if (SerializedNoiseParameter.CustomFunction == CustomFunctionType.kCustom)
+            {
                 var customExponent = EditorGUI.FloatField(EditorGUILayout.GetControlRect(), "Custom Exponent", SerializedNoiseParameter.CustomExponent);
                 SerializedNoiseParameter.CustomExponent = customExponent <= 0 ? 0.0001f : customExponent;
             }
@@ -46,35 +51,47 @@ public class NoiseParameterEditor {
             info.GenerationType = (GenerationType)EditorGUI.EnumPopup(EditorGUILayout.GetControlRect(), info.GenerationType);
             GUILayout.EndHorizontal();
 
-            if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!")) {
-                if (info.GenerationType != GenerationType.kSingleRun) {
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Paint the terrain!"))
+            {
+                if (info.GenerationType != GenerationType.kSingleRun)
+                {
                     Debug.LogWarningFormat("WARNING: Parameter _GenerationType is {0}, needs to be kSingleRun (can't paint terrain in runtime), changing to single run.", info.GenerationType.ToString());
                     info.GenerationType = GenerationType.kSingleRun;
                 }
                 AssignSplatMap.DoSplat(info);
+            }
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Apply noise parameters!"))
+            {
+                script.GenerateTerrainOnDemand(true);
             }
             GUILayout.Label("Saved noise presets");
             GUILayout.BeginHorizontal(GUILayout.Width(250));
             var lastIndex = CurrentSelectedIndexNoise;
             CurrentSelectedIndexNoise = EditorGUILayout.Popup(CurrentSelectedIndexNoise, AllNoiseParameterNames, GUILayout.Width(250));
             DeleteFailsafe = lastIndex != CurrentSelectedIndexNoise ? 0 : DeleteFailsafe;
-            if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200))) {
-                if (DeleteFailsafe == 2) {
+            if (GUILayout.Button(string.Format("Delete selected preset ({0})", DeleteFailsafe), GUILayout.MaxWidth(200)))
+            {
+                if (DeleteFailsafe == 2)
+                {
                     DeleteFailsafe = 0;
                     SerializationManager.DeleteNoiseParameter(AllNoiseParameterNames[CurrentSelectedIndexNoise]);
                     SerializedNoiseParameters.RemoveAt(CurrentSelectedIndexNoise);
                     TryGeneratingSavedNoiseParameters(info, false);
-                } else {
+                }
+                else
+                {
                     DeleteFailsafe++;
                 }
             }
             GUILayout.EndHorizontal();
-            if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset")) {
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Load preset"))
+            {
                 TryGeneratingSavedNoiseParameters(info, true);
             }
             EditorGUI.LabelField(EditorGUILayout.GetControlRect(), "Terrain parameter serializer, saves the current terrain preset configuration.");
             NoisePresetName = EditorGUI.TextField(EditorGUILayout.GetControlRect(), "Terrain preset name: ", NoisePresetName);
-            if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset")) {
+            if (GUI.Button(EditorGUILayout.GetControlRect(), "Save preset"))
+            {
                 SerializedNoiseParameter.NoiseParameterName = NoisePresetName;
                 SerializationManager.SaveNoiseParameters(NoisePresetName, SerializedNoiseParameter);
                 TryGeneratingSavedNoiseParameters(info, false);
@@ -82,23 +99,30 @@ public class NoiseParameterEditor {
         }
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+        // we do this shit so editor syncs up with runtime, its terrible
+        SerializedNoiseParameter.RuntimeErosion = info.RuntimeErosion;
+        SerializedNoiseParameter.ErosionType = info.ErosionType;
         SetCorrectNoiseParams(SerializedNoiseParameter, ref info);
         EditorPrefs.SetInt("ParameterPresetNoiseIdx", CurrentSelectedIndexNoise);
     }
-    public void TryGeneratingSavedNoiseParameters(TerrainInfo info, bool overrideSerialisedParam) {
+    public void TryGeneratingSavedNoiseParameters(TerrainInfo info, bool overrideSerialisedParam)
+    {
         SerializationManager.InitializeManager();
         SerializedNoiseParameters = SerializationManager.ReadAllNoiseParameters();
         AllNoiseParameterNames = new string[SerializedNoiseParameters.Count];
-        for (int i = 0; i < SerializedNoiseParameters.Count; i++) {
+        for (int i = 0; i < SerializedNoiseParameters.Count; i++)
+        {
             AllNoiseParameterNames[i] = SerializedNoiseParameters[i].NoiseParameterName;
         }
-        if (overrideSerialisedParam) {
+        if (overrideSerialisedParam)
+        {
             SerializedNoiseParameter = SerializedNoiseParameters[CurrentSelectedIndexNoise];
             var cp = SerializedNoiseParameters[CurrentSelectedIndexNoise];
             SetCorrectNoiseParams(cp, ref info);
         }
     }
-    private void SetCorrectNoiseParams(NoiseParameters noiseParam, ref TerrainInfo info) {
+    private void SetCorrectNoiseParams(NoiseParameters noiseParam, ref TerrainInfo info)
+    {
         info.ErosionType = noiseParam.ErosionType;
         info.RuntimeErosion = noiseParam.RuntimeErosion;
         info.NoiseScale = noiseParam.NoiseScale;

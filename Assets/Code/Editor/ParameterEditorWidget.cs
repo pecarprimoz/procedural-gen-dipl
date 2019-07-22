@@ -64,7 +64,7 @@ public class ParameterEditorWidget : Editor
             {
                 DrawDevelWidget();
                 DrawErosionTypeProperties();
-                _NoiseParameterEditor.DrawNoiseParameterGUI(TerrainInfo, EditorWidgetFoldouts);
+                _NoiseParameterEditor.DrawNoiseParameterGUI(Script, TerrainInfo, EditorWidgetFoldouts);
                 _EditorSeasonalChange.DrawSeasonalChangeGUI(TerrainInfo);
                 // should always be running after terrainInfo is avaliable, cant be run in editor
                 //_EditorSeasonalChange.SeasonalChangeUpdate(TerrainInfo);
