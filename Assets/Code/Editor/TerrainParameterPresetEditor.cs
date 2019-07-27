@@ -90,6 +90,12 @@ public class TerrainParameterPresetEditor
             return ReorderableParameterList;
         }
         ReorderableParameterList = new ReorderableList(SerializedTerrainParameters, typeof(TerrainParameters), true, true, true, true);
+        if(ScrollPositions.Count <= 0) {
+            for (int i = 0; i < SerializedTerrainParameters.Count; i++)
+            {
+                ScrollPositions.Add(Vector2.zero);
+            }
+        }
         ReorderableParameterList.elementHeight = 22.0f * 18;
         ReorderableParameterList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
         {
