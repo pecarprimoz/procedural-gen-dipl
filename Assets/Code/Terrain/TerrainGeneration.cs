@@ -19,6 +19,8 @@ public class TerrainGeneration : MonoBehaviour
     // ContentGenerator
     public ContentGenerator ContentGenerator;
 
+    public RoadGenerator RoadGenerator;
+
     // Manager for terrain 
     public TerrainInfo TerrainInfo;
 
@@ -26,6 +28,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         ContentManager = GetComponent<ContentManager>();
         SeasonalChange = GetComponent<SeasonalChange>();
+        RoadGenerator = GetComponent<RoadGenerator>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
         if (UseCustomTerrainSizeDefinitions)
         {
@@ -108,6 +111,7 @@ public class TerrainGeneration : MonoBehaviour
             TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             ContentManager.InitializeBiomePlacementObjects(TerrainInfo);
             ContentGenerator.GenerateBiomeContent(TerrainInfo);
+            RoadGenerator.GenerateRoad(TerrainInfo);
         }
     }
 

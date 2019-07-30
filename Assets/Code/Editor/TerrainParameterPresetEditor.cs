@@ -90,7 +90,8 @@ public class TerrainParameterPresetEditor
             return ReorderableParameterList;
         }
         ReorderableParameterList = new ReorderableList(SerializedTerrainParameters, typeof(TerrainParameters), true, true, true, true);
-        if(ScrollPositions.Count <= 0) {
+        if (ScrollPositions.Count <= 0)
+        {
             for (int i = 0; i < SerializedTerrainParameters.Count; i++)
             {
                 ScrollPositions.Add(Vector2.zero);
