@@ -13,6 +13,7 @@ public class ParameterEditorWidget : Editor
     private TerrainInfo TerrainInfo;
     private Dictionary<string, bool> EditorWidgetFoldouts = new Dictionary<string, bool>() {
         { "DevelWidget", false },
+        { "RoadGenerationWidget", false },
         { "ErosionWidget", false },
         { "TerrainGenerationWidget", false },
     };
@@ -63,6 +64,7 @@ public class ParameterEditorWidget : Editor
             if (Script.TerrainInfo != null)
             {
                 DrawDevelWidget();
+                DrawRoadGenerationWidget();
                 DrawErosionTypeProperties();
                 _NoiseParameterEditor.DrawNoiseParameterGUI(Script, TerrainInfo, EditorWidgetFoldouts);
                 _EditorSeasonalChange.DrawSeasonalChangeGUI(TerrainInfo);
@@ -104,6 +106,19 @@ public class ParameterEditorWidget : Editor
         }
         EditorGUILayout.Space();
         EditorGUILayout.Space();
+    }
+
+    public void DrawRoadGenerationWidget()
+    {
+        EditorWidgetFoldouts["RoadGenerationWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["RoadGenerationWidget"], "RoadGenerationWidget");
+        if (EditorWidgetFoldouts["RoadGenerationWidget"])
+        {
+            Script.RoadGenerator.TotalSpreadSize = EditorGUILayout.IntField("Total Road Length", Script.RoadGenerator.TotalSpreadSize);
+            if (GUILayout.Button("Generate Road"))
+            {
+                Script.RoadGenerator.GenerateRoad(TerrainInfo);
+            }
+        }
     }
 
     /// <summary>
