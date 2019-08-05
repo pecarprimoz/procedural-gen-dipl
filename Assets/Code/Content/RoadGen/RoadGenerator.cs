@@ -32,7 +32,8 @@ public class RoadGenerator : MonoBehaviour
     public GameObject RoadTemp;
     public GameObject RoadHolder;
 
-    public int TotalSpreadSize = 1;
+    public int TotalSpreadSize = 1000;
+    public int RadiusSize = 3;
     private RoadSpreadDirection SpreadDirection = RoadSpreadDirection.kUp;
     private List<RoadWaypoint> RoadPointList;
     public void GenerateRoad(TerrainInfo terrainInfo)
@@ -65,6 +66,8 @@ public class RoadGenerator : MonoBehaviour
         // how long the current road will be 
         for (int i = 0; i < TotalSpreadSize; i++)
         {
+            // do coin flip
+            bool coinFlip = Random.Range(0, 2) == 0;
             int CurrentSpreadSize = Random.Range(1, TotalSpreadSize / 4);
             Debug.Log(CurrentSpreadSize);
             for (int j = 0; j < CurrentSpreadSize; j++)
@@ -86,9 +89,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            var tmpArray = PickRoadWaypoint(pointX, pointZ);
-                            pointX = tmpArray[0];
-                            pointZ = tmpArray[1];
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
@@ -99,9 +100,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            var tmpArray = PickRoadWaypoint(pointX, pointZ);
-                            pointX = tmpArray[0];
-                            pointZ = tmpArray[1];
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
@@ -112,9 +111,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            var tmpArray = PickRoadWaypoint(pointX, pointZ);
-                            pointX = tmpArray[0];
-                            pointZ = tmpArray[1];
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
@@ -125,9 +122,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            var tmpArray = PickRoadWaypoint(pointX, pointZ);
-                            pointX = tmpArray[0];
-                            pointZ = tmpArray[1];
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
@@ -135,15 +130,21 @@ public class RoadGenerator : MonoBehaviour
                         break;
                 }
             }
-            var previousRoadPoint = PickRoadWaypoint(pointX, pointZ);
-            pointX = previousRoadPoint[0];
-            pointZ = previousRoadPoint[1];
+            if (coinFlip)
+            {
+                (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+            }
+            else
+            {
+                (pointX, pointZ) = PickRandomNotInRangeWaypoint(info);
+            }
         }
     }
-    private int[] PickRoadWaypoint(int pointX, int pointZ)
+    private (int, int) PickRoadWaypoint(int pointX, int pointZ)
     {
         // first get a point out of our list
         var newWaypoint = RoadPointList[Random.Range(0, RoadPointList.Count)];
+
         pointX = newWaypoint.PointX;
         pointZ = newWaypoint.PointZ;
         if (newWaypoint.RoadSpreadDirectionAtCreationTime == RoadSpreadDirection.kUp ||
@@ -155,7 +156,47 @@ public class RoadGenerator : MonoBehaviour
         {
             SpreadDirection = (RoadSpreadDirection)Random.Range(0, 2);
         }
-        return new int[2] { pointX, pointZ };
+        return (pointX, pointZ);
+    }
+    private (int, int) PickRandomNotInRangeWaypoint(TerrainInfo info)
+    {
+        // get the first two points from which we are gonna generate roads
+        int pointX = 0;
+        int pointZ = 0;
+        int maxIters = 1000;
+        int i = 0;
+        do
+        {
+            pointX = (int)Random.Range(0, info.TerrainWidth);
+            pointZ = (int)Random.Range(0, info.TerrainHeight);
+            i++;
+            if (i > maxIters)
+            {
+                break;
+            }
+        }
+        while (AreAnyRoadsInRadius(info, pointX, pointZ));
+        return (pointX, pointZ);
+    }
+    private bool AreAnyRoadsInRadius(TerrainInfo info, int pointX, int pointZ)
+    {
+        if (pointX + RadiusSize > info.TerrainWidth || pointZ + RadiusSize > info.TerrainHeight)
+        {
+            return true;
+        }
+        for (int i = 0; i < RoadPointList.Count; i++)
+        {
+            var roadPoint = RoadPointList[i];
+            for (int j = 0; j < RadiusSize + 1; j++)
+            {
+                if (pointX + RadiusSize == roadPoint.PointX || pointZ + RadiusSize == roadPoint.PointZ)
+                {
+                    return true;
+                }
+            }
+        }
+        Debug.Log("Found start point!");
+        return false;
     }
 
 }

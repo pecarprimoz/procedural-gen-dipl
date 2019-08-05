@@ -114,6 +114,7 @@ public class ParameterEditorWidget : Editor
         if (EditorWidgetFoldouts["RoadGenerationWidget"])
         {
             Script.RoadGenerator.TotalSpreadSize = EditorGUILayout.IntField("Total Road Length", Script.RoadGenerator.TotalSpreadSize);
+            Script.RoadGenerator.RadiusSize = EditorGUILayout.IntField("Road Separation Radius", Script.RoadGenerator.RadiusSize);
             if (GUILayout.Button("Generate Road"))
             {
                 Script.RoadGenerator.GenerateRoad(TerrainInfo);
