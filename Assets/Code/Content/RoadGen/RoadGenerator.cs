@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoadGenerator : MonoBehaviour
 {
-    private struct RoadWaypoint
+    public struct RoadWaypoint
     {
         public int PointX;
         public int PointZ;
@@ -22,7 +22,7 @@ public class RoadGenerator : MonoBehaviour
             RoadSpreadDirectionAtCreationTime = roadSpreadDirectionAtCreationTime;
         }
     }
-    private enum RoadSpreadDirection : int
+    public enum RoadSpreadDirection : int
     {
         kUp = 0,
         kDown = 1,
@@ -35,13 +35,14 @@ public class RoadGenerator : MonoBehaviour
     public int TotalSpreadSize = 1000;
     public int RadiusSize = 3;
     private RoadSpreadDirection SpreadDirection = RoadSpreadDirection.kUp;
-    private List<RoadWaypoint> RoadPointList;
-    public void GenerateRoad(TerrainInfo terrainInfo)
+    public List<RoadWaypoint> RoadPointList;
+    public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo)
     {
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
         DoRoadGeneration(terrainInfo);
         TotalSpreadSize = backupTotalSpreadSize;
+        return RoadPointList;
     }
 
     // issues

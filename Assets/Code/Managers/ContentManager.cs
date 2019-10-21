@@ -15,6 +15,11 @@ public class ContentManager : MonoBehaviour {
         }
     }
 
+    public GameObject GetParentContentObject()
+    {
+        return ParentObjectForInstantiatedObjects;
+    }
+
     public Dictionary<int, GameObject> BiomeParentGameObjects = new Dictionary<int, GameObject>();
     // Just keep all the data here
     public GameObject ParentObjectForInstantiatedObjects;

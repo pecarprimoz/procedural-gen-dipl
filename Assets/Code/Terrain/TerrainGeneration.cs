@@ -111,7 +111,8 @@ public class TerrainGeneration : MonoBehaviour
             TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             ContentManager.InitializeBiomePlacementObjects(TerrainInfo);
             ContentGenerator.GenerateBiomeContent(TerrainInfo);
-            RoadGenerator.GenerateRoad(TerrainInfo);
+            var RoadList = RoadGenerator.GenerateRoad(TerrainInfo);
+            ContentGenerator.PlaceHousesNearRoads(RoadList, TerrainInfo, ContentManager.GetParentContentObject());
         }
     }
 
