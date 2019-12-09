@@ -117,7 +117,7 @@ public class ParameterEditorWidget : Editor
             Script.RoadGenerator.RadiusSize = EditorGUILayout.IntField("Road Separation Radius", Script.RoadGenerator.RadiusSize);
             if (GUILayout.Button("Generate Road"))
             {
-                Script.RoadGenerator.GenerateRoad(TerrainInfo);
+                Script.RoadGenerator.GenerateRoad(TerrainInfo, Script.GetComponentInChildren<SplineMesh.Spline>());
             }
         }
     }

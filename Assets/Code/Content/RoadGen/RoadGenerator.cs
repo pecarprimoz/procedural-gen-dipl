@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using SplineMesh;
 public class RoadGenerator : MonoBehaviour
 {
     public struct RoadWaypoint
@@ -36,13 +36,28 @@ public class RoadGenerator : MonoBehaviour
     public int RadiusSize = 3;
     private RoadSpreadDirection SpreadDirection = RoadSpreadDirection.kUp;
     public List<RoadWaypoint> RoadPointList;
-    public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo)
+    public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript)
     {
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
-        DoRoadGeneration(terrainInfo);
+        DoRoadGeneration(terrainInfo, splineScript);
         TotalSpreadSize = backupTotalSpreadSize;
         return RoadPointList;
+    }
+
+    public Vector3 GetDirection(RoadSpreadDirection direction) {
+        switch (direction)
+        {
+            case (RoadSpreadDirection.kDown):
+                return Vector3.down;
+            case RoadSpreadDirection.kUp:
+                return Vector3.up;
+            case RoadSpreadDirection.kLeft:
+                return Vector3.left;
+            case RoadSpreadDirection.kRight:
+                return Vector3.right;
+        }
+        return Vector3.forward;
     }
 
     // issues
@@ -58,7 +73,7 @@ public class RoadGenerator : MonoBehaviour
     // done
     // improvements
     // dont generate roads next to each other, add a radius check where roads should be generated, if roads in radius pick a new point
-    private void DoRoadGeneration(TerrainInfo info)
+    private void DoRoadGeneration(TerrainInfo info, Spline splineScript)
     {
         // get the first two points from which we are gonna generate roads
         int pointX = (int)Random.Range(0, info.TerrainWidth);
@@ -69,7 +84,7 @@ public class RoadGenerator : MonoBehaviour
         {
             // do coin flip
             bool coinFlip = Random.Range(0, 2) == 0;
-            int CurrentSpreadSize = Random.Range(1, TotalSpreadSize / 4);
+            int CurrentSpreadSize = Random.Range(1, TotalSpreadSize);
             Debug.Log(CurrentSpreadSize);
             for (int j = 0; j < CurrentSpreadSize; j++)
             {
@@ -78,7 +93,8 @@ public class RoadGenerator : MonoBehaviour
                 var roadPointMapCoords = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ);
                 RoadWaypoint waypoint = new RoadWaypoint(pointX, pointZ, roadPointMapCoords, TotalSpreadSize, SpreadDirection);
                 RoadPointList.Add(waypoint);
-                Instantiate(RoadTemp, waypoint.WaypointPosition, Quaternion.identity, RoadHolder.transform);
+                splineScript.AddNode(new SplineNode(roadPointMapCoords, GetDirection(SpreadDirection)));
+                //Instantiate(RoadTemp, waypoint.WaypointPosition, Quaternion.identity, RoadHolder.transform);
                 TotalSpreadSize--;
                 switch (SpreadDirection)
                 {

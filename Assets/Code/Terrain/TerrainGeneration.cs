@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using SplineMesh;
 
 public class TerrainGeneration : MonoBehaviour
 {
@@ -24,12 +25,15 @@ public class TerrainGeneration : MonoBehaviour
     // Manager for terrain 
     public TerrainInfo TerrainInfo;
 
+    public Spline SplineScript;
+
     void Start()
     {
         ContentManager = GetComponent<ContentManager>();
         SeasonalChange = GetComponent<SeasonalChange>();
         RoadGenerator = GetComponent<RoadGenerator>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
+        SplineScript = GetComponentInChildren<Spline>();
         if (UseCustomTerrainSizeDefinitions)
         {
             TerrainInfo.TerrainWidth = TerrainWidth;
@@ -111,7 +115,7 @@ public class TerrainGeneration : MonoBehaviour
             TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             ContentManager.InitializeBiomePlacementObjects(TerrainInfo);
             ContentGenerator.GenerateBiomeContent(TerrainInfo);
-            var RoadList = RoadGenerator.GenerateRoad(TerrainInfo);
+            var RoadList = RoadGenerator.GenerateRoad(TerrainInfo, SplineScript);
             ContentGenerator.PlaceHousesNearRoads(RoadList, TerrainInfo, ContentManager.GetParentContentObject());
         }
     }
