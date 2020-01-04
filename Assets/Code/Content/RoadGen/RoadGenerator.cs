@@ -61,7 +61,7 @@ public class RoadGenerator : MonoBehaviour
         return Vector3.forward;
     }
 
-    private void SetRoadSemgent(int startSegmentIdx, Spline roadSpline, Vector3 currentNodePosition, RoadSpreadDirection dir)
+    private void SetRoadSegment(int startSegmentIdx, Spline roadSpline, Vector3 currentNodePosition, RoadSpreadDirection dir)
     {
         var moveAmnt = GetDirection(dir) * 2;
         Vector3 firstNodePosition = currentNodePosition;
@@ -86,7 +86,7 @@ public class RoadGenerator : MonoBehaviour
 
         SpreadDirection = (RoadSpreadDirection)Random.Range(0, 4);
         // create instance of this gobject and place it
-        SetRoadSemgent(0, newRoadSpline, new Vector3(pointX, info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ), SpreadDirection);
+        SetRoadSegment(0, newRoadSpline, new Vector3(pointX, info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ), SpreadDirection);
         RoadPointList.Add(new RoadWaypoint((int)newRoadSpline.nodes[0].Position.x, (int)newRoadSpline.nodes[0].Position.y, newRoadSpline.nodes[0].Position, TotalSpreadSize - 1, SpreadDirection));
         int nextRoadSegment = 1;
         // how long the current road will be 
@@ -101,7 +101,7 @@ public class RoadGenerator : MonoBehaviour
                 var roadPointMapCoords = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ);
 
                 newRoadSpline.AddNode(new SplineNode(Vector3.zero, Vector3.zero));
-                SetRoadSemgent(nextRoadSegment, newRoadSpline, roadPointMapCoords, SpreadDirection);
+                SetRoadSegment(nextRoadSegment, newRoadSpline, roadPointMapCoords, SpreadDirection);
                 //Instantiate(RoadTemp, waypoint.WaypointPosition, Quaternion.identity, RoadHolder.transform);
                 nextRoadSegment++;
                 TotalSpreadSize--;
