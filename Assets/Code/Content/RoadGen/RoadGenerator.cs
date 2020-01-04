@@ -45,7 +45,8 @@ public class RoadGenerator : MonoBehaviour
         return RoadPointList;
     }
 
-    public Vector3 GetDirection(RoadSpreadDirection direction) {
+    public Vector3 GetDirection(RoadSpreadDirection direction)
+    {
         switch (direction)
         {
             case (RoadSpreadDirection.kDown):
@@ -60,25 +61,22 @@ public class RoadGenerator : MonoBehaviour
         return Vector3.forward;
     }
 
-    // issues
-    // road steepnes isnt calculated correctly and the angle at witch we place the road is wrong
-    // we can go deeper with this, instead of just placing roads, track them, when we get cut off (either we are gonna be OOB next iteration 
-    // or our currentSpreadSize ran out, take a random road point and iterate in the OPPOSITE direction that we previously went
-    // psedocode
-    // track all points and in which direction we were spreading
-    // when we reach our end at currentSpreadSize
-    // pick random road that we placed
-    // check in what direction we went (if we went up, we ignore directions up and down, but randomly pick left or right)
-    // continue the iteration
-    // done
-    // improvements
-    // dont generate roads next to each other, add a radius check where roads should be generated, if roads in radius pick a new point
     private void DoRoadGeneration(TerrainInfo info, Spline splineScript)
     {
         // get the first two points from which we are gonna generate roads
+        // init start point
+
         int pointX = (int)Random.Range(0, info.TerrainWidth);
         int pointZ = (int)Random.Range(0, info.TerrainHeight);
         SpreadDirection = (RoadSpreadDirection)Random.Range(0, 4);
+        // create instance of this gobject and place it
+        var newRoad = Instantiate(splineScript.gameObject, Vector3.zero, Quaternion.identity);
+        var newRoadSpline = newRoad.GetComponent<Spline>();
+        newRoadSpline.nodes[0].Position = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ);
+        newRoadSpline.nodes[0].Direction = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ - 3);
+        newRoadSpline.nodes[1].Position = newRoadSpline.nodes[0].Direction;
+        newRoadSpline.nodes[1].Direction = newRoadSpline.nodes[1].Position - new Vector3(0, 0, 3);
+        pointZ -= 3;
         // how long the current road will be 
         for (int i = 0; i < TotalSpreadSize; i++)
         {
@@ -93,7 +91,8 @@ public class RoadGenerator : MonoBehaviour
                 var roadPointMapCoords = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ);
                 RoadWaypoint waypoint = new RoadWaypoint(pointX, pointZ, roadPointMapCoords, TotalSpreadSize, SpreadDirection);
                 RoadPointList.Add(waypoint);
-                splineScript.AddNode(new SplineNode(roadPointMapCoords, GetDirection(SpreadDirection)));
+                var lastNode = newRoadSpline.nodes[newRoadSpline.nodes.Count - 1];
+                newRoadSpline.AddNode(new SplineNode(lastNode.Direction, roadPointMapCoords - new Vector3(0,0,3)));
                 //Instantiate(RoadTemp, waypoint.WaypointPosition, Quaternion.identity, RoadHolder.transform);
                 TotalSpreadSize--;
                 switch (SpreadDirection)

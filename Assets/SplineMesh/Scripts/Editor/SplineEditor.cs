@@ -217,23 +217,23 @@ namespace SplineMesh {
                 selection = newNode;
                 serializedObject.Update();
             }
-            StartPoint = EditorGUILayout.Vector3Field("vec3 pos", StartPoint, null);
-            if (GUILayout.Button("tEST"))
-            {
-                Undo.RecordObject(spline, "add spline node");
-                SplineNode newNode = new SplineNode(StartPoint, selection.Direction + selection.Direction - selection.Position);
-                var index = spline.nodes.IndexOf(selection);
-                if (index == spline.nodes.Count - 1)
-                {
-                    spline.AddNode(newNode);
-                }
-                else
-                {
-                    spline.InsertNode(index + 1, newNode);
-                }
-                selection = newNode;
-                serializedObject.Update();
-            }
+            //StartPoint = EditorGUILayout.Vector3Field("vec3 pos", StartPoint, null);
+            //if (GUILayout.Button("tEST"))
+            //{
+            //    Undo.RecordObject(spline, "add spline node");
+            //    SplineNode newNode = new SplineNode(StartPoint, selection.Direction + selection.Direction - selection.Position);
+            //    var index = spline.nodes.IndexOf(selection);
+            //    if (index == spline.nodes.Count - 1)
+            //    {
+            //        spline.AddNode(newNode);
+            //    }
+            //    else
+            //    {
+            //        spline.InsertNode(index + 1, newNode);
+            //    }
+            //    selection = newNode;
+            //    serializedObject.Update();
+            //}
             GUI.enabled = true;
 
             // delete button
