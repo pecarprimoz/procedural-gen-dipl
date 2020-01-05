@@ -22,7 +22,6 @@ public class SeasonalChange : MonoBehaviour
     {
         if (info.AreSeasonsChanging)
         {
-            Debug.Log($"CURRENT SEASON {CurrentSeason}");
             // if total elapsed time 
             if (ElapsedTimeTotal < TotalSeasonChangeDuration)
             {
@@ -42,6 +41,7 @@ public class SeasonalChange : MonoBehaviour
             }
             if (ElapsedTimePerSeason >= 4.0f)
             {
+                Debug.LogFormat("Changing season from {} to {}", (SeasonType)CurrentSeason, (SeasonType)CurrentSeason + 1);
                 CurrentSeason = CurrentSeason + 1;
                 ElapsedTimePerSeason = 0.0f;
             }

@@ -235,7 +235,7 @@ public class TerrainParameterPresetEditor
         {
             AllParameterNames[i] = allPresetNames[i];
         }
-        if (CurrentSelectedIndex < AllParameters.Count - 1)
+        if (CurrentSelectedIndex <= AllParameters.Count - 1)
         {
             SerializedTerrainParameters = AllParameters[CurrentSelectedIndex];
         }

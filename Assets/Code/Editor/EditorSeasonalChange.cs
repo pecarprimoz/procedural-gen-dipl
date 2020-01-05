@@ -4,8 +4,6 @@ using UnityEditor;
 using UnityEngine;
 public class EditorSeasonalChange
 {
-
-
     public void DrawSeasonalChangeGUI(TerrainInfo info)
     {
         if (GUI.Button(EditorGUILayout.GetControlRect(), "Start Season Transition"))

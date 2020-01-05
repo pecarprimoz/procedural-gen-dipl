@@ -1,0 +1,1 @@
+{"NoiseParameterName":"road_testing","ErosionType":2,"ErosionIterations":750,"RuntimeErosion":false,"NoiseScale":275.0,"BaseFrequency":3.0,"Persistance":0.2,"Lacunarity":4.0,"NumberOfOctaves":10,"GlobalNoiseAddition":0.0,"Seed":"new terrain","UserOffset":{"x":0.0,"y":0.0,"magnitude":0.0,"sqrMagnitude":0.0},"CustomFunction":0,"CustomExponent":0.1,"TerrainTextureType":1}
