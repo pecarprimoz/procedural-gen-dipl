@@ -147,7 +147,7 @@ public class RoadGenerator : MonoBehaviour
                     case RoadSpreadDirection.kUp:
                         if (pointX < info.TerrainWidth - MAX_X_OFFSET)
                         {
-                            pointX += 1;
+                            pointX += 4;
                         }
                         else
                         {
@@ -158,7 +158,7 @@ public class RoadGenerator : MonoBehaviour
                     case RoadSpreadDirection.kDown:
                         if (pointX > MAX_X_OFFSET)
                         {
-                            pointX -= 1;
+                            pointX -= 4;
                         }
                         else
                         {
@@ -169,7 +169,7 @@ public class RoadGenerator : MonoBehaviour
                     case RoadSpreadDirection.kLeft:
                         if (pointZ > MAX_Z_OFFSET)
                         {
-                            pointZ -= 1;
+                            pointZ -= 4;
                         }
                         else
                         {
@@ -180,7 +180,7 @@ public class RoadGenerator : MonoBehaviour
                     case RoadSpreadDirection.kRight:
                         if (pointZ < info.TerrainHeight - MAX_Z_OFFSET)
                         {
-                            pointZ += 1;
+                            pointZ += 4;
                         }
                         else
                         {
@@ -208,8 +208,8 @@ public class RoadGenerator : MonoBehaviour
                 var pos = spline.waypoints[i].WaypointPosition;
                 SetRoadSegment(i, spline.spline, spline.waypoints, pos, spline.waypoints[i].RoadSpreadDirectionAtCreationTime);
                 info.HeightMap[(int)pos.z, (int)pos.x] = info.HeightMap[(int)pos.z, (int)pos.x] - 0.05f;
-                info.HeightMap[(int)pos.z - 1, (int)pos.x] = info.HeightMap[(int)pos.z, (int)pos.x] - 0.05f;
-                info.HeightMap[(int)pos.z + 1, (int)pos.x] = info.HeightMap[(int)pos.z, (int)pos.x] - 0.05f;
+                info.HeightMap[(int)pos.z - 1, (int)pos.x] = info.HeightMap[(int)pos.z - 1, (int)pos.x] - 0.05f;
+                info.HeightMap[(int)pos.z + 1, (int)pos.x] = info.HeightMap[(int)pos.z + 1, (int)pos.x] - 0.05f;
             }
         }
         info._Terrain.terrainData.SetHeights(0, 0, info.HeightMap);
