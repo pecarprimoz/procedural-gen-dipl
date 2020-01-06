@@ -19,6 +19,7 @@ public class AssignSplatMap : MonoBehaviour
         return true;
     }
 
+
     public static void DoSplat(TerrainInfo info, SeasonType seasonType = SeasonType.kUndefined)
     {
         if (!ValidParameterCheck(info.TerrainParameterList))

@@ -14,6 +14,7 @@ public class EditorSeasonalChange
             }
             else
             {
+                GUILayout.Label("Current season " + info.CurrentSeason.ToString());
                 Debug.LogWarning("Season Transitions already running !");
             }
 

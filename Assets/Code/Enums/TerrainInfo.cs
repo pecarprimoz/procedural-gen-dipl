@@ -59,5 +59,7 @@ public class TerrainInfo {
 
     // Seasonal changes boolean
     public bool AreSeasonsChanging = false;
+    public SeasonType CurrentSeason = SeasonType.kSpring;
+
 
 }
