@@ -18,7 +18,7 @@ public class ContentGenerator : MonoBehaviour
             for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
             {
                 // iterate trough all the objects, then place them, first pass is for random ground bullshit
-                PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[0]);
+                PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
             }
         }
     }
