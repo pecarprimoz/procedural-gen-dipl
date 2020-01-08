@@ -76,7 +76,7 @@ public class RoadGenerator : MonoBehaviour
             case RoadSpreadDirection.kRight:
                 return new Vector3(0, 0, 1);
         }
-        return Vector3.forward;
+        return Vector3.zero;
     }
 
     private void SetRoadSegment(int index, Spline roadSpline, List<RoadWaypoint> waypoints, Vector3 currentNodePosition, RoadSpreadDirection dir)
@@ -84,10 +84,10 @@ public class RoadGenerator : MonoBehaviour
         var nodePosition = currentNodePosition;
         if (index < waypoints.Count - 1)
         {
-            if (currentNodePosition == waypoints[index + 1].WaypointPosition)
-            {
-                var a = 1;
-            }
+            //if (currentNodePosition == waypoints[index + 1].WaypointPosition)
+            //{
+            //    var a = 1;
+            //}
             var nextNodePosition = waypoints[index + 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
@@ -97,10 +97,10 @@ public class RoadGenerator : MonoBehaviour
         }
         else if (index >= 1)
         {
-            if (currentNodePosition == waypoints[index - 1].WaypointPosition)
-            {
-                var a = 1;
-            }
+            //if (currentNodePosition == waypoints[index - 1].WaypointPosition)
+            //{
+            //    var a = 1;
+            //}
             var previousNodePosition = waypoints[index - 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
@@ -116,10 +116,12 @@ public class RoadGenerator : MonoBehaviour
         int pointZ = (int)Random.Range(MAX_Z_OFFSET, info.TerrainHeight - MAX_Z_OFFSET);
         SpreadDirection = (RoadSpreadDirection)Random.Range(0, 4);
 
+        // total spread size is the total road size
         for (int i = 0; i < TotalSpreadSize; i++)
         {
             // do coin flip
             bool coinFlip = Random.Range(0, 2) == 0;
+            // current road segment size, min 2 due to splines
             int CurrentSpreadSize = Random.Range(2, TotalSpreadSize + 2);
             var newRoad = Instantiate(splineScript.gameObject, Vector3.zero, Quaternion.identity);
             var newRoadSpline = newRoad.GetComponent<Spline>();
@@ -130,14 +132,7 @@ public class RoadGenerator : MonoBehaviour
             for (int j = 0; j < CurrentSpreadSize; j++)
             {
                 var roadPointMapCoords = new Vector3(pointX, (int)info._Terrain.terrainData.GetHeight(pointX, pointZ), pointZ);
-                RoadWaypoint waypoint = new RoadWaypoint(pointX, pointZ, roadPointMapCoords, TotalSpreadSize, SpreadDirection);
-                foreach (var item in RoadPointList)
-                {
-                    if (item.WaypointPosition == roadPointMapCoords)
-                    {
-                        var a = 1;
-                    }
-                }
+                RoadWaypoint waypoint = new RoadWaypoint(pointX, pointZ, roadPointMapCoords, CurrentSpreadSize, SpreadDirection);
                 RoadPointList.Add(waypoint);
                 Splines[i].waypoints.Add(waypoint);
                 TotalSpreadSize--;
@@ -145,7 +140,7 @@ public class RoadGenerator : MonoBehaviour
                 {
                     // if we wanna go up, it means we gotta get a point at Vec3 (info.SeperatedBiomes[i][randomPoint].X + 1, terrainPositionY, info.SeperatedBiomes[i][randomPoint].Z);
                     case RoadSpreadDirection.kUp:
-                        if (pointX < info.TerrainWidth - MAX_X_OFFSET)
+                        if (pointX + 4 < info.TerrainWidth - MAX_X_OFFSET)
                         {
                             pointX += 4;
                         }
@@ -156,7 +151,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         break;
                     case RoadSpreadDirection.kDown:
-                        if (pointX > MAX_X_OFFSET)
+                        if (pointX - 4 > MAX_X_OFFSET)
                         {
                             pointX -= 4;
                         }
@@ -167,7 +162,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         break;
                     case RoadSpreadDirection.kLeft:
-                        if (pointZ > MAX_Z_OFFSET)
+                        if (pointZ - 4 > MAX_Z_OFFSET)
                         {
                             pointZ -= 4;
                         }
@@ -178,7 +173,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         break;
                     case RoadSpreadDirection.kRight:
-                        if (pointZ < info.TerrainHeight - MAX_Z_OFFSET)
+                        if (pointZ + 4 < info.TerrainHeight - MAX_Z_OFFSET)
                         {
                             pointZ += 4;
                         }

@@ -64,7 +64,7 @@ public class TerrainGeneration : MonoBehaviour
     public void InitializeTerrainWithPresetGeneration()
     {
         // this kills the performance, is rly pretty tho :D
-        TerrainInfo._Terrain.detailObjectDistance = 50000;
+        TerrainInfo._Terrain.detailObjectDistance = 1;
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
         TerrainInfo._Terrain.terrainData.alphamapResolution = TerrainInfo.TerrainWidth;
         TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 16);
