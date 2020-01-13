@@ -55,6 +55,7 @@ public class RoadGenerator : MonoBehaviour
 
     private bool DirectionChanged = false;
     private int SplineSize = 5;
+    private int MinRoadSize = 5;
     public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript) {
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
@@ -81,10 +82,6 @@ public class RoadGenerator : MonoBehaviour
     private void SetRoadSegment(int index, Spline roadSpline, List<RoadWaypoint> waypoints, Vector3 currentNodePosition) {
         var nodePosition = currentNodePosition;
         if (index < waypoints.Count - 1) {
-            //if (currentNodePosition == waypoints[index + 1].WaypointPosition)
-            //{
-            //    var a = 1;
-            //}
             var nextNodePosition = waypoints[index + 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
@@ -92,10 +89,6 @@ public class RoadGenerator : MonoBehaviour
             );
             roadSpline.AddNode(splineNode);
         } else if (index >= 1) {
-            //if (currentNodePosition == waypoints[index - 1].WaypointPosition)
-            //{
-            //    var a = 1;
-            //}
             var previousNodePosition = waypoints[index - 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
@@ -117,6 +110,10 @@ public class RoadGenerator : MonoBehaviour
             bool coinFlip = Random.Range(0, 2) == 0;
             // current road segment size, min 2 due to splines
             int CurrentSpreadSize = Random.Range(TotalSpreadSize / 2, TotalSpreadSize);
+
+            if (CurrentSpreadSize < MinRoadSize) {
+                break;
+            }
             var newRoad = Instantiate(splineScript.gameObject, Vector3.zero, Quaternion.identity);
             var newRoadSpline = newRoad.GetComponent<Spline>();
             newRoadSpline.nodes.Clear();
