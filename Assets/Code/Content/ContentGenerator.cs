@@ -28,9 +28,31 @@ public class ContentGenerator : MonoBehaviour
         for (int i = 0; i < roadWaypoints.Count; i++)
         {
             var waypoint = roadWaypoints[i];
-                int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(waypoint.PointX + 1, waypoint.PointZ );
-                Instantiate(info.TerrainParameterList[0].TerrainParameterObjectList[0], new Vector3(waypoint.PointX + 1, terrainPositionY, waypoint.PointZ), Quaternion.identity, parent.transform);
+            Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint);
+            Instantiate(info.TerrainParameterList[0].TerrainParameterObjectList[0], housePos, Quaternion.identity, parent.transform);
         }
+    }
+
+    public Vector3 GetHousePosition(TerrainData data, RoadGenerator.RoadWaypoint point)
+    {
+        Vector3 housePos = new Vector3(point.PointX, 0, point.PointZ);
+        switch (point.RoadSpreadDirectionAtCreationTime)
+        {
+            case RoadGenerator.RoadSpreadDirection.kUp:
+                housePos.z += 3;
+                break;
+            case RoadGenerator.RoadSpreadDirection.kDown:
+                housePos.z -= 3;
+                break;
+            case RoadGenerator.RoadSpreadDirection.kLeft:
+                housePos.x += 3;
+                break;
+            case RoadGenerator.RoadSpreadDirection.kRight:
+                housePos.x -= 3;
+                break;
+        }
+        housePos.y = data.GetHeight((int)housePos.x, (int)housePos.z) + 4;
+        return housePos;
     }
 
 
