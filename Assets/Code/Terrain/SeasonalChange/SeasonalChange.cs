@@ -10,6 +10,13 @@ public class SeasonalChange : MonoBehaviour {
 
     const float SeasonTimeLength = 4.0f;
 
+    /// <summary>
+    /// Current season ammount in precentages
+    /// </summary>
+    public float SeasonAmmount {
+        get { return ElapsedTimePerSeason / SeasonTimeLength; }
+    }
+
     void Start() {
         // We have 4 seasons in total
         TotalSeasonChangeDuration = SeasonTimeLength * 4;
@@ -29,11 +36,24 @@ public class SeasonalChange : MonoBehaviour {
             // go trough biome content
             for (int i = 0; i < biomeParent.transform.childCount; i++) {
                 var child = biomeParent.transform.GetChild(i);
-                if (child.name.Contains("Broadleaf_Hero_Field")){
+                if (child.name.Contains("Broadleaf_Hero_Field")) {
                     var meshRenderer = child.GetChild(0).GetComponent<MeshRenderer>();
                     if (meshRenderer != null) {
                         if (meshRenderer.materials.Length > 1) {
-                            meshRenderer.materials[2].SetColor("_Color", Color.red);
+                            switch (info.CurrentSeason) {
+                                case SeasonType.kSpring:
+                                    meshRenderer.materials[2].SetColor("_Color", Color.yellow);
+                                    break;
+                                case SeasonType.kSummer:
+                                    meshRenderer.materials[2].SetColor("_Color", Color.green);
+                                    break;
+                                case SeasonType.kAutumn:
+                                    meshRenderer.materials[2].SetColor("_Color", new Color(139.0f / 255.0f, 69.0f / 255.0f, 19.0f / 255.0f, 1.0f));
+                                    break;
+                                case SeasonType.kWinter:
+                                    meshRenderer.materials[2].SetColor("_Color", new Color(1, 1, 1, 0.0f));
+                                    break;
+                            }
                         }
                     }
                 }
@@ -54,11 +74,11 @@ public class SeasonalChange : MonoBehaviour {
                 ElapsedTimeTotal = 0.0f;
                 ElapsedTimePerSeason = 0.0f;
                 info.CurrentSeason = SeasonType.kSpring;
-                AssignSplatMap.DoSplat(info, info.CurrentSeason);
+                AssignSplatMap.DoSplat(info, info.CurrentSeason, SeasonAmmount);
                 Debug.Log($"SEASON TRANSITION END {info.CurrentSeason}");
                 return;
             }
-            if (ElapsedTimePerSeason >= 4.0f) {
+            if (ElapsedTimePerSeason >= SeasonTimeLength) {
                 Debug.LogFormat("Changing season from {0} to {1}", (SeasonType)info.CurrentSeason, (SeasonType)info.CurrentSeason + 1);
                 info.CurrentSeason = info.CurrentSeason + 1;
                 ElapsedTimePerSeason = 0.0f;
