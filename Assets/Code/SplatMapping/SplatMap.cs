@@ -54,7 +54,7 @@ public class AssignSplatMap : MonoBehaviour {
                 // Setup an array to record the mix of texture weights at this point
                 float[] splatWeights = new float[info._Terrain.terrainData.alphamapLayers];
                 int idx = BiomeGeneration.GetCorrectBiomeIndex(info, x, y);
-                splatWeights[idx] = 1.0f;
+                splatWeights[idx] = 0.2f;
                 // blending, if we arnt at ocean/snow level
                 if (idx >= 1 && idx < info.TerrainParameterList.Count - 1) {
                     splatWeights[idx + 1] = 0.5f;
