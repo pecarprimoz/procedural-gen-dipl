@@ -1,0 +1,1 @@
+{"NoiseParameterName":"even_terrain","ErosionType":2,"ErosionIterations":750,"RuntimeErosion":false,"NoiseScale":265.36,"BaseFrequency":2.2,"Persistance":0.31,"Lacunarity":2.49,"NumberOfOctaves":10,"GlobalNoiseAddition":-0.02,"Seed":"","UserOffset":{"x":0.0,"y":0.0,"magnitude":0.0,"sqrMagnitude":0.0},"CustomFunction":0,"CustomExponent":0.1,"TerrainTextureType":1}

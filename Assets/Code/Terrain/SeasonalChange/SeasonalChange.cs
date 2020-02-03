@@ -75,16 +75,20 @@ public class SeasonalChange : MonoBehaviour {
                 ElapsedTimePerSeason = 0.0f;
                 info.CurrentSeason = SeasonType.kSpring;
                 AssignSplatMap.DoSplat(info, info.CurrentSeason, SeasonAmmount);
+                UpdateBiomeContent(info, info.CurrentSeason);
+                info.ContentGenerator.PlaceNature(info);
                 Debug.Log($"SEASON TRANSITION END {info.CurrentSeason}");
                 return;
             }
             if (ElapsedTimePerSeason >= SeasonTimeLength) {
                 Debug.LogFormat("Changing season from {0} to {1}", (SeasonType)info.CurrentSeason, (SeasonType)info.CurrentSeason + 1);
                 info.CurrentSeason = info.CurrentSeason + 1;
+                UpdateBiomeContent(info, info.CurrentSeason);
+                AssignSplatMap.DoSplat(info, info.CurrentSeason);
+                info.ContentGenerator.PlaceNature(info);
                 ElapsedTimePerSeason = 0.0f;
             }
-            UpdateBiomeContent(info, info.CurrentSeason);
-            AssignSplatMap.DoSplat(info, info.CurrentSeason);
+            
         }
     }
 }

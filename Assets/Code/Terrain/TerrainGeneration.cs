@@ -43,6 +43,7 @@ public class TerrainGeneration : MonoBehaviour
         // Figure out how to do this better, for now info has "manager" info (so we can use it elsewhere)
         TerrainInfo.ContentManager = ContentManager;
         ContentGenerator = GetComponent<ContentGenerator>();
+        TerrainInfo.ContentGenerator = ContentGenerator;
         // Initialize manager, need to handle path for different platforms (OSX, Windows)
         SerializationManager.InitializeManager();
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values

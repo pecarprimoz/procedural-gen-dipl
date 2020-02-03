@@ -6,10 +6,11 @@ using UnityEngine;
 
 public class ContentGenerator : MonoBehaviour
 {
+    public GameObject House;
     public void GenerateBiomeContent(TerrainInfo info)
     {
         // testing for some biomes to get grass 
-        PlaceSomeShit(info);
+        PlaceNature(info);
 
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++)
@@ -29,7 +30,7 @@ public class ContentGenerator : MonoBehaviour
         {
             var waypoint = roadWaypoints[i];
             Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint);
-            Instantiate(info.TerrainParameterList[0].TerrainParameterObjectList[0], housePos, Quaternion.identity, parent.transform);
+            Instantiate(House, housePos, Quaternion.identity, parent.transform);
         }
     }
 
@@ -80,7 +81,17 @@ public class ContentGenerator : MonoBehaviour
     }
     // note to self
     // if you want to add additional vegetation & floura, has to be done by unity's Terrain Details, 4 tab on the Terrain component
-    private void PlaceSomeShit(TerrainInfo info)
+
+    private int GetDensity(SeasonType season, int min, int max)
+    {
+        if (season == SeasonType.kWinter)
+        {
+            return 0;
+        }
+        return UnityEngine.Random.Range(13, 16);
+    }
+
+    public void PlaceNature(TerrainInfo info)
     {
         // 0 - 5 indices are for grass atm, 3-5 are flowers (less dense patches)
         var t = info._Terrain;
@@ -95,8 +106,8 @@ public class ContentGenerator : MonoBehaviour
                 {
                     // go trough the detail layers
                     // https://answers.unity.com/questions/182147/terraindatagetdetaillayer.html
-                    int density = UnityEngine.Random.Range(13, 16);
-                    map[point.Z, point.X] = density;
+
+                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 13, 16);
                 }
             }
         }
@@ -110,9 +121,7 @@ public class ContentGenerator : MonoBehaviour
                 // go trough the biome points
                 foreach (var point in info.SeperatedBiomes[i])
                 {
-                    // go trough the detail layers
-                    int density = UnityEngine.Random.Range(1, 5);
-                    map[point.Z, point.X] = density;
+                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 5);
                 }
             }
             t.terrainData.SetDetailLayer(0, 0, j, map);
