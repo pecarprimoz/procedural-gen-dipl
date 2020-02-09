@@ -60,17 +60,11 @@ public class ContentGenerator : MonoBehaviour
     // placement of objects is invalid, since biomePoint.X and biomePoint.Z are ACTUAL INDICES IN THE ARRAY, NOT POINTS, TODO
     private void PlaceBiomeContent(TerrainInfo info, int biomeType, int objCount, GameObject placeableObject)
     {
-        // good for debugging
-        //for (int i = 0; i < info.SeperatedBiomes[biomeType].Count; i++) {
-        //    var biomePoint = info.SeperatedBiomes[biomeType][i];
-        //    int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);
-        //    Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity);
-        //}
         for (int i = 0; i < objCount; i++)
         {
             int randomPoint = UnityEngine.Random.Range(0, info.SeperatedBiomes[biomeType].Count - 1);
             var biomePoint = info.SeperatedBiomes[biomeType][randomPoint];
-            if (!biomePoint.ContainsItem)
+            if (!biomePoint.ContainsItem && !info.RoadGenerator.IsRoadOnCoordinates(biomePoint.X, biomePoint.Z))
             {
                 int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);
                 Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity, info.ContentManager.BiomeParentGameObjects[biomeType].transform);
@@ -88,7 +82,7 @@ public class ContentGenerator : MonoBehaviour
         {
             return 0;
         }
-        return UnityEngine.Random.Range(13, 16);
+        return UnityEngine.Random.Range(min, max);
     }
 
     public void PlaceNature(TerrainInfo info)
@@ -106,10 +100,14 @@ public class ContentGenerator : MonoBehaviour
                 {
                     // go trough the detail layers
                     // https://answers.unity.com/questions/182147/terraindatagetdetaillayer.html
-
-                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 13, 16);
+                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
+                        map[point.Z, point.X] = 0;
+                        continue;
+                    }
+                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 2);
                 }
             }
+            t.terrainData.SetDetailLayer(0, 0, j, map);
         }
 
         // add the flowers
@@ -121,6 +119,10 @@ public class ContentGenerator : MonoBehaviour
                 // go trough the biome points
                 foreach (var point in info.SeperatedBiomes[i])
                 {
+                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
+                        map[point.Z, point.X] = 0;
+                        continue;
+                    }
                     map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 5);
                 }
             }

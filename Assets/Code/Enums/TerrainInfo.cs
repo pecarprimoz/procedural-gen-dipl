@@ -20,6 +20,9 @@ public class TerrainInfo {
     public ContentGenerator ContentGenerator {
         get; set;
     }
+    public RoadGenerator RoadGenerator {
+        get; set;
+    }
     // Terrain parameters, change this if you want a bigger/higher terrain
     public int TerrainWidth = 128;
     public int TerrainHeight = 128;

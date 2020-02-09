@@ -27,15 +27,13 @@ public class TerrainGeneration : MonoBehaviour
 
     public Spline SplineScript;
 
-    void Start()
-    {
+    void Start() {
         ContentManager = GetComponent<ContentManager>();
         SeasonalChange = GetComponent<SeasonalChange>();
         RoadGenerator = GetComponent<RoadGenerator>();
         TerrainInfo = new TerrainInfo(GetComponent<Terrain>());
         SplineScript = GetComponentInChildren<Spline>();
-        if (UseCustomTerrainSizeDefinitions)
-        {
+        if (UseCustomTerrainSizeDefinitions) {
             TerrainInfo.TerrainWidth = TerrainWidth;
             TerrainInfo.TerrainHeight = TerrainHeight;
             TerrainInfo.TerrainDepth = TerrainDepth;
@@ -44,58 +42,48 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo.ContentManager = ContentManager;
         ContentGenerator = GetComponent<ContentGenerator>();
         TerrainInfo.ContentGenerator = ContentGenerator;
+        TerrainInfo.RoadGenerator = RoadGenerator;
         // Initialize manager, need to handle path for different platforms (OSX, Windows)
         SerializationManager.InitializeManager();
         // You can deserialize here and take the first NoiseParameter from the list if you dont want the default values
         InitializeTerrainWithPresetGeneration();
     }
 
-    private void Update()
-    {
-        if (TerrainInfo.GenerationType == GenerationType.kUpdating)
-        {
+    private void Update() {
+        if (TerrainInfo.GenerationType == GenerationType.kUpdating) {
             InitializeTerrainWithPresetGeneration();
         }
-        if (TerrainInfo.AreSeasonsChanging)
-        {
+        if (TerrainInfo.AreSeasonsChanging) {
             SeasonalChange.SeasonalChangeUpdate(TerrainInfo);
         }
     }
 
-    public void InitializeTerrainWithPresetGeneration()
-    {
-        // this kills the performance, is rly pretty tho :D
-        TerrainInfo._Terrain.detailObjectDistance = 1;
+    public void InitializeTerrainWithPresetGeneration() {
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
         TerrainInfo._Terrain.terrainData.alphamapResolution = TerrainInfo.TerrainWidth;
-        TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 16);
-        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth * 2;
+        TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 32);
+        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth;
         TerrainInfo._Terrain.terrainData.size = new Vector3(TerrainInfo.TerrainWidth, TerrainInfo.TerrainDepth, TerrainInfo.TerrainHeight);
         GenerateTerrainFromPreset();
     }
 
-    public void InitializeTerrain()
-    {
-        // this kills the performance, is rly pretty tho :D
-        TerrainInfo._Terrain.detailObjectDistance = 50000;
+    public void InitializeTerrain() {
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
         TerrainInfo._Terrain.terrainData.alphamapResolution = TerrainInfo.TerrainWidth;
-        TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 16);
-        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth * 2;
+        TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 32);
+        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth;
         TerrainInfo._Terrain.terrainData.size = new Vector3(TerrainInfo.TerrainWidth, TerrainInfo.TerrainDepth, TerrainInfo.TerrainHeight);
     }
 
 
-    public void GenerateTerrainAfterErosion()
-    {
+    public void GenerateTerrainAfterErosion() {
         // this can be parallelized 
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
         TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
 
-    public void GenerateTerrainFromPreset()
-    {
+    public void GenerateTerrainFromPreset() {
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         // this can be parallelized 
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
@@ -103,33 +91,28 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
     // A lot of stuff can be paralelized, stuff is decoupled for clarity when developing, in the end will be re-facced so shit that can get run paralel will
-    public void GenerateTerrainOnDemand(bool onlyUseTerrainParameteters = false)
-    {
+    public void GenerateTerrainOnDemand(bool onlyUseTerrainParameteters = false) {
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
         TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
-        if (!onlyUseTerrainParameteters)
-        {
+        if (!onlyUseTerrainParameteters) {
             ApplyErosion();
+            RoadGenerator.GenerateRoad(TerrainInfo, SplineScript);
             AssignSplatMap.DoSplat(TerrainInfo);
             TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             ContentManager.InitializeBiomePlacementObjects(TerrainInfo);
             ContentGenerator.GenerateBiomeContent(TerrainInfo);
-            var RoadList = RoadGenerator.GenerateRoad(TerrainInfo, SplineScript);
-            ContentGenerator.PlaceHousesNearRoads(RoadList, TerrainInfo, ContentManager.GetParentContentObject());
+            //ContentGenerator.PlaceHousesNearRoads(RoadList, TerrainInfo, ContentManager.GetParentContentObject());
         }
     }
 
-    public void ApplyErosion()
-    {
-        if (TerrainInfo.GenerationType == GenerationType.kUpdating)
-        {
+    public void ApplyErosion() {
+        if (TerrainInfo.GenerationType == GenerationType.kUpdating) {
             Debug.LogWarning("You are applying erosion in runtime. Switching to single mode");
             TerrainInfo.GenerationType = GenerationType.kSingleRun;
         }
-        switch (TerrainInfo.ErosionType)
-        {
+        switch (TerrainInfo.ErosionType) {
             case ErosionGeneration.ErosionType.kThermalErosion:
                 TerrainInfo.HeightMap = ErosionGeneration.ThermalErosion(TerrainInfo);
                 break;

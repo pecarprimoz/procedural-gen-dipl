@@ -56,6 +56,9 @@ public class RoadGenerator : MonoBehaviour
     private bool DirectionChanged = false;
     private int SplineSize = 5;
     private int MinRoadSize = 5;
+
+    public Texture2D RoadTexture;
+
     public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript) {
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
@@ -115,6 +118,7 @@ public class RoadGenerator : MonoBehaviour
                 break;
             }
             var newRoad = Instantiate(splineScript.gameObject, Vector3.zero, Quaternion.identity);
+            newRoad.SetActive(false);
             var newRoadSpline = newRoad.GetComponent<Spline>();
             newRoadSpline.nodes.Clear();
             newRoadSpline.curves.Clear();
@@ -181,23 +185,24 @@ public class RoadGenerator : MonoBehaviour
             for (int i = 0; i < spline.waypoints.Count; i++) {
                 var pos = spline.waypoints[i].WaypointPosition;
                 SetRoadSegment(i, spline.spline, spline.waypoints, pos);
-                //info.HeightMap[(int)pos.z, (int)pos.x] = info.HeightMap[(int)pos.z, (int)pos.x] - 0.05f;
-                //info.HeightMap[(int)pos.z - 1, (int)pos.x] = info.HeightMap[(int)pos.z - 1, (int)pos.x] - 0.05f;
-                //info.HeightMap[(int)pos.z + 1, (int)pos.x] = info.HeightMap[(int)pos.z + 1, (int)pos.x] - 0.05f;
             }
         }
         info._Terrain.terrainData.SetHeights(0, 0, info.HeightMap);
     }
-    private void OnDrawGizmos() {
-        //if (RoadPointList != null)
-        //{
-        //    foreach (var nodePosition in RoadPointList)
-        //    {
-        //        Gizmos.color = Color.red;
-        //        Gizmos.DrawSphere(nodePosition.WaypointPosition, 1.25f);
-        //    }
-        //}
+
+    public bool IsRoadOnCoordinates(int x, int z) {
+        foreach (var roadPoint in AllRoadPoints) {
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (roadPoint.PointX == x + i && roadPoint.PointZ == z + j) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
+
     private (int, int) PickRoadWaypoint(int pointX, int pointZ) {
         // first get a point out of our list
         var newWaypoint = RoadPointList[RoadPointList.Count - 1];
