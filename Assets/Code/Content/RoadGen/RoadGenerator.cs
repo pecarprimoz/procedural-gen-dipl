@@ -192,9 +192,12 @@ public class RoadGenerator : MonoBehaviour
 
     public bool IsRoadOnCoordinates(int x, int z) {
         foreach (var roadPoint in AllRoadPoints) {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (roadPoint.PointX == x + i && roadPoint.PointZ == z + j) {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if (roadPoint.PointX == x + i && roadPoint.PointZ == z + j ||
+                        roadPoint.PointX == x - i && roadPoint.PointZ == z - j ||
+                        roadPoint.PointX == x + i && roadPoint.PointZ == z - j ||
+                        roadPoint.PointX == x - i && roadPoint.PointZ == z + j) {
                         return true;
                     }
                 }

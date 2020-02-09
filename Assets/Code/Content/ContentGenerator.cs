@@ -84,9 +84,24 @@ public class ContentGenerator : MonoBehaviour
         }
         return UnityEngine.Random.Range(min, max);
     }
-
+    public void ClearOutDetails(ref int[,] map, int x, int y) {
+        try {
+            map[x, y] = 0;
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    for (int h = 0; h < 6; h++) {
+                        map[x + i, y + j] = 0;
+                        map[x - i, y - j] = 0;
+                        map[x + i, y - j] = 0;
+                        map[x - i, y + j] = 0;
+                    }
+                }
+            }
+        } catch (Exception e) { }
+    }
     public void PlaceNature(TerrainInfo info)
     {
+        var tmpContentDelete = new List<(int, int)>();
         // 0 - 5 indices are for grass atm, 3-5 are flowers (less dense patches)
         var t = info._Terrain;
         // go trough the biomes that need grass
@@ -101,12 +116,16 @@ public class ContentGenerator : MonoBehaviour
                     // go trough the detail layers
                     // https://answers.unity.com/questions/182147/terraindatagetdetaillayer.html
                     if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
-                        map[point.Z, point.X] = 0;
+                        tmpContentDelete.Add((point.Z, point.X));
                         continue;
                     }
-                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 2);
+                    map[point.Z, point.X] = GetDensity(info.CurrentSeason, 13, 16);
                 }
             }
+            foreach (var item in tmpContentDelete) {
+                ClearOutDetails(ref map, item.Item1, item.Item2);
+            }
+            tmpContentDelete.Clear();
             t.terrainData.SetDetailLayer(0, 0, j, map);
         }
 
@@ -120,14 +139,16 @@ public class ContentGenerator : MonoBehaviour
                 foreach (var point in info.SeperatedBiomes[i])
                 {
                     if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
-                        map[point.Z, point.X] = 0;
+                        tmpContentDelete.Add((point.Z, point.X));
                         continue;
                     }
                     map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 5);
                 }
             }
+            foreach (var item in tmpContentDelete) {
+                ClearOutDetails(ref map, item.Item1, item.Item2);
+            }
             t.terrainData.SetDetailLayer(0, 0, j, map);
         }
-
     }
 }

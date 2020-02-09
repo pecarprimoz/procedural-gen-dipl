@@ -62,7 +62,7 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
         TerrainInfo._Terrain.terrainData.alphamapResolution = TerrainInfo.TerrainWidth;
         TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 32);
-        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth;
+        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth * 2;
         TerrainInfo._Terrain.terrainData.size = new Vector3(TerrainInfo.TerrainWidth, TerrainInfo.TerrainDepth, TerrainInfo.TerrainHeight);
         GenerateTerrainFromPreset();
     }
@@ -71,7 +71,7 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo._Terrain.terrainData.heightmapResolution = TerrainInfo.TerrainWidth + 1;
         TerrainInfo._Terrain.terrainData.alphamapResolution = TerrainInfo.TerrainWidth;
         TerrainInfo._Terrain.terrainData.SetDetailResolution(TerrainInfo.TerrainWidth, 32);
-        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth;
+        TerrainInfo._Terrain.terrainData.baseMapResolution = TerrainInfo.TerrainWidth * 2;
         TerrainInfo._Terrain.terrainData.size = new Vector3(TerrainInfo.TerrainWidth, TerrainInfo.TerrainDepth, TerrainInfo.TerrainHeight);
     }
 
