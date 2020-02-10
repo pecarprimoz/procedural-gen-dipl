@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -10,7 +11,7 @@ public class ContentGenerator : MonoBehaviour
     public void GenerateBiomeContent(TerrainInfo info)
     {
         // testing for some biomes to get grass 
-        PlaceNature(info);
+        //PlaceNature(info);
 
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++)
@@ -19,17 +20,42 @@ public class ContentGenerator : MonoBehaviour
             for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
             {
                 // iterate trough all the objects, then place them, first pass is for random ground bullshit
-                PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
+                //PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
             }
         }
     }
 
+    public float[,] GetFlattendTerrain(float[,] hm, int x, int z, int width)
+    {
+        List<float> norm = new List<float>();
+        float[,] flatten = new float[width, width];
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                float v = hm[x + i, z + j];
+                norm.Add(v);
+                //flatten[i, j] = hm[x + i, z + j] + 0.05f;
+            }
+        }
+        float e_v = norm.Sum() / norm.Count;
+        for (int i = 0; i < width; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                flatten[i, j] = e_v;
+            }
+        }
+        return flatten;
+    }
+
     public void PlaceHousesNearRoads(List<RoadGenerator.RoadWaypoint> roadWaypoints, TerrainInfo info, GameObject parent)
     {
-        for (int i = 0; i < roadWaypoints.Count; i++)
+        for (int i = 0; i < 1; i++)
         {
             var waypoint = roadWaypoints[i];
             Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint);
+            //info._Terrain.terrainData.SetHeights((int)housePos.x - 4, (int)housePos.z - 4, GetFlattendTerrain(info.HeightMap, (int)housePos.x, (int)housePos.z, 8));
             Instantiate(House, housePos, Quaternion.identity, parent.transform);
         }
     }
@@ -52,7 +78,7 @@ public class ContentGenerator : MonoBehaviour
                 housePos.x -= 3;
                 break;
         }
-        housePos.y = data.GetHeight((int)housePos.x, (int)housePos.z) + 4;
+        housePos.y = data.GetHeight((int)housePos.x, (int)housePos.z) ;
         return housePos;
     }
 
@@ -84,12 +110,17 @@ public class ContentGenerator : MonoBehaviour
         }
         return UnityEngine.Random.Range(min, max);
     }
-    public void ClearOutDetails(ref int[,] map, int x, int y) {
-        try {
+    public void ClearOutDetails(ref int[,] map, int x, int y)
+    {
+        try
+        {
             map[x, y] = 0;
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 2; j++) {
-                    for (int h = 0; h < 6; h++) {
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    for (int h = 0; h < 6; h++)
+                    {
                         map[x + i, y + j] = 0;
                         map[x - i, y - j] = 0;
                         map[x + i, y - j] = 0;
@@ -97,7 +128,8 @@ public class ContentGenerator : MonoBehaviour
                     }
                 }
             }
-        } catch (Exception e) { }
+        }
+        catch (Exception e) { }
     }
     public void PlaceNature(TerrainInfo info)
     {
@@ -115,14 +147,16 @@ public class ContentGenerator : MonoBehaviour
                 {
                     // go trough the detail layers
                     // https://answers.unity.com/questions/182147/terraindatagetdetaillayer.html
-                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
+                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z))
+                    {
                         tmpContentDelete.Add((point.Z, point.X));
                         continue;
                     }
                     map[point.Z, point.X] = GetDensity(info.CurrentSeason, 13, 16);
                 }
             }
-            foreach (var item in tmpContentDelete) {
+            foreach (var item in tmpContentDelete)
+            {
                 ClearOutDetails(ref map, item.Item1, item.Item2);
             }
             tmpContentDelete.Clear();
@@ -138,14 +172,16 @@ public class ContentGenerator : MonoBehaviour
                 // go trough the biome points
                 foreach (var point in info.SeperatedBiomes[i])
                 {
-                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z)) {
+                    if (info.RoadGenerator.IsRoadOnCoordinates(point.X, point.Z))
+                    {
                         tmpContentDelete.Add((point.Z, point.X));
                         continue;
                     }
                     map[point.Z, point.X] = GetDensity(info.CurrentSeason, 1, 5);
                 }
             }
-            foreach (var item in tmpContentDelete) {
+            foreach (var item in tmpContentDelete)
+            {
                 ClearOutDetails(ref map, item.Item1, item.Item2);
             }
             t.terrainData.SetDetailLayer(0, 0, j, map);

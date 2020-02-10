@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using SplineMesh;
+using System.Linq;
+
 public class RoadGenerator : MonoBehaviour
 {
     public struct RoadWaypoint
@@ -13,7 +15,8 @@ public class RoadGenerator : MonoBehaviour
         public int TotalRoadLengthAtCreationTime;
         public RoadSpreadDirection RoadSpreadDirectionAtCreationTime;
 
-        public RoadWaypoint(int pointX, int pointZ, Vector3 waypointPosition, int totalRoadLengthAtCreationTime, RoadSpreadDirection roadSpreadDirectionAtCreationTime) {
+        public RoadWaypoint(int pointX, int pointZ, Vector3 waypointPosition, int totalRoadLengthAtCreationTime, RoadSpreadDirection roadSpreadDirectionAtCreationTime)
+        {
             PointX = pointX;
             PointZ = pointZ;
             WaypointPosition = waypointPosition;
@@ -27,7 +30,8 @@ public class RoadGenerator : MonoBehaviour
         public Spline spline;
         public List<RoadWaypoint> waypoints;
 
-        public SplineNodeHelper(Spline spline, List<RoadWaypoint> waypoints) {
+        public SplineNodeHelper(Spline spline, List<RoadWaypoint> waypoints)
+        {
             this.spline = spline;
             this.waypoints = waypoints;
         }
@@ -59,7 +63,8 @@ public class RoadGenerator : MonoBehaviour
 
     public Texture2D RoadTexture;
 
-    public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript) {
+    public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript)
+    {
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
         Splines = new List<SplineNodeHelper>();
@@ -68,8 +73,10 @@ public class RoadGenerator : MonoBehaviour
         return RoadPointList;
     }
 
-    public Vector3 GetDirection(RoadSpreadDirection direction) {
-        switch (direction) {
+    public Vector3 GetDirection(RoadSpreadDirection direction)
+    {
+        switch (direction)
+        {
             case (RoadSpreadDirection.kDown):
                 return new Vector3(-1, 0, 0);
             case RoadSpreadDirection.kUp:
@@ -82,16 +89,20 @@ public class RoadGenerator : MonoBehaviour
         return Vector3.zero;
     }
 
-    private void SetRoadSegment(int index, Spline roadSpline, List<RoadWaypoint> waypoints, Vector3 currentNodePosition) {
+    private void SetRoadSegment(int index, Spline roadSpline, List<RoadWaypoint> waypoints, Vector3 currentNodePosition)
+    {
         var nodePosition = currentNodePosition;
-        if (index < waypoints.Count - 1) {
+        if (index < waypoints.Count - 1)
+        {
             var nextNodePosition = waypoints[index + 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
                 nodePosition + (nextNodePosition - nodePosition).normalized / 1000
             );
             roadSpline.AddNode(splineNode);
-        } else if (index >= 1) {
+        }
+        else if (index >= 1)
+        {
             var previousNodePosition = waypoints[index - 1].WaypointPosition;
             var splineNode = new SplineNode(
                 nodePosition,
@@ -101,20 +112,23 @@ public class RoadGenerator : MonoBehaviour
         }
     }
 
-    private void DoRoadGeneration(TerrainInfo info, Spline splineScript) {
+    private void DoRoadGeneration(TerrainInfo info, Spline splineScript)
+    {
         int pointX = (int)Random.Range(MAX_X_OFFSET, info.TerrainWidth - MAX_X_OFFSET);
         int pointZ = (int)Random.Range(MAX_Z_OFFSET, info.TerrainHeight - MAX_Z_OFFSET);
         SpreadDirection = (RoadSpreadDirection)Random.Range(0, 4);
 
         // total spread size is the total road size
-        for (int i = 0; i < TotalSpreadSize; i++) {
+        for (int i = 0; i < TotalSpreadSize; i++)
+        {
             if (TotalSpreadSize <= 10) break;
             // do coin flip
             bool coinFlip = Random.Range(0, 2) == 0;
             // current road segment size, min 2 due to splines
             int CurrentSpreadSize = Random.Range(TotalSpreadSize / 2, TotalSpreadSize);
 
-            if (CurrentSpreadSize < MinRoadSize) {
+            if (CurrentSpreadSize < MinRoadSize)
+            {
                 break;
             }
             var newRoad = Instantiate(splineScript.gameObject, Vector3.zero, Quaternion.identity);
@@ -124,9 +138,11 @@ public class RoadGenerator : MonoBehaviour
             newRoadSpline.curves.Clear();
             List<RoadWaypoint> currentSplineWaypoints = new List<RoadWaypoint>();
             Splines.Add(new SplineNodeHelper(newRoadSpline, currentSplineWaypoints));
-            for (int j = 0; j < CurrentSpreadSize; j++) {
+            for (int j = 0; j < CurrentSpreadSize; j++)
+            {
                 // prev iter we changed direction, break off this spline, create a new one and continue
-                if (DirectionChanged && j != 0) {
+                if (DirectionChanged && j != 0)
+                {
                     DirectionChanged = false;
                     break;
                 }
@@ -137,36 +153,49 @@ public class RoadGenerator : MonoBehaviour
                 AllRoadPoints.Add(waypoint);
                 Splines[i].waypoints.Add(waypoint);
                 TotalSpreadSize--;
-                switch (SpreadDirection) {
+                switch (SpreadDirection)
+                {
                     // if we wanna go up, it means we gotta get a point at Vec3 (info.SeperatedBiomes[i][randomPoint].X + 1, terrainPositionY, info.SeperatedBiomes[i][randomPoint].Z);
                     case RoadSpreadDirection.kUp:
-                        if (pointX + SplineSize < info.TerrainWidth - MAX_X_OFFSET) {
+                        if (pointX + SplineSize < info.TerrainWidth - MAX_X_OFFSET)
+                        {
                             pointX += SplineSize;
-                        } else {
+                        }
+                        else
+                        {
                             (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
                     case RoadSpreadDirection.kDown:
-                        if (pointX - SplineSize > MAX_X_OFFSET) {
+                        if (pointX - SplineSize > MAX_X_OFFSET)
+                        {
                             pointX -= SplineSize;
-                        } else {
+                        }
+                        else
+                        {
                             (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
                     case RoadSpreadDirection.kLeft:
-                        if (pointZ - SplineSize > MAX_Z_OFFSET) {
+                        if (pointZ - SplineSize > MAX_Z_OFFSET)
+                        {
                             pointZ -= SplineSize;
-                        } else {
+                        }
+                        else
+                        {
                             (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
                         break;
                     case RoadSpreadDirection.kRight:
-                        if (pointZ + SplineSize < info.TerrainHeight - MAX_Z_OFFSET) {
+                        if (pointZ + SplineSize < info.TerrainHeight - MAX_Z_OFFSET)
+                        {
                             pointZ += SplineSize;
-                        } else {
+                        }
+                        else
+                        {
                             (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
                             break;
                         }
@@ -175,14 +204,19 @@ public class RoadGenerator : MonoBehaviour
                         break;
                 }
             }
-            if (coinFlip) {
+            if (coinFlip)
+            {
                 (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
-            } else {
+            }
+            else
+            {
                 (pointX, pointZ) = PickRandomNotInRangeWaypoint(info);
             }
         }
-        foreach (var spline in Splines) {
-            for (int i = 0; i < spline.waypoints.Count; i++) {
+        foreach (var spline in Splines)
+        {
+            for (int i = 0; i < spline.waypoints.Count; i++)
+            {
                 var pos = spline.waypoints[i].WaypointPosition;
                 SetRoadSegment(i, spline.spline, spline.waypoints, pos);
             }
@@ -190,14 +224,20 @@ public class RoadGenerator : MonoBehaviour
         info._Terrain.terrainData.SetHeights(0, 0, info.HeightMap);
     }
 
-    public bool IsRoadOnCoordinates(int x, int z) {
-        foreach (var roadPoint in AllRoadPoints) {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 2; j++) {
+    public bool IsRoadOnCoordinates(int x, int z)
+    {
+        foreach (var roadPoint in AllRoadPoints)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
                     if (roadPoint.PointX == x + i && roadPoint.PointZ == z + j ||
                         roadPoint.PointX == x - i && roadPoint.PointZ == z - j ||
                         roadPoint.PointX == x + i && roadPoint.PointZ == z - j ||
-                        roadPoint.PointX == x - i && roadPoint.PointZ == z + j) {
+                        roadPoint.PointX == x - i && roadPoint.PointZ == z + j ||
+                        roadPoint.PointX == x && roadPoint.PointZ == z)
+                    {
                         return true;
                     }
                 }
@@ -206,26 +246,36 @@ public class RoadGenerator : MonoBehaviour
         return false;
     }
 
-    private (int, int) PickRoadWaypoint(int pointX, int pointZ) {
+    private (int, int) PickRoadWaypoint(int pointX, int pointZ)
+    {
         // first get a point out of our list
         var newWaypoint = RoadPointList[RoadPointList.Count - 1];
 
         pointX = newWaypoint.PointX;
         pointZ = newWaypoint.PointZ;
         if (newWaypoint.RoadSpreadDirectionAtCreationTime == RoadSpreadDirection.kUp ||
-            newWaypoint.RoadSpreadDirectionAtCreationTime == RoadSpreadDirection.kDown) {
+            newWaypoint.RoadSpreadDirectionAtCreationTime == RoadSpreadDirection.kDown)
+        {
             SpreadDirection = (RoadSpreadDirection)Random.Range(2, 4);
-            if (SpreadDirection == RoadSpreadDirection.kLeft) {
+            if (SpreadDirection == RoadSpreadDirection.kLeft)
+            {
                 pointZ -= SplineSize;
-            } else {
+            }
+            else
+            {
                 pointZ += SplineSize;
             }
             DirectionChanged = true;
-        } else {
+        }
+        else
+        {
             SpreadDirection = (RoadSpreadDirection)Random.Range(0, 2);
-            if (SpreadDirection == RoadSpreadDirection.kUp) {
+            if (SpreadDirection == RoadSpreadDirection.kUp)
+            {
                 pointX += SplineSize;
-            } else {
+            }
+            else
+            {
                 pointX -= SplineSize;
             }
             DirectionChanged = true;
@@ -233,38 +283,54 @@ public class RoadGenerator : MonoBehaviour
         // shit code idc
         return (pointX, pointZ);
     }
-    private (int, int) PickRandomNotInRangeWaypoint(TerrainInfo info) {
+    private (int, int) PickRandomNotInRangeWaypoint(TerrainInfo info)
+    {
         // get the first two points from which we are gonna generate roads
+        //var water_points = info.SeperatedBiomes[info.SeperatedBiomes.Keys.Count - 1];
         int pointX = 0;
         int pointZ = 0;
         int maxIters = 1000;
         int i = 0;
-        do {
+        do
+        {
             pointX = (int)Random.Range(MAX_X_OFFSET, info.TerrainWidth - MAX_X_OFFSET);
             pointZ = (int)Random.Range(MAX_Z_OFFSET, info.TerrainHeight - MAX_Z_OFFSET);
             i++;
-            if (i > maxIters) {
+            if (i > maxIters)
+            {
                 Debug.Log("Couldnt find a point without any roads in radius.");
                 // in this case, we need to find a point where no roads exist
                 break;
             }
+            //if (water_points.Where(x => x.X == pointX).Count() > 0) {
+            //    continue;
+            //}
+            //if (water_points.Where(x => x.Z == pointZ).Count() > 0)
+            //{
+            //    continue;
+            //}
         }
         while (AreAnyRoadsInRadius(info, pointX, pointZ));
         return (pointX, pointZ);
     }
-    private bool AreAnyRoadsInRadius(TerrainInfo info, int pointX, int pointZ) {
+    private bool AreAnyRoadsInRadius(TerrainInfo info, int pointX, int pointZ)
+    {
         if (pointX + RadiusSize > info.TerrainWidth || pointZ + RadiusSize > info.TerrainHeight &&
-            pointX - RadiusSize < 0 || pointZ - RadiusSize < 0) {
+            pointX - RadiusSize < 0 || pointZ - RadiusSize < 0)
+        {
             return true;
         }
-        for (int i = 0; i < AllRoadPoints.Count; i++) {
+        for (int i = 0; i < AllRoadPoints.Count; i++)
+        {
             var roadPoint = AllRoadPoints[i];
             // fuck circle math just do a square check of the point
-            for (int j = -RadiusSize; j < RadiusSize; j++) {
+            for (int j = -RadiusSize; j < RadiusSize; j++)
+            {
                 // go trough square from pointX, pointZ
                 (int pX, int pZ) = (pointX + j, pointZ + j);
                 // if any point in roadPointList matches with the coordinates of pX pZ, means we found a road in our vicinity
-                if (pX == roadPoint.PointX || pZ == roadPoint.PointZ) {
+                if (pX == roadPoint.PointX || pZ == roadPoint.PointZ)
+                {
                     Debug.LogFormat("Found a road segment at {0} {1}", pX, pZ);
                     return true;
                 }
