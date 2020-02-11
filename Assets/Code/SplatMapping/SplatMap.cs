@@ -102,22 +102,22 @@ public class AssignSplatMap : MonoBehaviour
                 {
                     // Setup an array to record the mix of texture weights at this point
                     int idx = BiomeGeneration.GetCorrectBiomeIndex(info, x, y);
-                    //splatWeights[idx] = 1f;
+                    splatWeights[idx] = .75f;
                     // blending, if we arnt at ocean/snow level
                     if (idx >= 1 && idx < info.TerrainParameterList.Count - 1)
                     {
-                        splatWeights[idx + 1] = 0.5f;
-                        splatWeights[idx - 1] = 0.5f;
+                        splatWeights[idx + 1] = 0.125f;
+                        splatWeights[idx - 1] = 0.125F;
                     }
-                    // we are at ocean level, blend the sand
+                    // WE ARE AT MNT, BLEND SMTH ELSE
                     else if (idx == 0)
                     {
-                        splatWeights[idx + 1] = 0.5f;
+                        splatWeights[idx + 1] = 0.25f;
                     }
                     // we are at snow level, blend the snow
                     else if (idx == info.TerrainParameterList.Count - 1)
                     {
-                        splatWeights[idx - 1] = 0.5f;
+                        splatWeights[idx - 1] = 0.25f;
                     }
                     // Sum of all textures weights must add to 1, so calculate normalization factor from sum of weights
                 }

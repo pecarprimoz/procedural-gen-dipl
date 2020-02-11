@@ -11,7 +11,7 @@ public class ContentGenerator : MonoBehaviour
     public void GenerateBiomeContent(TerrainInfo info)
     {
         // testing for some biomes to get grass 
-        //PlaceNature(info);
+        PlaceNature(info);
 
         // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
         for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++)
@@ -20,7 +20,7 @@ public class ContentGenerator : MonoBehaviour
             for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
             {
                 // iterate trough all the objects, then place them, first pass is for random ground bullshit
-                //PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
+                PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
             }
         }
     }

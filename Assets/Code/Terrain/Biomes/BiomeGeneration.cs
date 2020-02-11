@@ -16,7 +16,7 @@ public class BiomeGeneration {
                 validHeightsIndicies.Add(i);
             }
         }
-        float tmapValue = info.HeightMap[x, y];
+        float tmapValue = info.TemperatureMap[x, y];
         for (int i = 0; i < validHeightsIndicies.Count; i++) {
             var tparam = tparams[i];
             if (tmapValue <= tparam.TemperatureParameterBoundry) {
