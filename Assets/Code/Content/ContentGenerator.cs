@@ -20,7 +20,7 @@ public class ContentGenerator : MonoBehaviour
             for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
             {
                 // iterate trough all the objects, then place them, first pass is for random ground bullshit
-                PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
+                //PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
             }
         }
     }
@@ -35,10 +35,9 @@ public class ContentGenerator : MonoBehaviour
             {
                 float v = hm[x + i, z + j];
                 norm.Add(v);
-                //flatten[i, j] = hm[x + i, z + j] + 0.05f;
             }
         }
-        float e_v = norm.Sum() / norm.Count;
+        float e_v = norm.Sum() / norm.Count();
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < width; j++)
@@ -49,36 +48,60 @@ public class ContentGenerator : MonoBehaviour
         return flatten;
     }
 
+    public bool IsAnyHouseNear(float min_dist, Vector3 housePos, List<Vector3> houses)
+    {
+        foreach (var curHouse in houses)
+        {
+            if (Vector2.Distance(new Vector2(curHouse.x, curHouse.z), new Vector2(housePos.x, housePos.z)) < min_dist)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void PlaceHousesNearRoads(List<RoadGenerator.RoadWaypoint> roadWaypoints, TerrainInfo info, GameObject parent)
     {
-        for (int i = 0; i < 1; i++)
+        List<Vector3> currentHouses = new List<Vector3>();
+        int cnt = 0;
+        int i = 0;
+        while (cnt < 10)
         {
+            if (i == roadWaypoints.Count - 1) { break; }
             var waypoint = roadWaypoints[i];
-            Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint);
-            //info._Terrain.terrainData.SetHeights((int)housePos.x - 4, (int)housePos.z - 4, GetFlattendTerrain(info.HeightMap, (int)housePos.x, (int)housePos.z, 8));
-            Instantiate(House, housePos, Quaternion.identity, parent.transform);
+            Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint, 9);
+            if (!IsAnyHouseNear(15, housePos, currentHouses))
+            {
+                info._Terrain.terrainData.SetHeights((int)housePos.x - 4, (int)housePos.z - 4, GetFlattendTerrain(info.HeightMap, (int)housePos.z, (int)housePos.x, 8));
+                var h = info._Terrain.terrainData.GetHeight((int)housePos.x + 2, (int)housePos.z + 2);
+                housePos.y = h;
+                Instantiate(House, housePos, Quaternion.identity, parent.transform);
+                cnt++;
+                currentHouses.Add(housePos);
+            }   
+            i++;
         }
     }
 
-    public Vector3 GetHousePosition(TerrainData data, RoadGenerator.RoadWaypoint point)
+    public Vector3 GetHousePosition(TerrainData data, RoadGenerator.RoadWaypoint point, int offset)
     {
         Vector3 housePos = new Vector3(point.PointX, 0, point.PointZ);
         switch (point.RoadSpreadDirectionAtCreationTime)
         {
             case RoadGenerator.RoadSpreadDirection.kUp:
-                housePos.z += 3;
+                housePos.z += offset;
                 break;
             case RoadGenerator.RoadSpreadDirection.kDown:
-                housePos.z -= 3;
+                housePos.z -= offset;
                 break;
             case RoadGenerator.RoadSpreadDirection.kLeft:
-                housePos.x += 3;
+                housePos.x += offset;
                 break;
             case RoadGenerator.RoadSpreadDirection.kRight:
-                housePos.x -= 3;
+                housePos.x -= offset;
                 break;
         }
-        housePos.y = data.GetHeight((int)housePos.x, (int)housePos.z) ;
+        housePos.y = data.GetHeight((int)housePos.x, (int)housePos.z);
         return housePos;
     }
 

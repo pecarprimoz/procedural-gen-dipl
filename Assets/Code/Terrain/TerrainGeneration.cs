@@ -98,9 +98,9 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         if (!onlyUseTerrainParameteters) {
             ApplyErosion();
+            TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             var RoadList = RoadGenerator.GenerateRoad(TerrainInfo, SplineScript);
             AssignSplatMap.DoSplat(TerrainInfo);
-            TerrainInfo.BiomeMap = BiomeGeneration.GenerateBiomeMap(TerrainInfo);
             ContentManager.InitializeBiomePlacementObjects(TerrainInfo);
             ContentGenerator.GenerateBiomeContent(TerrainInfo);
             ContentGenerator.PlaceHousesNearRoads(RoadList, TerrainInfo, ContentManager.GetParentContentObject());

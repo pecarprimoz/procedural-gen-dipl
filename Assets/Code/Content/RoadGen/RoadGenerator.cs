@@ -121,7 +121,7 @@ public class RoadGenerator : MonoBehaviour
         // total spread size is the total road size
         for (int i = 0; i < TotalSpreadSize; i++)
         {
-            if (TotalSpreadSize <= 10) break;
+            if (TotalSpreadSize <= 10) TotalSpreadSize = 11;
             // do coin flip
             bool coinFlip = Random.Range(0, 2) == 0;
             // current road segment size, min 2 due to splines
@@ -280,13 +280,27 @@ public class RoadGenerator : MonoBehaviour
             }
             DirectionChanged = true;
         }
-        // shit code idc
         return (pointX, pointZ);
     }
+
+    public bool WillSpreadToWater(TerrainInfo info, int cX, int cZ)
+    {
+        var water_points = info.SeperatedBiomes[info.SeperatedBiomes.Keys.Count - 1];
+        if (water_points.Where(x => x.X == cX).Count() > 0)
+        {
+            return true;
+        }
+        if (water_points.Where(x => x.Z == cZ).Count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private (int, int) PickRandomNotInRangeWaypoint(TerrainInfo info)
     {
         // get the first two points from which we are gonna generate roads
-        //var water_points = info.SeperatedBiomes[info.SeperatedBiomes.Keys.Count - 1];
+        var water_points = info.SeperatedBiomes[info.SeperatedBiomes.Keys.Count - 1];
         int pointX = 0;
         int pointZ = 0;
         int maxIters = 1000;
@@ -302,13 +316,14 @@ public class RoadGenerator : MonoBehaviour
                 // in this case, we need to find a point where no roads exist
                 break;
             }
-            //if (water_points.Where(x => x.X == pointX).Count() > 0) {
-            //    continue;
-            //}
-            //if (water_points.Where(x => x.Z == pointZ).Count() > 0)
-            //{
-            //    continue;
-            //}
+            if (water_points.Where(x => x.X == pointX).Count() > 0)
+            {
+                continue;
+            }
+            if (water_points.Where(x => x.Z == pointZ).Count() > 0)
+            {
+                continue;
+            }
         }
         while (AreAnyRoadsInRadius(info, pointX, pointZ));
         return (pointX, pointZ);
@@ -323,15 +338,21 @@ public class RoadGenerator : MonoBehaviour
         for (int i = 0; i < AllRoadPoints.Count; i++)
         {
             var roadPoint = AllRoadPoints[i];
-            // fuck circle math just do a square check of the point
             for (int j = -RadiusSize; j < RadiusSize; j++)
             {
                 // go trough square from pointX, pointZ
-                (int pX, int pZ) = (pointX + j, pointZ + j);
+                (int pX1, int pZ1) = (pointX + j, pointZ + j);
+                (int pX2, int pZ2) = (pointX, pointZ + j);
+                (int pX3, int pZ3) = (pointX + j, pointZ);
+                (int pX4, int pZ4) = (pointX + j, pointZ);
+
                 // if any point in roadPointList matches with the coordinates of pX pZ, means we found a road in our vicinity
-                if (pX == roadPoint.PointX || pZ == roadPoint.PointZ)
+                if (pX1 == roadPoint.PointX || pZ1 == roadPoint.PointZ ||
+                    pX2 == roadPoint.PointX || pZ2 == roadPoint.PointZ ||
+                    pX3 == roadPoint.PointX || pZ3 == roadPoint.PointZ ||
+                    pX4 == roadPoint.PointX || pZ4 == roadPoint.PointZ)
                 {
-                    Debug.LogFormat("Found a road segment at {0} {1}", pX, pZ);
+                    Debug.LogFormat("Found a road segment");
                     return true;
                 }
             }
