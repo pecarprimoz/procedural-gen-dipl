@@ -7,20 +7,26 @@ using UnityEngine;
 
 public class ContentGenerator : MonoBehaviour
 {
+    public static List<Vector3> CurrentHouses = new List<Vector3>();
     public GameObject House;
     public void GenerateBiomeContent(TerrainInfo info)
     {
         // testing for some biomes to get grass 
-        PlaceNature(info);
-
-        // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
-        for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++)
+        if (info.ApplyDetail)
         {
-            // instead of taking the first item, take random ?
-            for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
+            PlaceNature(info);
+        }
+        if (info.ApplyContent)
+        {
+            // Totaly noob approach, dont use blue noise or anything, just select a random point and place an item therev
+            for (int i = 0; i < info.SeperatedBiomes.Keys.Count; i++)
             {
-                // iterate trough all the objects, then place them, first pass is for random ground bullshit
-                //PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
+                // instead of taking the first item, take random ?
+                for (int j = 0; j < info.TerrainParameterList[i].ObjectListCount; j++)
+                {
+                    // iterate trough all the objects, then place them, first pass is for random ground bullshit
+                    PlaceBiomeContent(info, i, info.TerrainParameterList[i].TerrainParameterObjectCount[j], info.TerrainParameterList[i].TerrainParameterObjectList[j]);
+                }
             }
         }
     }
@@ -62,7 +68,10 @@ public class ContentGenerator : MonoBehaviour
 
     public void PlaceHousesNearRoads(List<RoadGenerator.RoadWaypoint> roadWaypoints, TerrainInfo info, GameObject parent)
     {
-        List<Vector3> currentHouses = new List<Vector3>();
+        if (!info.ApplyRoads)
+        {
+            return;
+        }
         int cnt = 0;
         int i = 0;
         while (cnt < 10)
@@ -70,15 +79,15 @@ public class ContentGenerator : MonoBehaviour
             if (i == roadWaypoints.Count - 1) { break; }
             var waypoint = roadWaypoints[i];
             Vector3 housePos = GetHousePosition(info._Terrain.terrainData, waypoint, 9);
-            if (!IsAnyHouseNear(15, housePos, currentHouses))
+            if (!IsAnyHouseNear(15, housePos, CurrentHouses))
             {
                 info._Terrain.terrainData.SetHeights((int)housePos.x - 4, (int)housePos.z - 4, GetFlattendTerrain(info.HeightMap, (int)housePos.z, (int)housePos.x, 8));
                 var h = info._Terrain.terrainData.GetHeight((int)housePos.x + 2, (int)housePos.z + 2);
                 housePos.y = h;
                 Instantiate(House, housePos, Quaternion.identity, parent.transform);
                 cnt++;
-                currentHouses.Add(housePos);
-            }   
+                CurrentHouses.Add(housePos);
+            }
             i++;
         }
     }
@@ -113,7 +122,7 @@ public class ContentGenerator : MonoBehaviour
         {
             int randomPoint = UnityEngine.Random.Range(0, info.SeperatedBiomes[biomeType].Count - 1);
             var biomePoint = info.SeperatedBiomes[biomeType][randomPoint];
-            if (!biomePoint.ContainsItem && !info.RoadGenerator.IsRoadOnCoordinates(biomePoint.X, biomePoint.Z))
+            if (!biomePoint.ContainsItem && !info.RoadGenerator.IsRoadOnCoordinates(biomePoint.X, biomePoint.Z, 5) && !IsAnyHouseNear(5, new Vector3(biomePoint.X, 0 ,biomePoint.Z), CurrentHouses))
             {
                 int terrainPositionY = (int)info._Terrain.terrainData.GetHeight(biomePoint.X, biomePoint.Z);
                 Instantiate(placeableObject, new Vector3(biomePoint.X, terrainPositionY, biomePoint.Z), Quaternion.identity, info.ContentManager.BiomeParentGameObjects[biomeType].transform);

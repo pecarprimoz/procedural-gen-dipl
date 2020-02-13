@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainInfo {
+public class TerrainInfo
+{
 
-    public TerrainInfo(Terrain terrain) {
+    public TerrainInfo(Terrain terrain)
+    {
         HeightMap = new float[TerrainWidth, TerrainHeight];
         MoistureMap = new float[TerrainWidth, TerrainHeight];
         TemperatureMap = new float[TerrainWidth, TerrainHeight];
         _Terrain = terrain;
     }
-    public TerrainInfo() {
+    public TerrainInfo()
+    {
         HeightMap = new float[TerrainWidth, TerrainHeight];
         MoistureMap = new float[TerrainWidth, TerrainHeight];
         TemperatureMap = new float[TerrainWidth, TerrainHeight];
@@ -62,6 +65,11 @@ public class TerrainInfo {
     [SerializeField]
     public List<TerrainParameters> TerrainParameterList = new List<TerrainParameters>();
 
+    public bool ApplyContent = true;
+    public bool ApplyDetail = true;
+    public bool ApplyRoads = true;
+    public bool GenerateTerrain = true;
+    public bool ApplyErosion = true;
     // Seasonal changes boolean
     public bool AreSeasonsChanging = false;
     public SeasonType CurrentSeason = SeasonType.kSpring;

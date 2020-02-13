@@ -95,6 +95,11 @@ public class ParameterEditorWidget : Editor
         EditorWidgetFoldouts["DevelWidget"] = EditorGUILayout.Foldout(EditorWidgetFoldouts["DevelWidget"], "DevelWidget");
         if (EditorWidgetFoldouts["DevelWidget"])
         {
+            TerrainInfo.GenerateTerrain = GUILayout.Toggle(TerrainInfo.GenerateTerrain, "Generate terrain");
+            TerrainInfo.ApplyErosion = GUILayout.Toggle(TerrainInfo.ApplyErosion, "Apply erosion");
+            TerrainInfo.ApplyContent = GUILayout.Toggle(TerrainInfo.ApplyContent, "Apply content");
+            TerrainInfo.ApplyDetail = GUILayout.Toggle(TerrainInfo.ApplyDetail, "Apply detail");
+            TerrainInfo.ApplyRoads = GUILayout.Toggle(TerrainInfo.ApplyRoads, "Apply roads");
             if (GUILayout.Button("Gen. H, M, T maps"))
             {
                 if (TerrainInfo.GenerationType != GenerationType.kSingleRun)

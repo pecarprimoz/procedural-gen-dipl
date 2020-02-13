@@ -65,6 +65,10 @@ public class RoadGenerator : MonoBehaviour
 
     public List<RoadWaypoint> GenerateRoad(TerrainInfo terrainInfo, Spline splineScript)
     {
+        if (!terrainInfo.ApplyRoads)
+        {
+            return new List<RoadWaypoint>();
+        }
         var backupTotalSpreadSize = TotalSpreadSize;
         RoadPointList = new List<RoadWaypoint>();
         Splines = new List<SplineNodeHelper>();
@@ -153,6 +157,10 @@ public class RoadGenerator : MonoBehaviour
                 AllRoadPoints.Add(waypoint);
                 Splines[i].waypoints.Add(waypoint);
                 TotalSpreadSize--;
+                if (WillSpreadToWater(info, pointX, pointZ))
+                {
+                    (pointX, pointZ) = PickRandomNotInRangeWaypoint(info);
+                }
                 switch (SpreadDirection)
                 {
                     // if we wanna go up, it means we gotta get a point at Vec3 (info.SeperatedBiomes[i][randomPoint].X + 1, terrainPositionY, info.SeperatedBiomes[i][randomPoint].Z);
@@ -163,7 +171,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ, info);
                             break;
                         }
                         break;
@@ -174,7 +182,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ, info);
                             break;
                         }
                         break;
@@ -185,7 +193,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ, info);
                             break;
                         }
                         break;
@@ -196,7 +204,7 @@ public class RoadGenerator : MonoBehaviour
                         }
                         else
                         {
-                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+                            (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ, info);
                             break;
                         }
                         break;
@@ -206,7 +214,7 @@ public class RoadGenerator : MonoBehaviour
             }
             if (coinFlip)
             {
-                (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ);
+                (pointX, pointZ) = PickRoadWaypoint(pointX, pointZ, info);
             }
             else
             {
@@ -228,6 +236,7 @@ public class RoadGenerator : MonoBehaviour
     {
         foreach (var roadPoint in AllRoadPoints)
         {
+
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < 2; j++)
@@ -246,7 +255,19 @@ public class RoadGenerator : MonoBehaviour
         return false;
     }
 
-    private (int, int) PickRoadWaypoint(int pointX, int pointZ)
+    public bool IsRoadOnCoordinates(int x, int z, float dist)
+    {
+        foreach (var roadPoint in AllRoadPoints)
+        {
+            if (Vector2.Distance(new Vector2(roadPoint.PointX, roadPoint.PointZ), new Vector2(x, z)) < dist)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private (int, int) PickRoadWaypoint(int pointX, int pointZ, TerrainInfo info)
     {
         // first get a point out of our list
         var newWaypoint = RoadPointList[RoadPointList.Count - 1];
@@ -286,13 +307,12 @@ public class RoadGenerator : MonoBehaviour
     public bool WillSpreadToWater(TerrainInfo info, int cX, int cZ)
     {
         var water_points = info.SeperatedBiomes[info.SeperatedBiomes.Keys.Count - 1];
-        if (water_points.Where(x => x.X == cX).Count() > 0)
+        foreach (var pt in water_points)
         {
-            return true;
-        }
-        if (water_points.Where(x => x.Z == cZ).Count() > 0)
-        {
-            return true;
+            if (Vector2.Distance(new Vector2(pt.X, pt.Z), new Vector2(cX, cZ)) < 15)
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -316,11 +336,7 @@ public class RoadGenerator : MonoBehaviour
                 // in this case, we need to find a point where no roads exist
                 break;
             }
-            if (water_points.Where(x => x.X == pointX).Count() > 0)
-            {
-                continue;
-            }
-            if (water_points.Where(x => x.Z == pointZ).Count() > 0)
+            if (WillSpreadToWater(info, pointX, pointZ))
             {
                 continue;
             }
