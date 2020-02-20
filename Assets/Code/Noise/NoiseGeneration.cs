@@ -116,22 +116,26 @@ public static class NoiseGeneration
         return currentTerrain;
     }
 
-    public static float[,] GenerateTemperatureMap(int terrainWidth, int terrainHeight, float[,] heightMap)
+    public static float[,] GenerateTemperatureMap(int terrainWidth, int terrainHeight, float[,] heightMap, TerrainInfo info = null)
     {
         // init boundries based on terrainHeight
-        float[,] baseNoiseMap = GenerateTerrain(new TerrainInfo()
-        {
-            TerrainWidth = terrainWidth,
-            TerrainHeight = terrainHeight,
-            NoiseScale = 175,
-            BaseFrequency = 3,
-            NumberOfOctaves = 5,
-            Persistance = 0.3f,
-            Lacunarity = 4.5f,
-            UserOffset = Vector2.zero,
-            ErosionIterations = 50,
-            GlobalNoiseAddition = 0.2f,
-        });
+        float[,] baseNoiseMap = GenerateTerrain(info == null ?
+
+            new TerrainInfo()
+            {
+                TerrainWidth = terrainWidth,
+                TerrainHeight = terrainHeight,
+                NoiseScale = 175,
+                BaseFrequency = 3,
+                NumberOfOctaves = 5,
+                Persistance = 0.3f,
+                Lacunarity = 4.5f,
+                UserOffset = Vector2.zero,
+                ErosionIterations = 50,
+                GlobalNoiseAddition = 0.2f,
+            } :
+            info
+        );
         float[,] temperatureMap = new float[terrainWidth, terrainHeight];
         for (int y = 0; y < terrainHeight; y++)
         {
@@ -145,7 +149,6 @@ public static class NoiseGeneration
         return temperatureMap;
     }
 
-    // SWAPPED MOISTURE AND TEMP MAPS CUZ I HAVE A BETTER IDEA FOR TEMP MAPS !
     public static float[,] GenerateMoistureMap(int terrainWidth, int terrainHeight, float[,] heightMap)
     {
         float[,] moistureMap = new float[terrainWidth, terrainHeight];

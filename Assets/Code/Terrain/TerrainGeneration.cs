@@ -87,7 +87,7 @@ public class TerrainGeneration : MonoBehaviour
     {
         // this can be parallelized 
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
-        TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
+        TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap, TerrainInfo);
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
 
@@ -96,7 +96,7 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo.HeightMap = NoiseGeneration.GenerateTerrain(TerrainInfo);
         // this can be parallelized 
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
-        TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
+        TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap, TerrainInfo);
         TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
     }
     // A lot of stuff can be paralelized, stuff is decoupled for clarity when developing, in the end will be re-facced so shit that can get run paralel will
@@ -107,7 +107,7 @@ public class TerrainGeneration : MonoBehaviour
         TerrainInfo._Terrain.terrainData.SetHeights(0, 0, TerrainInfo.HeightMap);
         if (TerrainInfo.GenerateTerrain)
         {
-            TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
+            TerrainInfo.TemperatureMap = NoiseGeneration.GenerateTemperatureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap, TerrainInfo);
             TerrainInfo.MoistureMap = NoiseGeneration.GenerateMoistureMap(TerrainInfo.TerrainWidth, TerrainInfo.TerrainHeight, TerrainInfo.HeightMap);
         }
         if (!onlyUseTerrainParameteters)
